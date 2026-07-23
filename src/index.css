@@ -1,0 +1,49 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+
+  /* EqualAccess Portal — blue + teal dual palette */
+  --color-ea-blue-50:  #eff6ff;
+  --color-ea-blue-100: #dbeafe;
+  --color-ea-blue-500: #3b82f6;
+  --color-ea-blue-600: #2563eb;
+  --color-ea-blue-700: #1d4ed8;
+  --color-ea-blue-800: #1e40af;
+  --color-ea-blue-900: #1e3a8a;
+
+  --color-ea-teal-50:  #f0fdfa;
+  --color-ea-teal-100: #ccfbf1;
+  --color-ea-teal-400: #2dd4bf;
+  --color-ea-teal-500: #14b8a6;
+  --color-ea-teal-600: #0d9488;
+  --color-ea-teal-700: #0f766e;
+  --color-ea-teal-800: #115e59;
+  --color-ea-teal-900: #134e4a;
+}
+
+html {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+}
+
+*::-webkit-scrollbar { width: 5px; height: 5px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+:focus-visible {
+  outline: 2px solid #0d9488;
+  outline-offset: 2px;
+}
