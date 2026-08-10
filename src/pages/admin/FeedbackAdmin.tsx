@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Eye, MessageSquare, Send } from 'lucide-react'
+import { Eye, Send } from 'lucide-react'
 import { feedbackTickets, type FeedbackTicket } from '../../data'
 import { Card, Tabs, statusBadge, Modal, Button, Textarea, Alert } from '../../components/ui'
 

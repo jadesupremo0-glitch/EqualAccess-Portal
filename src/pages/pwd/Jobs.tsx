@@ -89,6 +89,8 @@ function JobCard({ job, onView }: { job: Job; onView: () => void }) {
 }
 
 function JobDetail({ job, onClose }: { job: Job; onClose: () => void }) {
+  const session = usePWDSession()
+  const user = session ? (pwdUsers.find((u) => u.id === session.userId) ?? pwdUsers[0]) : pwdUsers[0]
   return (
     <Modal open title={job.title} onClose={onClose} size="lg">
       <div className="space-y-5">
@@ -123,7 +125,7 @@ function JobDetail({ job, onClose }: { job: Job; onClose: () => void }) {
         <div>
           <p className="text-xs uppercase tracking-wide font-bold text-gray-400 mb-2">Why This Job Matches Your Profile</p>
           <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-700 space-y-2">
-            <p>Based on your registered skills (<strong>{currentUser.skills?.join(', ')}</strong>), this position aligns well with your qualifications and accessibility needs.</p>
+            <p>Based on your registered skills (<strong>{user?.skills?.join(', ') ?? 'No skills listed'}</strong>), this position aligns well with your qualifications and accessibility needs.</p>
             <ul className="space-y-1 mt-2">
               {job.matchReasons?.map((r, i) => (
                 <li key={i} className="flex items-center gap-2">

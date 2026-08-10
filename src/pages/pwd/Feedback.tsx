@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { MessageSquare, Send, Eye, Lock } from 'lucide-react'
-import { feedbackTickets, type FeedbackTicket } from '../../data'
+import { type FeedbackTicket } from '../../data'
 import { Card, Button, Input, Textarea, Select, statusBadge, Modal, FileUpload, Alert } from '../../components/ui'
+import { usePWDSession } from '../../context'
+import { useStore } from '../../store'
 
 const categories = [
   { value: 'Question', label: 'Ask a Question' },
@@ -28,7 +30,9 @@ function TicketCard({ ticket, onView }: { ticket: FeedbackTicket; onView: () => 
 }
 
 function TicketDetail({ ticket, onClose }: { ticket: FeedbackTicket; onClose: () => void }) {
+  const { addFeedbackReply } = useStore()
   const [reply, setReply] = useState('')
+  const [sent, setSent] = useState(false)
   return (
     <Modal open title={ticket.subject} onClose={onClose} size="lg">
       <div className="space-y-4">
@@ -58,8 +62,15 @@ function TicketDetail({ ticket, onClose }: { ticket: FeedbackTicket; onClose: ()
         {/* Reply input */}
         {ticket.status !== 'Closed' && (
           <div className="border-t border-gray-100 pt-4 space-y-3">
+            {sent && <Alert type="success" message="Reply sent successfully." />}
             <Textarea label="Your Reply" value={reply} onChange={setReply} placeholder="Type your reply here..." rows={3} />
-            <Button icon={<Send size={15} />} disabled={!reply.trim()}>Send Reply</Button>
+            <Button
+              icon={<Send size={15} />}
+              disabled={!reply.trim()}
+              onClick={() => { addFeedbackReply(ticket.id, 'You', reply); setReply(''); setSent(true); setTimeout(() => setSent(false), 2500) }}
+            >
+              Send Reply
+            </Button>
           </div>
         )}
       </div>
@@ -68,6 +79,10 @@ function TicketDetail({ ticket, onClose }: { ticket: FeedbackTicket; onClose: ()
 }
 
 export default function FeedbackPage() {
+  const session = usePWDSession()
+  const { pwdUsers, feedbackTickets, submitFeedback } = useStore()
+  const me = session ? (pwdUsers.find((u) => u.id === session.userId) ?? pwdUsers[0]) : pwdUsers[0]
+
   const [view, setView] = useState<'form' | 'list'>('form')
   const [category, setCategory] = useState('')
   const [subject, setSubject] = useState('')
@@ -76,13 +91,14 @@ export default function FeedbackPage() {
   const [submitted, setSubmitted] = useState(false)
   const [selected, setSelected] = useState<FeedbackTicket | null>(null)
 
-  const myTickets = feedbackTickets.filter((t) => !t.isAnonymous)
+  const myTickets = feedbackTickets.filter((t) => t.userId === me.id || (!t.userId && t.pwdName === me.name))
 
   const handleSubmit = () => {
     if (!category || !subject || !message) return
+    submitFeedback(me.id, { category, subject, message, anonymous })
     setSubmitted(true)
-    setCategory(''); setSubject(''); setMessage('')
-    setTimeout(() => { setSubmitted(false); setView('list') }, 2000)
+    setCategory(''); setSubject(''); setMessage(''); setAnonymous(false)
+    setTimeout(() => { setSubmitted(false); setView('list') }, 1500)
   }
 
   return (

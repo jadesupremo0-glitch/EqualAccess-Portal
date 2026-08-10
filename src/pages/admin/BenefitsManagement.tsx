@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Plus, Eye, Edit2, Trash2, Power } from 'lucide-react'
-import { benefits, type Benefit } from '../../data'
+import { benefits } from '../../data'
 import { Card, Button, SearchBar, Select, statusBadge, Modal, Input, Textarea } from '../../components/ui'
 
 function AddProgramModal({ onClose }: { onClose: () => void }) {
@@ -15,7 +15,9 @@ function AddProgramModal({ onClose }: { onClose: () => void }) {
         <Input label="Program Name" placeholder="e.g., Monthly Cash Assistance" value={form.name} onChange={(e) => set('name', e.target.value)} className="sm:col-span-2" required />
         <Select label="Category" options={categories.map((c) => ({ value: c, label: c }))} value={form.category} onChange={(v) => set('category', v)} placeholder="Select category" required />
         <Select label="Barangay" options={barangays.map((b) => ({ value: b, label: b }))} value={form.barangay} onChange={(v) => set('barangay', v)} placeholder="Select barangay" />
-        <Textarea label="Description" value={form.description} onChange={(v) => set('description', v)} placeholder="Describe the program..." className="sm:col-span-2" rows={3} />
+        <div className="sm:col-span-2">
+          <Textarea label="Description" value={form.description} onChange={(v) => set('description', v)} placeholder="Describe the program..." rows={3} />
+        </div>
         <Textarea label="Eligibility Requirements" value={form.eligibility} onChange={(v) => set('eligibility', v)} placeholder="Who can apply..." rows={3} />
         <Textarea label="Benefits Provided" value="" onChange={() => {}} placeholder="List the benefits..." rows={3} />
         <Input label="Date" type="date" value={form.date} onChange={(e) => set('date', e.target.value)} />

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, UserCheck, Eye, Edit2, UserX } from 'lucide-react'
+import { UserCheck, Eye, Edit2, UserX } from 'lucide-react'
 import { pwdUsers, type PWDUser } from '../../data'
 import { Card, Button, SearchBar, Select, statusBadge, Modal } from '../../components/ui'
 

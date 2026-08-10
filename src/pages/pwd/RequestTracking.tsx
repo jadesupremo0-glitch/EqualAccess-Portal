@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { ClipboardList, ChevronRight } from 'lucide-react'
-import { assistanceRequests, pwdUsers, type AssistanceRequest } from '../../data'
+import { type AssistanceRequest } from '../../data'
 import { Card, Timeline, statusBadge, Modal } from '../../components/ui'
 import { usePWDSession } from '../../context'
+import { useStore } from '../../store'
 
 function TrackingCard({ req, onSelect }: { req: AssistanceRequest; onSelect: () => void }) {
   const completedSteps = req.timeline.filter((s) => s.completed).length
@@ -148,6 +149,7 @@ function TrackingDetail({ req, onClose }: { req: AssistanceRequest; onClose: () 
 
 export default function RequestTracking() {
   const session = usePWDSession()
+  const { pwdUsers, assistanceRequests } = useStore()
   const userId = session?.userId ?? (pwdUsers[0]?.id ?? '')
   const userRequests = assistanceRequests.filter((r) => r.pwdId === userId)
   const [selected, setSelected] = useState<AssistanceRequest | null>(null)

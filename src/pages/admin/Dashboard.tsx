@@ -1,4 +1,4 @@
-import { Users, UserCheck, Clock, FileText, CheckCircle, Star, Briefcase, TrendingUp } from 'lucide-react'
+import { Users, UserCheck, Clock, FileText, CheckCircle, Star, TrendingUp } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, LineChart, Line,
@@ -11,10 +11,10 @@ const PIE_COLORS = ['#16a34a', '#dc2626', '#d97706']
 
 function AdminBanner({ name, role }: { name: string; role: string }) {
   const roleColor: Record<string, string> = {
-    Administrator: 'from-slate-700 to-slate-600',
-    'Benefits Officer': 'from-teal-700 to-teal-600',
-    'Social Worker': 'from-blue-700 to-blue-600',
-    'Records Officer': 'from-indigo-700 to-indigo-600',
+    Administrator: 'from-slate-800 via-slate-800 to-ea-blue-900',
+    'Benefits Officer': 'from-ea-teal-900 via-ea-teal-900 to-ea-blue-950',
+    'Social Worker': 'from-ea-blue-900 via-ea-blue-900 to-indigo-950',
+    'Records Officer': 'from-indigo-900 via-indigo-900 to-ea-blue-950',
   }
   const roleDesc: Record<string, string> = {
     Administrator: 'Full system access — all modules and analytics available.',
@@ -23,16 +23,17 @@ function AdminBanner({ name, role }: { name: string; role: string }) {
     'Records Officer': 'Manage PWD registrations, verifications, and documentation.',
   }
   return (
-    <div className={`rounded-2xl bg-gradient-to-r ${roleColor[role] ?? 'from-slate-700 to-slate-600'} p-5 text-white`}>
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className={`relative overflow-hidden rounded-3xl bg-gradient-to-r ${roleColor[role] ?? 'from-slate-800 via-slate-800 to-ea-blue-900'} p-5 text-white shadow-xl animate-fade-up`}>
+      <div className="absolute -right-10 -top-10 w-48 h-48 rounded-full bg-white/10 blur-2xl" aria-hidden="true" />
+      <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <p className="text-white/60 text-xs mb-0.5">Logged in as</p>
-          <h1 className="text-xl font-bold">{name}</h1>
+          <p className="text-white/50 text-xs mb-0.5 uppercase tracking-wide">Logged in as</p>
+          <h1 className="font-display text-xl font-extrabold tracking-tight">{name}</h1>
           <div className="flex items-center gap-2 mt-1.5">
-            <span className="text-xs bg-white/20 border border-white/20 px-2.5 py-0.5 rounded-full font-semibold">{role}</span>
+            <span className="text-xs bg-white/15 border border-white/20 px-2.5 py-0.5 rounded-full font-semibold backdrop-blur">{role}</span>
           </div>
         </div>
-        <div className="bg-white/10 border border-white/15 rounded-xl p-3 max-w-xs">
+        <div className="glass-dark rounded-2xl p-3 max-w-xs shadow-lg">
           <p className="text-white/80 text-xs leading-relaxed">{roleDesc[role] ?? ''}</p>
         </div>
       </div>
@@ -58,7 +59,7 @@ function AdministratorView() {
 
       <div className="grid lg:grid-cols-5 gap-6">
         <Card className="lg:col-span-3 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Assistance Requests Over Time</h3>
+          <h3 className="font-display font-bold text-gray-900 mb-4">Assistance Requests Over Time</h3>
           <ResponsiveContainer width="100%" height={200}>
             <LineChart data={chartData.requestsTrend}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -71,13 +72,13 @@ function AdministratorView() {
         </Card>
 
         <Card className="lg:col-span-2 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Approval Rate</h3>
+          <h3 className="font-display font-bold text-gray-900 mb-4">Approval Rate</h3>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart>
               <Pie data={chartData.approvalRate} cx="50%" cy="50%" innerRadius={55} outerRadius={80} dataKey="value" paddingAngle={3}>
                 {chartData.approvalRate.map((_, i) => <Cell key={i} fill={PIE_COLORS[i]} />)}
               </Pie>
-              <Tooltip formatter={(v: number) => `${v}%`} />
+              <Tooltip formatter={(v) => `${v}%`} />
             </PieChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-3 justify-center mt-2">
@@ -93,7 +94,7 @@ function AdministratorView() {
 
       <div className="grid lg:grid-cols-2 gap-6">
         <Card className="p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">PWD Distribution by Barangay</h3>
+          <h3 className="font-display font-bold text-gray-900 mb-4">PWD Distribution by Barangay</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={chartData.byBarangay} layout="vertical" margin={{ left: 100 }}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" horizontal={false} />
@@ -105,7 +106,7 @@ function AdministratorView() {
           </ResponsiveContainer>
         </Card>
         <Card className="p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Requests by Assistance Type</h3>
+          <h3 className="font-display font-bold text-gray-900 mb-4">Requests by Assistance Type</h3>
           <ResponsiveContainer width="100%" height={200}>
             <BarChart data={chartData.byAssistanceType}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -139,7 +140,7 @@ function BenefitsOfficerView() {
 
       <div className="grid lg:grid-cols-2 gap-6">
         <Card className="p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Requests by Assistance Type</h3>
+          <h3 className="font-display font-bold text-gray-900 mb-4">Requests by Assistance Type</h3>
           <ResponsiveContainer width="100%" height={220}>
             <BarChart data={chartData.byAssistanceType}>
               <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
@@ -151,13 +152,13 @@ function BenefitsOfficerView() {
           </ResponsiveContainer>
         </Card>
         <Card className="p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">Approval Rate</h3>
+          <h3 className="font-display font-bold text-gray-900 mb-4">Approval Rate</h3>
           <ResponsiveContainer width="100%" height={220}>
             <PieChart>
               <Pie data={chartData.approvalRate} cx="50%" cy="50%" innerRadius={60} outerRadius={88} dataKey="value" paddingAngle={3}>
                 {chartData.approvalRate.map((_, i) => <Cell key={i} fill={PIE_COLORS[i]} />)}
               </Pie>
-              <Tooltip formatter={(v: number) => `${v}%`} />
+              <Tooltip formatter={(v) => `${v}%`} />
             </PieChart>
           </ResponsiveContainer>
           <div className="flex flex-wrap gap-3 justify-center mt-2">

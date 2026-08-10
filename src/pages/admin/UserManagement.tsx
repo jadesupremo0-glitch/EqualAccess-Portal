@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { Plus, Edit2, UserX, Trash2, Key, Activity } from 'lucide-react'
-import { adminUsers, activityLog, type AdminUser } from '../../data'
+import { Plus, Edit2, UserX, Trash2, Key } from 'lucide-react'
+import { adminUsers, activityLog } from '../../data'
 import { Card, Button, Tabs, statusBadge, Modal, Input, Select } from '../../components/ui'
 
 function AddUserModal({ onClose }: { onClose: () => void }) {

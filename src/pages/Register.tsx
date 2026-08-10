@@ -70,13 +70,17 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
 
   if (done) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-6">
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-10 max-w-lg w-full text-center">
-          <div className="w-20 h-20 rounded-full bg-teal-100 flex items-center justify-center mx-auto mb-5">
-            <CheckCircle size={40} className="text-teal-600" />
+      <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-6 bg-slate-50">
+        <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
+          <div className="absolute -top-24 -right-24 w-[26rem] h-[26rem] rounded-full bg-gradient-to-br from-ea-teal-400/25 to-sky-400/20 blur-3xl animate-blob" />
+          <div className="absolute bottom-0 -left-24 w-[24rem] h-[24rem] rounded-full bg-gradient-to-tr from-ea-blue-500/20 to-indigo-400/15 blur-3xl animate-blob-delayed" />
+        </div>
+        <div className="card-glass rounded-3xl p-10 max-w-lg w-full text-center animate-scale-in">
+          <div className="w-20 h-20 rounded-full bg-gradient-to-br from-ea-teal-400 to-ea-blue-600 flex items-center justify-center mx-auto mb-5 shadow-xl shadow-ea-teal-600/30 ring-4 ring-ea-teal-100">
+            <CheckCircle size={40} className="text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Registration Submitted!</h2>
-          <p className="text-gray-500 mb-5 text-sm leading-relaxed">
+          <h2 className="font-display text-2xl font-extrabold text-slate-900 mb-2 tracking-tight">Registration Submitted!</h2>
+          <p className="text-slate-500 mb-5 text-sm leading-relaxed">
             Thank you for registering, <strong>{form.fullName || 'User'}</strong>. Your application has been submitted to the PDAO.
           </p>
           <Alert
@@ -85,12 +89,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
             message="Your account will be reviewed by an administrator before activation. This typically takes 3–5 business days. You will receive a notification once your account is verified."
           />
           <div className="mt-6 space-y-3">
-            <button
-              onClick={() => onNavigate('login')}
-              className="w-full py-3 text-sm font-semibold bg-teal-600 text-white rounded-xl hover:bg-teal-700 transition-colors"
-            >
-              Proceed to Login
-            </button>
+            <Button size="lg" fullWidth onClick={() => onNavigate('login')}>Proceed to Login</Button>
             <Button fullWidth variant="outline" onClick={() => onNavigate('landing')}>Back to Home</Button>
           </div>
         </div>
@@ -99,20 +98,25 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col relative overflow-hidden">
+      <div className="fixed inset-0 -z-10 pointer-events-none" aria-hidden="true">
+        <div className="absolute -top-24 right-1/4 w-[28rem] h-[28rem] rounded-full bg-gradient-to-br from-ea-teal-400/20 to-sky-400/15 blur-3xl animate-blob" />
+        <div className="absolute bottom-0 -left-20 w-[24rem] h-[24rem] rounded-full bg-gradient-to-tr from-ea-blue-500/15 to-indigo-400/10 blur-3xl animate-blob-delayed" />
+      </div>
+
       {/* Header */}
-      <header className="bg-white border-b border-gray-100 px-4 py-4">
+      <header className="bg-white/70 backdrop-blur-xl border-b border-white/60 px-4 py-4 sticky top-0 z-30">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-teal-600 flex items-center justify-center">
-              <span className="text-white font-black text-sm">EA</span>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center shadow-lg shadow-ea-teal-600/25">
+              <span className="text-white font-black text-sm font-display">EA</span>
             </div>
             <div>
-              <p className="text-sm font-bold text-gray-900">EqualAccess Portal</p>
-              <p className="text-xs text-gray-400">PDAO — Los Baños, Laguna</p>
+              <p className="text-sm font-bold text-slate-900 font-display tracking-tight">EqualAccess Portal</p>
+              <p className="text-xs text-slate-400">PDAO — Los Baños, Laguna</p>
             </div>
           </div>
-          <button onClick={() => onNavigate('landing')} className="flex items-center gap-1.5 text-sm text-gray-400 hover:text-gray-600">
+          <button onClick={() => onNavigate('landing')} className="flex items-center gap-1.5 text-sm text-slate-400 hover:text-slate-600">
             <ArrowLeft size={14} />
             Back to Home
           </button>
@@ -120,7 +124,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
       </header>
 
       <div className="flex-1 flex items-start justify-center p-6 pt-10">
-        <div className="w-full max-w-2xl">
+        <div className="w-full max-w-2xl animate-fade-up">
           {/* Progress steps */}
           <div className="mb-8 flex items-center justify-between">
             {steps.map((s, i) => (
@@ -128,30 +132,33 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
                 <div className="flex flex-col items-center">
                   <div
                     className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold transition-all ${
-                      step > s.n ? 'bg-teal-500 text-white' :
-                      step === s.n ? 'bg-teal-700 text-white ring-4 ring-teal-100' :
-                      'bg-gray-100 text-gray-400'
+                      step > s.n ? 'bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 text-white shadow-lg shadow-ea-teal-600/25' :
+                      step === s.n ? 'bg-gradient-to-br from-ea-teal-600 to-ea-blue-700 text-white ring-4 ring-ea-teal-200 shadow-lg shadow-ea-blue-600/25' :
+                      'bg-white/70 border border-white/70 text-slate-400 shadow-sm'
                     }`}
                     aria-current={step === s.n ? 'step' : undefined}
                   >
                     {step > s.n ? <CheckCircle size={16} /> : s.n}
                   </div>
-                  <p className={`text-xs mt-1.5 hidden sm:block font-medium ${step >= s.n ? 'text-gray-700' : 'text-gray-400'}`}>
+                  <p className={`text-xs mt-1.5 hidden sm:block font-semibold ${step >= s.n ? 'text-slate-700' : 'text-slate-400'}`}>
                     {s.label}
                   </p>
                 </div>
                 {i < steps.length - 1 && (
-                  <div className={`flex-1 h-0.5 mx-3 mb-5 rounded-full ${step > s.n ? 'bg-teal-400' : 'bg-gray-200'}`} aria-hidden="true" />
+                  <div className={`flex-1 h-1 mx-3 mb-5 rounded-full ${step > s.n ? 'bg-gradient-to-r from-ea-teal-500 to-ea-blue-600' : 'bg-white/70 border border-white/60'}`} aria-hidden="true" />
                 )}
               </div>
             ))}
           </div>
 
           {/* Form card */}
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="bg-teal-700 px-6 py-5">
-              <h1 className="text-white font-bold text-lg">{steps[step - 1].label}</h1>
-              <p className="text-teal-200 text-sm mt-0.5">Step {step} of 4 — EqualAccess Portal Registration</p>
+          <div className="card-glass rounded-3xl overflow-hidden shadow-xl">
+            <div className="relative bg-brand-glow px-6 py-5 overflow-hidden">
+              <div className="absolute inset-0 bg-decor-grid opacity-15" aria-hidden="true" />
+              <div className="relative">
+                <h1 className="font-display text-white font-bold text-lg tracking-tight">{steps[step - 1].label}</h1>
+                <p className="text-teal-200/90 text-sm mt-0.5">Step {step} of 4 — EqualAccess Portal Registration</p>
+              </div>
             </div>
 
             <div className="p-6 space-y-4">
@@ -175,7 +182,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
               )}
               {step === 3 && (
                 <>
-                  <p className="text-sm text-gray-600 leading-relaxed">Upload a clear photo or scan of your PWD ID issued by the Municipality of Los Baños. This will be reviewed by PDAO staff.</p>
+                  <p className="text-sm text-slate-600 leading-relaxed">Upload a clear photo or scan of your PWD ID issued by the Municipality of Los Baños. This will be reviewed by PDAO staff.</p>
                   <FileUpload label="PWD ID — Front Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" />
                   <FileUpload label="PWD ID — Back Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" />
                   <Alert type="warning" title="Important" message="Ensure all ID details are clearly visible. Blurry or incomplete images will delay your PDAO verification." />
@@ -189,9 +196,9 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
                   <div>
                     <label className="flex items-start gap-3 cursor-pointer">
                       <input type="checkbox" checked={form.agreeTerms} onChange={(e) => set('agreeTerms', e.target.checked)}
-                        className="mt-0.5 w-4 h-4 border-gray-300 rounded text-teal-600 focus:ring-teal-500" />
-                      <span className="text-sm text-gray-600">
-                        I agree to the <a href="#" className="text-teal-700 font-medium hover:underline">Terms of Use</a> and <a href="#" className="text-teal-700 font-medium hover:underline">Privacy Policy</a>. I consent to the collection of my personal data for PDAO benefit processing purposes.
+                        className="mt-0.5 w-4 h-4 border-gray-300 rounded text-ea-teal-600 focus:ring-ea-teal-500" />
+                      <span className="text-sm text-slate-600">
+                        I agree to the <a href="#" className="text-ea-teal-700 font-medium hover:underline">Terms of Use</a> and <a href="#" className="text-ea-teal-700 font-medium hover:underline">Privacy Policy</a>. I consent to the collection of my personal data for PDAO benefit processing purposes.
                       </span>
                     </label>
                     {errors.agreeTerms && <p className="text-xs text-red-600 mt-1 ml-7">{errors.agreeTerms}</p>}
@@ -201,22 +208,19 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
               )}
             </div>
 
-            <div className="flex items-center justify-between p-6 pt-0 gap-3 border-t border-gray-50">
+            <div className="flex items-center justify-between p-6 pt-0 gap-3 border-t border-white/60">
               <Button variant="outline" size="lg" onClick={step === 1 ? () => onNavigate('login') : back} icon={<ArrowLeft size={15} />}>
                 {step === 1 ? 'Back to Login' : 'Previous'}
               </Button>
-              <button
-                onClick={next}
-                className="inline-flex items-center gap-2 bg-teal-600 hover:bg-teal-700 text-white font-semibold px-6 py-3 rounded-xl transition-colors text-sm"
-              >
-                {step === 4 ? <><CheckCircle size={15} /> Create Account</> : <>Continue <ArrowRight size={15} /></>}
-              </button>
+              <Button size="lg" onClick={next} icon={step === 4 ? <CheckCircle size={16} /> : <ArrowRight size={16} />}>
+                {step === 4 ? 'Create Account' : 'Continue'}
+              </Button>
             </div>
           </div>
 
-          <p className="text-center text-sm text-gray-400 mt-6">
+          <p className="text-center text-sm text-slate-400 mt-6">
             Already have an account?{' '}
-            <button onClick={() => onNavigate('login')} className="text-teal-700 font-semibold hover:text-teal-800">Sign in here</button>
+            <button onClick={() => onNavigate('login')} className="text-ea-teal-700 font-semibold hover:text-ea-teal-800">Sign in here</button>
           </p>
         </div>
       </div>

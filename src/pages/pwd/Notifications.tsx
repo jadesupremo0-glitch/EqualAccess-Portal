@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Bell, CheckCheck, CheckCircle, Clock, AlertCircle, Info } from 'lucide-react'
+import { Bell, CheckCheck, CheckCircle, AlertCircle, Info } from 'lucide-react'
 import { notifications, type Notification } from '../../data'
 import { Button } from '../../components/ui'
 

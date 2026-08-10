@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Plus, Eye } from 'lucide-react'
-import { assistanceRequests, pwdUsers, type AssistanceRequest } from '../../data'
+import { type AssistanceRequest } from '../../data'
 import { Card, Button, statusBadge, Modal, Timeline, Alert, Textarea, Select, FileUpload, Input } from '../../components/ui'
 import { usePWDSession } from '../../context'
+import { useStore } from '../../store'
 
 const assistanceTypes = [
   { value: 'Financial Assistance', label: 'Financial Assistance' },
@@ -75,48 +76,35 @@ function RequestDetail({ req, onClose }: { req: AssistanceRequest; onClose: () =
   )
 }
 
-function NewRequestForm({ onClose, onSubmit }: { onClose: () => void; onSubmit: () => void }) {
-  const [type, setType] = useState('')
-  const [title, setTitle] = useState('')
+function NewRequestForm({ onClose, onSubmit, initialType, initialTitle }: {
+  onClose: () => void
+  onSubmit: (data: { type: string; title: string; description: string }) => void
+  initialType?: string
+  initialTitle?: string
+}) {
+  const [type, setType] = useState(initialType ?? '')
+  const [title, setTitle] = useState(initialTitle ?? '')
   const [description, setDescription] = useState('')
   const [reason, setReason] = useState('')
-  const [submitted, setSubmitted] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = () => {
-    if (!type || !title || !description) return
-    setSubmitted(true)
-  }
-
-  if (submitted) {
-    return (
-      <Modal open title="Request Submitted" onClose={onClose} size="md">
-        <div className="text-center py-4">
-          <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
-            <svg className="text-green-600" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
-          </div>
-          <h3 className="text-lg font-bold text-gray-900 mb-2">Request Submitted Successfully!</h3>
-          <div className="bg-gray-50 rounded-xl p-4 text-sm text-left space-y-2 mb-6">
-            <div className="flex justify-between"><span className="text-gray-500">Reference No.:</span><span className="font-mono font-semibold">REQ-2024-006</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Date Submitted:</span><span>2024-03-01</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Type:</span><span>{type}</span></div>
-            <div className="flex justify-between"><span className="text-gray-500">Status:</span><span className="text-amber-600 font-medium">Pending</span></div>
-          </div>
-          <Alert type="info" message="Your request has been received. An administrator will review it within 3–5 business days." />
-          <Button fullWidth className="mt-4" onClick={onClose}>Close</Button>
-        </div>
-      </Modal>
-    )
+    if (!type || !title || !description) {
+      setError('Please complete the assistance type, title, and description.')
+      return
+    }
+    setError('')
+    onSubmit({ type, title, description })
   }
 
   return (
     <Modal open title="New Assistance Request" onClose={onClose} size="lg">
       <div className="space-y-4">
+        {error && <Alert type="error" message={error} />}
         <Select label="Assistance Type" options={assistanceTypes} value={type} onChange={setType} placeholder="Select type of assistance" required />
         <Input label="Request Title" placeholder="Brief title for your request" value={title} onChange={(e) => setTitle(e.target.value)} required />
         <Textarea label="Description of Request" placeholder="Describe what you need assistance with..." value={description} onChange={setDescription} rows={4} required />
         <Textarea label="Reason for Request" placeholder="Explain why you need this assistance..." value={reason} onChange={setReason} rows={3} />
-        <Input label="Preferred Barangay" placeholder="Brgy. Poblacion" value="" onChange={() => {}} />
-        <Input label="Contact Number" placeholder="+63 9XX XXX XXXX" value="" onChange={() => {}} />
         <FileUpload label="Supporting Documents (Optional)" accept=".pdf,.jpg,.png" helperText="Medical certificates, ID, or other supporting documents" />
         <div className="flex gap-3 pt-2">
           <Button onClick={handleSubmit} fullWidth>Submit Request</Button>
@@ -127,13 +115,49 @@ function NewRequestForm({ onClose, onSubmit }: { onClose: () => void; onSubmit: 
   )
 }
 
+function SubmittedModal({ req, onClose }: { req: AssistanceRequest; onClose: () => void }) {
+  return (
+    <Modal open title="Request Submitted" onClose={onClose} size="md">
+      <div className="text-center py-4">
+        <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+          <svg className="text-green-600" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="20 6 9 17 4 12" /></svg>
+        </div>
+        <h3 className="text-lg font-bold text-gray-900 mb-2">Request Submitted Successfully!</h3>
+        <div className="bg-gray-50 rounded-xl p-4 text-sm text-left space-y-2 mb-6">
+          <div className="flex justify-between"><span className="text-gray-500">Reference No.:</span><span className="font-mono font-semibold">{req.id}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Date Submitted:</span><span>{req.dateSubmitted}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Type:</span><span>{req.type}</span></div>
+          <div className="flex justify-between"><span className="text-gray-500">Status:</span><span className="text-amber-600 font-medium">{req.status}</span></div>
+        </div>
+        <Alert type="info" message="Your request has been received. An administrator will review it within 3–5 business days." />
+        <Button fullWidth className="mt-4" onClick={onClose}>Close</Button>
+      </div>
+    </Modal>
+  )
+}
+
 export default function Requests() {
   const session = usePWDSession()
+  const { pwdUsers, assistanceRequests, addRequest, requestDraft, setRequestDraft } = useStore()
   const userId = session?.userId ?? (pwdUsers[0]?.id ?? '')
   const userRequests = assistanceRequests.filter((r) => r.pwdId === userId)
   const [selected, setSelected] = useState<AssistanceRequest | null>(null)
   const [newRequest, setNewRequest] = useState(false)
+  const [justSubmitted, setJustSubmitted] = useState<AssistanceRequest | null>(null)
   const [submitted, setSubmitted] = useState(false)
+
+  const openNewRequest = () => {
+    setNewRequest(true)
+  }
+
+  const handleSubmitted = (data: { type: string; title: string; description: string }) => {
+    const req = addRequest(userId, data)
+    setRequestDraft(null)
+    setNewRequest(false)
+    setJustSubmitted(req)
+    setSubmitted(true)
+    setTimeout(() => setSubmitted(false), 4000)
+  }
 
   return (
     <div className="space-y-5">
@@ -142,10 +166,12 @@ export default function Requests() {
           <h1 className="text-2xl font-bold text-gray-900">Assistance Requests</h1>
           <p className="text-gray-500 text-sm mt-0.5">Submit and track your assistance requests</p>
         </div>
-        <Button icon={<Plus size={16} />} onClick={() => setNewRequest(true)}>New Request</Button>
+        <Button icon={<Plus size={16} />} onClick={openNewRequest}>New Request</Button>
       </div>
 
-      {submitted && <Alert type="success" title="Request Submitted" message="Your new request has been submitted and is pending review." />}
+      {submitted && justSubmitted && (
+        <Alert type="success" title="Request Submitted" message={`Request ${justSubmitted.id} has been submitted and is pending review.`} />
+      )}
 
       {/* Status summary */}
       <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
@@ -168,7 +194,7 @@ export default function Requests() {
         {userRequests.length === 0 ? (
           <Card className="py-16 text-center">
             <p className="text-gray-400 mb-3">No assistance requests yet.</p>
-            <Button onClick={() => setNewRequest(true)} icon={<Plus size={16} />}>Submit Your First Request</Button>
+            <Button onClick={openNewRequest} icon={<Plus size={16} />}>Submit Your First Request</Button>
           </Card>
         ) : (
           userRequests.map((r) => (
@@ -178,7 +204,15 @@ export default function Requests() {
       </div>
 
       {selected && <RequestDetail req={selected} onClose={() => setSelected(null)} />}
-      {newRequest && <NewRequestForm onClose={() => setNewRequest(false)} onSubmit={() => { setNewRequest(false); setSubmitted(true) }} />}
+      {newRequest && (
+        <NewRequestForm
+          onClose={() => { setNewRequest(false); setRequestDraft(null) }}
+          onSubmit={handleSubmitted}
+          initialType={requestDraft?.type}
+          initialTitle={requestDraft?.title}
+        />
+      )}
+      {justSubmitted && !submitted && <SubmittedModal req={justSubmitted} onClose={() => setJustSubmitted(null)} />}
     </div>
   )
 }

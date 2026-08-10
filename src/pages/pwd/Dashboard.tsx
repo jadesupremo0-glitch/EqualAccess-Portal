@@ -1,30 +1,31 @@
 import { Gift, FileText, ClipboardList, MessageSquare, CheckCircle, Clock, Briefcase, ArrowRight, Sparkles } from 'lucide-react'
-import { pwdUsers, benefits, assistanceRequests, notifications, jobs } from '../../data'
 import { Card, StatsCard, statusBadge, Button } from '../../components/ui'
 import { usePWDSession } from '../../context'
+import { useStore } from '../../store'
 
 export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) => void }) {
   const session = usePWDSession()
+  const { pwdUsers, benefits, assistanceRequests, notifications, jobs } = useStore()
   const user = session ? pwdUsers.find((u) => u.id === session.userId) : pwdUsers[0]
   const currentUser = user ?? pwdUsers[0]
 
   const userRequests = assistanceRequests.filter((r) => r.pwdId === currentUser.id)
-  const unread = notifications.filter((n) => !n.read)
+  const unread = notifications.filter((n) => !n.read && (!n.userId || n.userId === currentUser.id))
   const topJob = [...jobs].sort((a, b) => (b.matchPercent ?? 0) - (a.matchPercent ?? 0))[0]
 
   return (
     <div className="space-y-6">
       {/* Welcome banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-teal-700 to-teal-600 p-6 text-white">
-        <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/5" aria-hidden="true" />
-        <div className="absolute right-8 bottom-0 w-24 h-24 rounded-full bg-white/5" aria-hidden="true" />
+      <div className="relative overflow-hidden rounded-3xl bg-brand-glow p-6 lg:p-8 text-white shadow-xl animate-fade-up">
+        <div className="absolute inset-0 bg-decor-grid opacity-15" aria-hidden="true" />
+        <div className="absolute -right-8 -top-8 w-40 h-40 rounded-full bg-white/10 blur-2xl animate-blob" aria-hidden="true" />
         <div className="relative flex flex-col sm:flex-row sm:items-center justify-between gap-5">
           <div>
             <p className="text-teal-200 text-sm mb-1">Welcome back,</p>
-            <h1 className="text-2xl font-extrabold">{currentUser.name}</h1>
+            <h1 className="font-display text-2xl font-extrabold tracking-tight">{currentUser.name}</h1>
             <div className="flex flex-wrap items-center gap-2 mt-2">
               {currentUser.verificationStatus === 'Verified' ? (
-                <span className="inline-flex items-center gap-1.5 bg-white/15 border border-white/20 text-green-200 text-xs font-semibold px-2.5 py-1 rounded-full">
+                <span className="inline-flex items-center gap-1.5 glass-dark text-green-200 text-xs font-semibold px-2.5 py-1 rounded-full">
                   <CheckCircle size={11} />Account Verified
                 </span>
               ) : (
@@ -35,7 +36,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
               <span className="text-teal-300 text-xs font-mono">{currentUser.id}</span>
             </div>
           </div>
-          <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-4 min-w-[200px]">
+          <div className="glass-dark rounded-2xl p-4 min-w-[200px] shadow-lg">
             <p className="text-teal-200 text-xs font-semibold mb-2 uppercase tracking-wide">Profile</p>
             <p className="text-white text-xs leading-relaxed">
               {currentUser.address}, {currentUser.barangay}
@@ -48,7 +49,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
 
       {/* Quick actions */}
       <div>
-        <h2 className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Quick Actions</h2>
+        <h2 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-3">Quick Actions</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {[
             { label: 'View Benefits', icon: <Gift size={20} />, page: 'pwd-benefits', bg: 'bg-teal-50 text-teal-700 hover:bg-teal-100', border: 'border-teal-100' },
@@ -59,7 +60,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
             <button
               key={a.label}
               onClick={() => onNavigate(a.page)}
-              className={`flex flex-col items-center gap-2.5 p-4 rounded-xl font-semibold text-sm transition-colors border ${a.bg} ${a.border}`}
+              className={`flex flex-col items-center gap-2.5 p-4 rounded-2xl font-semibold text-sm transition-all border backdrop-blur hover:-translate-y-0.5 hover:shadow-lift ${a.bg} ${a.border}`}
             >
               {a.icon}
               {a.label}
@@ -79,7 +80,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
       <div className="grid lg:grid-cols-5 gap-5">
         <div className="lg:col-span-3 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">Recommended Programs</h2>
+            <h2 className="font-display font-bold text-gray-900">Recommended Programs</h2>
             <button onClick={() => onNavigate('pwd-benefits')} className="text-sm text-teal-700 font-medium flex items-center gap-1 hover:text-teal-800">
               View all <ArrowRight size={13} />
             </button>
@@ -136,7 +137,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
 
         <div className="lg:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
-            <h2 className="font-semibold text-gray-900">Recent Requests</h2>
+            <h2 className="font-display font-bold text-gray-900">Recent Requests</h2>
             <button onClick={() => onNavigate('pwd-tracking')} className="text-sm text-teal-700 font-medium flex items-center gap-1 hover:text-teal-800">
               Track <ArrowRight size={13} />
             </button>
@@ -166,15 +167,15 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
           {unread.length > 0 && (
             <>
               <div className="flex items-center justify-between">
-                <h2 className="font-semibold text-gray-900">Notifications</h2>
+                <h2 className="font-display font-bold text-gray-900">Notifications</h2>
                 <button onClick={() => onNavigate('pwd-notifications')} className="text-sm text-teal-700 font-medium flex items-center gap-1 hover:text-teal-800">
                   View all <ArrowRight size={13} />
                 </button>
               </div>
               <div className="space-y-2">
                 {unread.slice(0, 3).map((n) => (
-                  <div key={n.id} className="flex gap-3 p-3 bg-blue-50 rounded-xl border border-blue-100">
-                    <div className="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-1.5" />
+                  <div key={n.id} className="flex gap-3 p-3 bg-sky-50/80 rounded-xl border border-sky-100 backdrop-blur">
+                    <div className="w-2 h-2 rounded-full bg-gradient-to-r from-sky-500 to-ea-teal-500 shrink-0 mt-1.5" />
                     <div>
                       <p className="text-xs font-semibold text-gray-800">{n.title}</p>
                       <p className="text-xs text-gray-500 line-clamp-2 leading-relaxed">{n.message}</p>

@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { User, Shield, FileText, Camera, Edit2, CheckCircle } from 'lucide-react'
-import { pwdUsers } from '../../data'
-import { Card, Button, Input, PasswordInput, Alert, statusBadge } from '../../components/ui'
+import { User, Shield, FileText, Camera, Edit2, CheckCircle, Upload } from 'lucide-react'
+import { Card, Button, Input, PasswordInput, Alert, statusBadge, Modal, FileUpload } from '../../components/ui'
 import { usePWDSession } from '../../context'
+import { useStore } from '../../store'
 
 export default function Profile() {
   const session = usePWDSession()
+  const { pwdUsers, updateProfile, changePassword } = useStore()
   const user = session ? pwdUsers.find((u) => u.id === session.userId) : pwdUsers[0]
   const currentUser = user ?? pwdUsers[0]
 
@@ -19,10 +20,39 @@ export default function Profile() {
   })
   const [saved, setSaved] = useState(false)
 
+  // password
+  const [currentPw, setCurrentPw] = useState('')
+  const [newPw, setNewPw] = useState('')
+  const [confirmPw, setConfirmPw] = useState('')
+  const [pwError, setPwError] = useState('')
+  const [pwSaved, setPwSaved] = useState(false)
+
+  // document upload
+  const [docModal, setDocModal] = useState(false)
+  const [docSent, setDocSent] = useState(false)
+
   const handleSave = () => {
-    setSaved(true)
+    updateProfile(currentUser.id, {
+      name: form.fullName,
+      address: form.address,
+      barangay: form.barangay,
+      contact: form.contact,
+      email: form.email,
+    })
     setEditing(false)
+    setSaved(true)
     setTimeout(() => setSaved(false), 3000)
+  }
+
+  const handlePassword = () => {
+    if (!currentPw || !newPw) { setPwError('Please fill in all password fields.'); return }
+    if (newPw !== confirmPw) { setPwError('New passwords do not match.'); return }
+    const err = changePassword(currentUser.id, currentPw, newPw)
+    if (err) { setPwError(err); return }
+    setPwError('')
+    setCurrentPw(''); setNewPw(''); setConfirmPw('')
+    setPwSaved(true)
+    setTimeout(() => setPwSaved(false), 3000)
   }
 
   return (
@@ -130,11 +160,11 @@ export default function Profile() {
             <p className="text-xs font-medium text-gray-500 mb-0.5">Verification Status</p>
             <div className="mt-0.5">{statusBadge(currentUser.verificationStatus)}</div>
           </div>
-          {(currentUser as any).skills && (currentUser as any).skills.length > 0 && (
+          {currentUser.skills && currentUser.skills.length > 0 && (
             <div className="sm:col-span-2">
               <p className="text-xs font-medium text-gray-500 mb-1.5">Registered Skills</p>
               <div className="flex flex-wrap gap-1.5">
-                {(currentUser as any).skills.map((s: string) => (
+                {currentUser.skills.map((s: string) => (
                   <span key={s} className="text-xs bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-full">{s}</span>
                 ))}
               </div>
@@ -142,7 +172,7 @@ export default function Profile() {
           )}
         </div>
         <div className="px-5 pb-5">
-          <Button variant="outline" size="sm">Update PWD ID Documents</Button>
+          <Button variant="outline" size="sm" icon={<Upload size={14} />} onClick={() => setDocModal(true)}>Update PWD ID Documents</Button>
         </div>
       </Card>
 
@@ -153,15 +183,34 @@ export default function Profile() {
           <h3 className="font-semibold text-gray-900">Account Security</h3>
         </div>
         <div className="p-5 space-y-4">
+          {pwError && <Alert type="error" message={pwError} />}
+          {pwSaved && <Alert type="success" title="Password Changed" message="Your password has been updated successfully." />}
           <div className="grid sm:grid-cols-2 gap-4">
-            <PasswordInput label="Current Password" placeholder="Enter current password" value="" onChange={() => {}} />
+            <PasswordInput label="Current Password" placeholder="Enter current password" value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} />
             <div />
-            <PasswordInput label="New Password" placeholder="Enter new password" value="" onChange={() => {}} />
-            <PasswordInput label="Confirm New Password" placeholder="Re-enter new password" value="" onChange={() => {}} />
+            <PasswordInput label="New Password" placeholder="Enter new password" value={newPw} onChange={(e) => setNewPw(e.target.value)} />
+            <PasswordInput label="Confirm New Password" placeholder="Re-enter new password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} />
           </div>
-          <Button variant="outline" icon={<Shield size={15} />}>Change Password</Button>
+          <Button variant="outline" icon={<Shield size={15} />} onClick={handlePassword}>Change Password</Button>
         </div>
       </Card>
+
+      <Modal open={docModal} onClose={() => setDocModal(false)} title="Update PWD ID Documents" size="md">
+        <div className="space-y-4">
+          <p className="text-sm text-gray-600 leading-relaxed">
+            Upload a clear photo or scan of your PWD ID. The PDAO will review and update your verification status.
+          </p>
+          <FileUpload label="PWD ID — Front Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" />
+          <FileUpload label="PWD ID — Back Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" />
+          {docSent && <Alert type="success" title="Documents Submitted" message="Your documents have been submitted for PDAO review." />}
+          <div className="flex gap-3">
+            <Button fullWidth onClick={() => { setDocSent(true); setTimeout(() => { setDocModal(false); setDocSent(false) }, 1500) }}>
+              Submit for Review
+            </Button>
+            <Button variant="outline" fullWidth onClick={() => setDocModal(false)}>Cancel</Button>
+          </div>
+        </div>
+      </Modal>
     </div>
   )
 }

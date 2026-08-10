@@ -1,7 +1,7 @@
 import { Download, FileText, Table2 } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
-  PieChart, Pie, Cell, LineChart, Line, Legend,
+  PieChart, Pie, Cell, LineChart, Line,
 } from 'recharts'
 import { chartData } from '../../data'
 import { Card, Button, Select } from '../../components/ui'

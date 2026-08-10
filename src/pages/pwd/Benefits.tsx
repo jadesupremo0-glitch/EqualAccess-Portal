@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Filter, Calendar, MapPin, Clock, Users, CheckCircle } from 'lucide-react'
-import { benefits, type Benefit, type BenefitCategory } from '../../data'
-import { Card, Button, SearchBar, Badge, statusBadge, Modal, Select } from '../../components/ui'
+import { type Benefit, type BenefitCategory } from '../../data'
+import { Card, Button, SearchBar, statusBadge, Modal, Select } from '../../components/ui'
+import { useStore } from '../../store'
 
 const categories: BenefitCategory[] = [
   'Financial Assistance', 'Medical Assistance', 'Assistive Devices',
@@ -125,19 +126,24 @@ function BenefitDetail({ benefit, onClose, onApply }: { benefit: Benefit; onClos
 }
 
 export default function Benefits({ onNavigate }: { onNavigate: (p: string) => void }) {
-  const [search, setSearch] = useState('')
+  const { benefits, globalSearch, setGlobalSearch, setRequestDraft } = useStore()
   const [category, setCategory] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
   const [selected, setSelected] = useState<Benefit | null>(null)
   const [showFilters, setShowFilters] = useState(false)
 
   const filtered = benefits.filter((b) => {
-    const q = search.toLowerCase()
-    const matchSearch = !search || b.name.toLowerCase().includes(q) || b.description.toLowerCase().includes(q) || b.category.toLowerCase().includes(q)
+    const q = globalSearch.toLowerCase()
+    const matchSearch = !globalSearch || b.name.toLowerCase().includes(q) || b.description.toLowerCase().includes(q) || b.category.toLowerCase().includes(q)
     const matchCat = !category || b.category === category
     const matchStatus = !statusFilter || b.status === statusFilter
     return matchSearch && matchCat && matchStatus
   })
+
+  const handleApply = (benefit: Benefit) => {
+    setRequestDraft({ type: benefit.category, title: benefit.name })
+    onNavigate('pwd-requests')
+  }
 
   return (
     <div className="space-y-5">
@@ -149,7 +155,7 @@ export default function Benefits({ onNavigate }: { onNavigate: (p: string) => vo
       {/* Search + Filter */}
       <div className="flex gap-3 flex-wrap">
         <div className="flex-1 min-w-60">
-          <SearchBar value={search} onChange={setSearch} placeholder="Search programs..." />
+          <SearchBar value={globalSearch} onChange={setGlobalSearch} placeholder="Search programs..." />
         </div>
         <Button variant="outline" icon={<Filter size={15} />} onClick={() => setShowFilters(!showFilters)}>
           Filters {showFilters ? '▲' : '▼'}
@@ -177,7 +183,7 @@ export default function Benefits({ onNavigate }: { onNavigate: (p: string) => vo
             />
           </div>
           <div className="flex items-end">
-            <Button variant="ghost" size="sm" onClick={() => { setCategory(''); setStatusFilter(''); setSearch('') }}>Clear Filters</Button>
+            <Button variant="ghost" size="sm" onClick={() => { setCategory(''); setStatusFilter(''); setGlobalSearch('') }}>Clear Filters</Button>
           </div>
         </div>
       )}
@@ -201,7 +207,7 @@ export default function Benefits({ onNavigate }: { onNavigate: (p: string) => vo
         <BenefitDetail
           benefit={selected}
           onClose={() => setSelected(null)}
-          onApply={() => { setSelected(null); onNavigate('pwd-requests') }}
+          onApply={() => { setSelected(null); handleApply(selected) }}
         />
       )}
     </div>

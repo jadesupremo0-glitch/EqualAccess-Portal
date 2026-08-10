@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { PWDLayout, AdminLayout } from './components/Layout'
 import { SessionContext, type AppSession } from './context'
-import { pwdUsers, adminUsers } from './data'
+import { StoreProvider, useStore } from './store'
 
 // Public
 import Landing from './pages/Landing'
@@ -17,6 +17,7 @@ import RequestTracking from './pages/pwd/RequestTracking'
 import FeedbackPage from './pages/pwd/Feedback'
 import Notifications from './pages/pwd/Notifications'
 import Jobs from './pages/pwd/Jobs'
+import PWDSettings from './pages/pwd/Settings'
 
 // Admin portal
 import AdminDashboard from './pages/admin/Dashboard'
@@ -26,6 +27,7 @@ import RequestManagement from './pages/admin/RequestManagement'
 import Reports from './pages/admin/Reports'
 import UserManagement from './pages/admin/UserManagement'
 import FeedbackAdmin from './pages/admin/FeedbackAdmin'
+import AdminSettings from './pages/admin/Settings'
 
 type Page =
   | 'landing' | 'login' | 'register'
@@ -44,26 +46,27 @@ const ADMIN_PAGES: Page[] = [
   'admin-reports', 'admin-users', 'admin-feedback', 'admin-settings',
 ]
 
-function validateCredentials(tab: 'user' | 'admin', username: string, password: string): AppSession {
-  if (tab === 'user') {
-    const user = pwdUsers.find(
-      (u) => (u.username === username || u.id === username) && u.password === password
-    )
-    if (user) return { type: 'pwd', userId: user.id }
-  } else {
-    const admin = adminUsers.find(
-      (a) => a.username === username && a.password === password && a.status === 'Active'
-    )
-    if (admin) return { type: 'admin', adminId: admin.id, role: admin.role }
-  }
-  return null
-}
-
-export default function App() {
+function AppInner() {
   const [page, setPage] = useState<Page>('landing')
   const [session, setSession] = useState<AppSession>(null)
+  const { pwdUsers, adminUsers } = useStore()
 
   const navigate = (p: string) => setPage(p as Page)
+
+  const validateCredentials = (tab: 'user' | 'admin', username: string, password: string): AppSession => {
+    if (tab === 'user') {
+      const user = pwdUsers.find(
+        (u) => (u.username === username || u.id === username) && u.password === password && u.active !== false
+      )
+      if (user) return { type: 'pwd', userId: user.id }
+    } else {
+      const admin = adminUsers.find(
+        (a) => a.username === username && a.password === password && a.status === 'Active'
+      )
+      if (admin) return { type: 'admin', adminId: admin.id, role: admin.role }
+    }
+    return null
+  }
 
   const handleLogin = (tab: 'user' | 'admin', username: string, password: string): string | null => {
     const newSession = validateCredentials(tab, username, password)
@@ -106,12 +109,7 @@ export default function App() {
         case 'pwd-feedback': return <FeedbackPage />
         case 'pwd-notifications': return <Notifications />
         case 'pwd-jobs': return <Jobs />
-        default: return (
-          <div className="max-w-lg">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Settings</h1>
-            <p className="text-gray-500 text-sm">Account settings and preferences — coming soon.</p>
-          </div>
-        )
+        default: return <PWDSettings />
       }
     }
     return (
@@ -131,12 +129,7 @@ export default function App() {
         case 'admin-reports': return <Reports />
         case 'admin-users': return <UserManagement />
         case 'admin-feedback': return <FeedbackAdmin />
-        default: return (
-          <div className="max-w-lg">
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Admin Settings</h1>
-            <p className="text-gray-500 text-sm">System configuration — coming soon.</p>
-          </div>
-        )
+        default: return <AdminSettings />
       }
     }
     return (
@@ -150,5 +143,13 @@ export default function App() {
     <SessionContext.Provider value={session}>
       <Landing onNavigate={navigate} />
     </SessionContext.Provider>
+  )
+}
+
+export default function App() {
+  return (
+    <StoreProvider>
+      <AppInner />
+    </StoreProvider>
   )
 }

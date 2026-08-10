@@ -6,6 +6,7 @@ export type DisabilityType =
   | 'Chronic Illness'
   | 'Learning Disability'
   | 'Psychosocial Disability'
+  | 'Other'
 
 export type VerificationStatus = 'Verified' | 'Pending' | 'Rejected' | 'Unverified'
 export type RequestStatus = 'Pending' | 'Under Review' | 'Approved' | 'Rejected' | 'Completed' | 'Requirements Needed'
@@ -34,6 +35,7 @@ export interface PWDUser {
   pwdIdNumber: string
   avatar?: string
   skills?: string[]
+  active?: boolean
 }
 
 export interface Benefit {
@@ -75,6 +77,7 @@ export interface Notification {
   message: string
   date: string
   read: boolean
+  userId?: string
 }
 
 export interface Job {
@@ -114,6 +117,7 @@ export interface FeedbackTicket {
   status: 'Open' | 'In Progress' | 'Resolved' | 'Closed'
   assignedStaff: string
   responses: { author: string; date: string; message: string; isInternal?: boolean }[]
+  userId?: string
 }
 
 // ── SAMPLE DATA ──────────────────────────────────────────────────
