@@ -59,12 +59,6 @@ const steps = [
   { n: '04', title: 'Track in Real Time', desc: 'Monitor your application status with a live timeline from submission to completion.' },
 ]
 
-const previewJobs = [
-  { title: 'Customer Service Representative', company: 'UPLB Tech Transfer', location: 'Los Baños, Laguna', match: 94, type: 'Full-time' },
-  { title: 'Data Encoder', company: 'Municipality of Los Baños', location: 'Los Baños, Laguna', match: 87, type: 'Full-time' },
-  { title: 'Remote Content Writer', company: 'IRRI Communications', location: 'Remote', match: 78, type: 'Remote' },
-]
-
 function SectionTag({ children }: { children: string }) {
   return (
     <span className="inline-flex items-center gap-1.5 text-ea-teal-700 text-xs font-bold uppercase tracking-[0.18em] mb-3 bg-ea-teal-50/80 border border-ea-teal-100 px-3 py-1 rounded-full">
@@ -92,7 +86,7 @@ export default function Landing({ onNavigate }: { onNavigate: (p: string) => voi
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
           <EALogo />
           <nav className="hidden md:flex items-center gap-7" aria-label="Main navigation">
-            {['Home', 'Benefits', 'Job Opportunities', 'About', 'Contact'].map((item) => (
+            {['Home', 'Benefits', 'About', 'Contact'].map((item) => (
               <a key={item} href="#" className="text-sm text-slate-500 hover:text-ea-teal-700 font-medium transition-colors">
                 {item}
               </a>
@@ -274,51 +268,6 @@ export default function Landing({ onNavigate }: { onNavigate: (p: string) => voi
             </div>
             <div className="text-center mt-10">
               <Button variant="outline" size="lg" onClick={() => onNavigate('login')}>View All Programs <ArrowRight size={16} /></Button>
-            </div>
-          </div>
-        </section>
-
-        {/* Job Opportunities Preview */}
-        <section className="py-20 px-4 bg-gradient-to-br from-ea-teal-50/60 to-ea-blue-50/60" aria-labelledby="jobs-heading">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex items-end justify-between mb-10 flex-wrap gap-4 animate-fade-up">
-              <div>
-                <SectionTag>Employment</SectionTag>
-                <h2 id="jobs-heading" className="font-display text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight">Job Opportunities for PWDs</h2>
-                <p className="text-slate-500 mt-2 max-w-xl">Curated PWD-friendly job listings matched to your skills and qualifications. Jobs are ranked by compatibility percentage.</p>
-              </div>
-              <Button variant="outline" onClick={() => onNavigate('login')} className="shrink-0">Browse All Jobs</Button>
-            </div>
-            <div className="grid md:grid-cols-3 gap-4">
-              {previewJobs.map((j, i) => (
-                <div key={j.title} className="card-glass rounded-2xl p-5 hover:-translate-y-1 hover:shadow-lift transition-all duration-300 animate-fade-up" style={{ animationDelay: `${i * 90}ms` }}>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className={`text-xs font-semibold px-2.5 py-1 rounded-full ring-1 ring-inset ${j.type === 'Remote' ? 'bg-emerald-50 text-emerald-700 ring-emerald-200' : 'bg-ea-blue-50 text-ea-blue-700 ring-ea-blue-100'}`}>
-                      {j.type}
-                    </span>
-                    <div className="flex items-center gap-1.5">
-                      <div className="relative w-8 h-8">
-                        <svg viewBox="0 0 36 36" className="w-8 h-8 -rotate-90">
-                          <circle cx="18" cy="18" r="15" fill="none" stroke="#e2e8f0" strokeWidth="3" />
-                          <circle cx="18" cy="18" r="15" fill="none" stroke="#0d9488" strokeWidth="3"
-                            strokeDasharray={`${(j.match / 100) * 94} 94`} strokeLinecap="round" />
-                        </svg>
-                        <span className="absolute inset-0 flex items-center justify-center text-[8px] font-bold text-ea-teal-700">{j.match}%</span>
-                      </div>
-                      <span className="text-xs text-slate-400">match</span>
-                    </div>
-                  </div>
-                  <h3 className="font-display font-bold text-slate-900 mb-0.5">{j.title}</h3>
-                  <p className="text-sm text-ea-teal-700 font-semibold mb-3">{j.company}</p>
-                  <p className="text-xs text-slate-400 flex items-center gap-1"><MapPin size={11} />{j.location}</p>
-                  <button
-                    onClick={() => onNavigate('login')}
-                    className="w-full mt-4 py-2.5 text-sm font-semibold bg-gradient-to-r from-ea-teal-600 to-ea-blue-600 text-white rounded-xl hover:from-ea-teal-500 hover:to-ea-blue-500 active:scale-[0.98] transition-all shadow-lg shadow-ea-teal-600/20"
-                  >
-                    Apply Now
-                  </button>
-                </div>
-              ))}
             </div>
           </div>
         </section>
