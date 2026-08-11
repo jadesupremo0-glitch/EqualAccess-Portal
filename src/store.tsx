@@ -22,7 +22,9 @@ import {
 } from './data'
 
 // ── Persistence ────────────────────────────────────────────────────
-const STORAGE_KEY = 'equalaccess-portal:v1'
+// v2: adds structured job postings and PWD employment-profile fields for
+// the TF-IDF / cosine-similarity job recommendation engine.
+const STORAGE_KEY = 'equalaccess-portal:v2'
 
 export interface ActivityEntry {
   user: string
