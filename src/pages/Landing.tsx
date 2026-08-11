@@ -2,7 +2,7 @@ import { useState } from 'react'
 import {
   ArrowRight, ChevronDown, Phone, Mail, MapPin,
   Shield, Clock, Globe, Award, CheckCircle,
-  Accessibility, BookOpen, Briefcase, HeartHandshake, Sparkles,
+  Accessibility, BookOpen, HeartHandshake, Sparkles,
 } from 'lucide-react'
 import { Button } from '../components/ui'
 
@@ -49,7 +49,6 @@ const benefitCategories = [
   { icon: <Accessibility size={22} className="text-ea-teal-600" />, title: 'Assistive Devices', desc: 'Wheelchairs, hearing aids, crutches, and mobility equipment', tint: 'from-ea-teal-50 to-emerald-50 border-ea-teal-100' },
   { icon: <BookOpen size={22} className="text-ea-blue-600" />, title: 'Educational Assistance', desc: 'PDAO scholarship grants and monthly stipends for PWD students', tint: 'from-ea-blue-50 to-sky-50 border-ea-blue-100' },
   { icon: <Award size={22} className="text-ea-teal-600" />, title: 'Livelihood Programs', desc: 'Skills training in agri-entrepreneurship, crafts, and technology', tint: 'from-ea-teal-50 to-emerald-50 border-ea-teal-100' },
-  { icon: <Briefcase size={22} className="text-ea-blue-600" />, title: 'Job Matching', desc: 'Curated PWD-friendly job listings matched to your skills and profile', tint: 'from-ea-blue-50 to-sky-50 border-ea-blue-100' },
 ]
 
 const steps = [
@@ -385,7 +384,7 @@ export default function Landing({ onNavigate }: { onNavigate: (p: string) => voi
             <div>
               <p className="text-white font-semibold text-sm mb-3">Quick Links</p>
               <ul className="space-y-2 text-xs">
-                {['Benefits & Programs', 'Assistance Request', 'Job Matching', 'About the Portal'].map((l) => (
+                {['Benefits & Programs', 'Assistance Request', 'About the Portal'].map((l) => (
                   <li key={l}><a href="#" className="hover:text-white transition-colors">{l}</a></li>
                 ))}
               </ul>
