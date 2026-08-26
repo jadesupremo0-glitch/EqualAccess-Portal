@@ -1,27 +1,37 @@
 import { useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react'
 import { Button, Input, PasswordInput, Select, FileUpload, Alert } from '../components/ui'
+import { useStore } from '../store'
 
 const disabilityTypes = [
-  { value: 'visual', label: 'Visual Impairment' },
-  { value: 'hearing', label: 'Hearing Impairment' },
-  { value: 'physical', label: 'Physical Disability' },
-  { value: 'mental', label: 'Mental Disability' },
-  { value: 'chronic', label: 'Chronic Illness' },
+  { value: 'cancer', label: 'Cancer (RA 11215)' },
+  { value: 'deaf', label: 'Deaf or Hard of Hearing' },
+  { value: 'intellectual', label: 'Intellectual Disability' },
   { value: 'learning', label: 'Learning Disability' },
+  { value: 'mental', label: 'Mental Disability' },
+  { value: 'physical', label: 'Physical Disability' },
   { value: 'psychosocial', label: 'Psychosocial Disability' },
+  { value: 'rare', label: 'Rare Disease (RA 10747)' },
+  { value: 'speech', label: 'Speech and Language Impairment' },
+  { value: 'visual', label: 'Visual Disability' },
   { value: 'other', label: 'Other' },
 ]
 
 const barangays = [
-  { value: 'malinta', label: 'Brgy. Malinta' },
-  { value: 'batong-malake', label: 'Brgy. Batong Malake' },
-  { value: 'bayog', label: 'Brgy. Bayog' },
-  { value: 'anos', label: 'Brgy. Anos' },
-  { value: 'maahas', label: 'Brgy. Maahas' },
-  { value: 'putho-tuntungin', label: 'Brgy. Putho-Tuntungin' },
-  { value: 'bagong-kalsada', label: 'Brgy. Bagong Kalsada' },
-  { value: 'san-antonio', label: 'Brgy. San Antonio' },
+  { value: 'anos', label: 'Anos' },
+  { value: 'bagong-silang', label: 'Bagong Silang' },
+  { value: 'bambang', label: 'Bambang' },
+  { value: 'batong-malake', label: 'Batong Malake' },
+  { value: 'baybayin', label: 'Baybayin' },
+  { value: 'bayog', label: 'Bayog' },
+  { value: 'lalakay', label: 'Lalakay' },
+  { value: 'maahas', label: 'Maahas' },
+  { value: 'malinta', label: 'Malinta' },
+  { value: 'mayondon', label: 'Mayondon' },
+  { value: 'putho-tuntungin', label: 'Putho-Tuntungin' },
+  { value: 'san-antonio', label: 'San Antonio' },
+  { value: 'tadlac', label: 'Tadlac' },
+  { value: 'timugan', label: 'Timugan' },
 ]
 
 const steps = [
@@ -32,15 +42,26 @@ const steps = [
 ]
 
 export default function Register({ onNavigate }: { onNavigate: (p: string) => void }) {
+  const { registerPWD } = useStore()
   const [step, setStep] = useState(1)
   const [done, setDone] = useState(false)
+  const [submitError, setSubmitError] = useState('')
   const [form, setForm] = useState({
-    fullName: '', address: '', barangay: '', contact: '', email: '',
+    fullName: '', age: '', address: '', barangay: '', contact: '', email: '',
     disabilityType: '', otherDisability: '',
-    username: '', password: '', confirmPassword: '',
+    pwdIdNumber: '', password: '', confirmPassword: '',
     agreeTerms: false,
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Map barangay slug value → display label
+  const barangayLabelMap: Record<string, string> = {
+    anos: 'Brgy. Anos', 'bagong-silang': 'Brgy. Bagong Silang', bambang: 'Brgy. Bambang',
+    'batong-malake': 'Brgy. Batong Malake', baybayin: 'Brgy. Baybayin', bayog: 'Brgy. Bayog',
+    lalakay: 'Brgy. Lalakay', maahas: 'Brgy. Maahas', malinta: 'Brgy. Malinta',
+    mayondon: 'Brgy. Mayondon', 'putho-tuntungin': 'Brgy. Putho-Tuntungin',
+    'san-antonio': 'Brgy. San Antonio', tadlac: 'Brgy. Tadlac', timugan: 'Brgy. Timugan',
+  }
 
   const set = (k: string, v: string | boolean) => setForm((f) => ({ ...f, [k]: v }))
 
@@ -48,6 +69,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
     const e: Record<string, string> = {}
     if (step === 1) {
       if (!form.fullName) e.fullName = 'Full name is required'
+      if (!form.age || Number(form.age) < 1) e.age = 'Age is required'
       if (!form.address) e.address = 'Address is required'
       if (!form.barangay) e.barangay = 'Please select your barangay'
       if (!form.contact) e.contact = 'Contact number is required'
@@ -56,7 +78,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
       if (!form.disabilityType) e.disabilityType = 'Please select a disability type'
     }
     if (step === 4) {
-      if (!form.username) e.username = 'Username is required'
+      if (!form.pwdIdNumber) e.pwdIdNumber = 'PWD ID No. is required'
       if (form.password.length < 8) e.password = 'Password must be at least 8 characters'
       if (form.password !== form.confirmPassword) e.confirmPassword = 'Passwords do not match'
       if (!form.agreeTerms) e.agreeTerms = 'You must agree to continue'
@@ -65,7 +87,32 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
     return Object.keys(e).length === 0
   }
 
-  const next = () => { if (validateStep()) { if (step === 4) setDone(true); else setStep(step + 1) } }
+  const next = () => {
+    if (validateStep()) {
+      if (step === 4) {
+        // Persist user to store
+        const result = registerPWD({
+          fullName: form.fullName.trim(),
+          age: Number(form.age),
+          address: form.address.trim(),
+          barangay: barangayLabelMap[form.barangay] ?? form.barangay,
+          contact: form.contact.trim(),
+          email: form.email.trim(),
+          disabilityType: form.disabilityType,
+          otherDisability: form.otherDisability?.trim() || undefined,
+          pwdIdNumber: form.pwdIdNumber.trim(),
+          password: form.password,
+        })
+        if (result.error) {
+          setSubmitError(result.error)
+          return
+        }
+        setDone(true)
+      } else {
+        setStep(step + 1)
+      }
+    }
+  }
   const back = () => { if (step > 1) setStep(step - 1) }
 
   if (done) {
@@ -165,6 +212,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
               {step === 1 && (
                 <>
                   <Input label="Full Name" placeholder="e.g., Maria Santos Reyes" value={form.fullName} onChange={(e) => set('fullName', e.target.value)} error={errors.fullName} required />
+                  <Input label="Age" type="number" placeholder="e.g., 25" value={form.age} onChange={(e) => set('age', e.target.value)} error={errors.age} required />
                   <Input label="Home Address" placeholder="House No., Street Name" value={form.address} onChange={(e) => set('address', e.target.value)} error={errors.address} required />
                   <Select label="Barangay (Los Baños)" options={barangays} value={form.barangay} onChange={(v) => set('barangay', v)} placeholder="Select your barangay" error={errors.barangay} required />
                   <Input label="Contact Number" type="tel" placeholder="+63 9XX XXX XXXX" value={form.contact} onChange={(e) => set('contact', e.target.value)} error={errors.contact} required />
@@ -190,7 +238,8 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
               )}
               {step === 4 && (
                 <>
-                  <Input label="Username" placeholder="Choose a unique username" value={form.username} onChange={(e) => set('username', e.target.value)} error={errors.username} helperText="5–20 characters. Letters, numbers, underscores only." required />
+                  {submitError && <Alert type="error" message={submitError} />}
+                  <Input label="PWD ID No." placeholder="e.g., LB-PHY-2024-00123" value={form.pwdIdNumber} onChange={(e) => set('pwdIdNumber', e.target.value)} error={errors.pwdIdNumber} helperText="Enter the PWD ID number from your PWD ID card." required />
                   <PasswordInput label="Password" placeholder="Create a strong password (min. 8 characters)" value={form.password} onChange={(e) => set('password', e.target.value)} error={errors.password} required />
                   <PasswordInput label="Confirm Password" placeholder="Re-enter your password" value={form.confirmPassword} onChange={(e) => set('confirmPassword', e.target.value)} error={errors.confirmPassword} required />
                   <div>

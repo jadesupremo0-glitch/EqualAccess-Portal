@@ -19,6 +19,7 @@ import {
   type VerificationStatus,
   type DisabilityType,
   type BenefitCategory,
+  type BenefitStatus,
 } from './data'
 
 // ── Persistence ────────────────────────────────────────────────────
@@ -96,13 +97,16 @@ function nextPWDId(): string {
 function nextPWDIdNumber(disability: DisabilityType): string {
   const year = new Date().getFullYear()
   const code: Partial<Record<DisabilityType, string>> = {
-    'Visual Impairment': 'VIS',
-    'Hearing Impairment': 'HEA',
+    'Visual Disability': 'VIS',
+    'Deaf or Hard of Hearing': 'HEA',
     'Physical Disability': 'PHY',
     'Mental Disability': 'MEN',
-    'Chronic Illness': 'CHR',
+    'Cancer (RA 11215)': 'CAN',
     'Learning Disability': 'LEA',
     'Psychosocial Disability': 'PSY',
+    'Intellectual Disability': 'INT',
+    'Rare Disease (RA 10747)': 'RAR',
+    'Speech and Language Impairment': 'SPC',
     Other: 'OTH',
   }
   const n = Math.floor(100 + Math.random() * 900)
@@ -110,13 +114,16 @@ function nextPWDIdNumber(disability: DisabilityType): string {
 }
 
 const DISABILITY_LABELS: Record<string, DisabilityType> = {
-  visual: 'Visual Impairment',
-  hearing: 'Hearing Impairment',
-  physical: 'Physical Disability',
-  mental: 'Mental Disability',
-  chronic: 'Chronic Illness',
+  cancer: 'Cancer (RA 11215)',
+  deaf: 'Deaf or Hard of Hearing',
+  intellectual: 'Intellectual Disability',
   learning: 'Learning Disability',
+  mental: 'Mental Disability',
+  physical: 'Physical Disability',
   psychosocial: 'Psychosocial Disability',
+  rare: 'Rare Disease (RA 10747)',
+  speech: 'Speech and Language Impairment',
+  visual: 'Visual Disability',
   other: 'Other',
 }
 
@@ -201,13 +208,14 @@ function loadState(): AppState {
 // ── Inputs ─────────────────────────────────────────────────────────
 export interface RegisterInput {
   fullName: string
+  age: number
   address: string
   barangay: string
   contact: string
   email: string
   disabilityType: string
   otherDisability?: string
-  username: string
+  pwdIdNumber: string
   password: string
 }
 
@@ -220,7 +228,7 @@ export interface BenefitInput {
   date: string
   time: string
   deadline: string
-  status: 'Active' | 'Inactive' | 'Upcoming'
+  status: BenefitStatus
   requirements: string[]
   benefits: string[]
   contactPerson: string
@@ -232,6 +240,8 @@ export interface AdminUserInput {
   position: string
   username: string
   password: string
+  contact?: string
+  email?: string
   role: AdminUser['role']
 }
 
@@ -252,7 +262,7 @@ interface StoreContextValue extends AppState {
   addFeedbackReply: (ticketId: string, author: string, message: string) => void
   markNotificationRead: (id: string) => void
   markAllNotificationsRead: () => void
-  applyToJob: (userId: string, job: Job) => void
+  applyToJob: (userId: string, job: Job) => void // kept for compat
 
   // Admin — PWD
   verifyPWD: (userId: string, status: 'Verified' | 'Rejected') => void
@@ -332,16 +342,17 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     registerPWD(input) {
       let error = ''
       setState((s) => {
-        if (s.pwdUsers.some((u) => u.username === input.username.trim())) {
-          error = 'That username is already taken. Please choose another.'
+        if (s.pwdUsers.some((u) => u.pwdIdNumber === input.pwdIdNumber.trim())) {
+          error = 'That PWD ID No. is already registered. Please check your ID number.'
           return s
         }
         const disability = DISABILITY_LABELS[input.disabilityType] ?? (input.otherDisability?.trim() ? 'Other' as DisabilityType : 'Other')
         const user: PWDUser = {
           id: nextPWDId(),
-          username: input.username.trim(),
+          username: input.pwdIdNumber.trim(),
           password: input.password,
           name: input.fullName.trim(),
+          age: input.age,
           address: input.address.trim(),
           barangay: input.barangay.trim(),
           contact: input.contact.trim(),
@@ -349,7 +360,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           disabilityType: disability,
           verificationStatus: 'Pending',
           dateRegistered: today(),
-          pwdIdNumber: nextPWDIdNumber(disability),
+          pwdIdNumber: input.pwdIdNumber.trim(),
           skills: [],
         }
         let next: AppState = { ...s, pwdUsers: [...s.pwdUsers, user] }
@@ -582,7 +593,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     toggleBenefitStatus(id) {
       setState((s) => ({
         ...s,
-        benefits: s.benefits.map((b) => (b.id === id ? { ...b, status: b.status === 'Active' ? 'Inactive' : 'Active' } : b)),
+        benefits: s.benefits.map((b) => (b.id === id ? { ...b, status: b.status === 'Active' ? 'Closed' as BenefitStatus : 'Active' as BenefitStatus } : b)),
       }))
     },
 
@@ -668,6 +679,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           position: input.position || input.role,
           username: input.username.trim(),
           password: input.password || 'admin123',
+          contact: input.contact,
+          email: input.email,
           role: input.role,
           status: 'Active',
           lastLogin: 'Never',

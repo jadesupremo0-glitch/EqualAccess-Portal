@@ -56,7 +56,7 @@ function AppInner() {
   const validateCredentials = (tab: 'user' | 'admin', username: string, password: string): AppSession => {
     if (tab === 'user') {
       const user = pwdUsers.find(
-        (u) => (u.username === username || u.id === username) && u.password === password && u.active !== false
+        (u) => (u.pwdIdNumber === username || u.username === username || u.id === username) && u.password === password && u.active !== false
       )
       if (user) return { type: 'pwd', userId: user.id }
     } else {
@@ -70,7 +70,7 @@ function AppInner() {
 
   const handleLogin = (tab: 'user' | 'admin', username: string, password: string): string | null => {
     const newSession = validateCredentials(tab, username, password)
-    if (!newSession) return 'Invalid username or password. Please check your credentials.'
+    if (!newSession) return tab === 'user' ? 'Invalid PWD ID No. or password. Please check your credentials.' : 'Invalid username or password. Please check your credentials.'
     setSession(newSession)
     if (newSession.type === 'pwd') setPage('pwd-dashboard')
     else setPage('admin-dashboard')

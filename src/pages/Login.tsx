@@ -3,13 +3,13 @@ import { ArrowLeft, AlertCircle, Accessibility, ChevronDown, ChevronUp } from 'l
 import { Input, PasswordInput, Alert, Button } from '../components/ui'
 
 const PWD_DEMO_ACCOUNTS = [
-  { username: 'maria.reyes', password: 'pwd123', name: 'Maria Santos Reyes', id: 'PWD-LB-2024-0042', type: 'Visual Disability', status: 'Verified' },
-  { username: 'juan.delacruz', password: 'pwd123', name: 'Juan dela Cruz', id: 'PWD-LB-2024-0043', type: 'Physical Disability', status: 'Verified' },
-  { username: 'ana.macaraeg', password: 'pwd123', name: 'Ana Macaraeg', id: 'PWD-LB-2024-0044', type: 'Hearing Disability', status: 'Pending' },
-  { username: 'roberto.v', password: 'pwd123', name: 'Roberto Villanueva', id: 'PWD-LB-2024-0045', type: 'Mental Disability', status: 'Verified' },
-  { username: 'liza.corpuz', password: 'pwd123', name: 'Liza Corpuz', id: 'PWD-LB-2024-0046', type: 'Chronic Illness', status: 'Rejected' },
-  { username: 'felix.abad', password: 'pwd123', name: 'Felix Abad', id: 'PWD-LB-2024-0047', type: 'Learning Disability', status: 'Pending' },
-  { username: 'carmelita.flores', password: 'pwd123', name: 'Carmelita Flores', id: 'PWD-LB-2024-0048', type: 'Psychosocial Disability', status: 'Verified' },
+  { pwdId: 'LB-VIS-2023-00421', password: 'pwd123', name: 'Maria Santos Reyes', id: 'PWD-LB-2024-0042', type: 'Visual Disability', status: 'Verified' },
+  { pwdId: 'LB-PHY-2023-00312', password: 'pwd123', name: 'Juan dela Cruz', id: 'PWD-LB-2024-0043', type: 'Physical Disability', status: 'Verified' },
+  { pwdId: 'LB-HEA-2024-00018', password: 'pwd123', name: 'Ana Macaraeg', id: 'PWD-LB-2024-0044', type: 'Deaf or Hard of Hearing', status: 'Pending' },
+  { pwdId: 'LB-MEN-2023-00156', password: 'pwd123', name: 'Roberto Villanueva', id: 'PWD-LB-2024-0045', type: 'Mental Disability', status: 'Verified' },
+  { pwdId: 'LB-CAN-2024-00007', password: 'pwd123', name: 'Liza Corpuz', id: 'PWD-LB-2024-0046', type: 'Cancer (RA 11215)', status: 'Rejected' },
+  { pwdId: 'LB-LEA-2024-00043', password: 'pwd123', name: 'Felix Abad', id: 'PWD-LB-2024-0047', type: 'Learning Disability', status: 'Pending' },
+  { pwdId: 'LB-PSY-2024-00029', password: 'pwd123', name: 'Carmelita Flores', id: 'PWD-LB-2024-0048', type: 'Psychosocial Disability', status: 'Verified' },
 ]
 
 const ADMIN_DEMO_ACCOUNTS = [
@@ -27,7 +27,7 @@ export default function Login({
   onLogin: (tab: 'user' | 'admin', username: string, password: string) => string | null
 }) {
   const [tab, setTab] = useState<'user' | 'admin'>('user')
-  const [username, setUsername] = useState('')
+  const [username, setUsername] = useState('')  // stores PWD ID No. or admin username
   const [password, setPassword] = useState('')
   const [remember, setRemember] = useState(false)
   const [error, setError] = useState('')
@@ -35,7 +35,7 @@ export default function Login({
   const [showDemo, setShowDemo] = useState(false)
 
   const handleLogin = () => {
-    if (!username || !password) { setError('Please enter your username and password.'); return }
+    if (!username || !password) { setError(tab === 'user' ? 'Please enter your PWD ID No. and password.' : 'Please enter your username and password.'); return }
     setError('')
     setLoading(true)
     setTimeout(() => {
@@ -55,6 +55,18 @@ export default function Login({
     Verified: 'bg-emerald-100 text-emerald-700',
     Pending: 'bg-amber-100 text-amber-700',
     Rejected: 'bg-rose-100 text-rose-700',
+  }
+
+  // For PWD login, use pwdIdNumber; for admin, use username
+  const handleLoginWithTab = () => {
+    if (!username || !password) { setError(tab === 'user' ? 'Please enter your PWD ID No. and password.' : 'Please enter your username and password.'); return }
+    setError('')
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+      const err = onLogin(tab, username, password)
+      if (err) setError(err)
+    }, 600)
   }
 
   return (
@@ -163,14 +175,14 @@ export default function Login({
           <div className="card-glass rounded-2xl p-7 space-y-5">
             {error && <Alert type="error" message={error} />}
 
-            <form onSubmit={(e) => { e.preventDefault(); handleLogin() }} className="space-y-4">
+            <form onSubmit={(e) => { e.preventDefault(); handleLoginWithTab() }} className="space-y-4">
               <Input
-                label="Username or PWD ID"
+                label={tab === 'user' ? 'PWD ID No.' : 'Username'}
                 type="text"
-                placeholder={tab === 'user' ? 'Enter username or PWD ID number' : 'Enter your PDAO staff username'}
+                placeholder={tab === 'user' ? 'Enter your PWD ID number' : 'Enter your PDAO staff username'}
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                autoComplete="username"
+                autoComplete={tab === 'user' ? 'off' : 'username'}
                 required
               />
               <PasswordInput
@@ -208,11 +220,11 @@ export default function Login({
             <div className="pt-3 border-t border-white/60">
               <p className="text-xs font-semibold text-slate-500 mb-2.5">Quick demo sign-in</p>
               <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => tab === 'user' ? fillDemo('maria.reyes', 'pwd123') : fillDemo('pdao.admin', 'admin123')}
+                <button onClick={() => tab === 'user' ? fillDemo('LB-VIS-2023-00421', 'pwd123') : fillDemo('pdao.admin', 'admin123')}
                   className="text-xs text-slate-600 bg-white/70 border border-white/70 rounded-xl px-3 py-2 hover:border-ea-teal-300 hover:text-ea-teal-700 transition-all text-left font-medium">
                   {tab === 'user' ? '👤 Maria Reyes (PWD)' : '🛡️ PDAO Admin'}
                 </button>
-                <button onClick={() => tab === 'user' ? fillDemo('juan.delacruz', 'pwd123') : fillDemo('pdao.benefits', 'admin123')}
+                <button onClick={() => tab === 'user' ? fillDemo('LB-PHY-2023-00312', 'pwd123') : fillDemo('pdao.benefits', 'admin123')}
                   className="text-xs text-slate-600 bg-white/70 border border-white/70 rounded-xl px-3 py-2 hover:border-ea-teal-300 hover:text-ea-teal-700 transition-all text-left font-medium">
                   {tab === 'user' ? '👤 Juan dela Cruz' : '🛡️ Benefits Officer'}
                 </button>
@@ -235,8 +247,8 @@ export default function Login({
                 {tab === 'user'
                   ? PWD_DEMO_ACCOUNTS.map((a) => (
                     <button
-                      key={a.username}
-                      onClick={() => fillDemo(a.username, a.password)}
+                      key={a.pwdId}
+                      onClick={() => fillDemo(a.pwdId, a.password)}
                       className="w-full text-left px-4 py-3 hover:bg-ea-teal-50 transition-colors group"
                     >
                       <div className="flex items-center justify-between gap-2">
@@ -249,7 +261,7 @@ export default function Login({
                         </div>
                       </div>
                       <div className="flex gap-3 mt-1.5">
-                        <span className="text-[11px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{a.username}</span>
+                        <span className="text-[11px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{a.pwdId}</span>
                         <span className="text-[11px] font-mono bg-slate-100 text-slate-600 px-1.5 py-0.5 rounded">{a.password}</span>
                         <span className="text-[11px] text-ea-teal-600 font-medium group-hover:underline ml-auto">Use →</span>
                       </div>

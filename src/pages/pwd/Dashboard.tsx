@@ -26,7 +26,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
             <div className="flex flex-wrap items-center gap-2 mt-2">
               {currentUser.verificationStatus === 'Verified' ? (
                 <span className="inline-flex items-center gap-1.5 glass-dark text-green-200 text-xs font-semibold px-2.5 py-1 rounded-full">
-                  <CheckCircle size={11} />Account Verified
+                  <CheckCircle size={11} />Verified · {currentUser.pwdIdNumber}
                 </span>
               ) : (
                 <span className="inline-flex items-center gap-1.5 bg-amber-500/20 border border-amber-400/30 text-amber-200 text-xs font-semibold px-2.5 py-1 rounded-full">
@@ -71,7 +71,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard label="Available Programs" value={benefits.filter((b) => b.status === 'Active').length} icon={<Gift size={20} className="text-teal-600" />} color="bg-teal-50" />
+        <StatsCard label="Available Programs" value={benefits.filter((b) => b.status === 'Active' || b.status === 'Approved').length} icon={<Gift size={20} className="text-teal-600" />} color="bg-teal-50" />
         <StatsCard label="Pending Requests" value={userRequests.filter((r) => r.status === 'Pending' || r.status === 'Under Review').length} icon={<Clock size={20} className="text-amber-600" />} color="bg-amber-50" />
         <StatsCard label="Approved Requests" value={userRequests.filter((r) => r.status === 'Approved' || r.status === 'Completed').length} icon={<CheckCircle size={20} className="text-green-600" />} color="bg-green-50" />
         <StatsCard label="Job Matches" value={jobs.filter((j) => (j.matchPercent ?? 0) >= 75).length} icon={<Briefcase size={20} className="text-blue-600" />} color="bg-blue-50" />
@@ -86,7 +86,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
             </button>
           </div>
           <div className="space-y-3">
-            {benefits.filter((b) => b.status === 'Active').slice(0, 3).map((b) => (
+            {benefits.filter((b) => b.status === 'Active' || b.status === 'Approved').slice(0, 3).map((b) => (
               <Card key={b.id} className="p-4">
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex-1 min-w-0">
@@ -129,7 +129,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
                   <p className="text-xs text-teal-700 font-medium">{topJob.company}</p>
                   <p className="text-xs text-gray-400 mt-0.5">📍 {topJob.location} · {topJob.type}</p>
                 </div>
-                <Button size="sm" variant="outline" onClick={() => onNavigate('pwd-jobs')}>Apply</Button>
+                <Button size="sm" variant="outline" onClick={() => onNavigate('pwd-jobs')}>View</Button>
               </div>
             </Card>
           )}

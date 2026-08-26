@@ -1,16 +1,57 @@
 import { useState } from 'react'
 import { Plus, Edit2, UserX, Trash2, Key } from 'lucide-react'
 import { adminUsers, activityLog } from '../../data'
-import { Card, Button, Tabs, statusBadge, Modal, Input, Select } from '../../components/ui'
+import { Card, Button, Tabs, statusBadge, Modal, Input, Select, PasswordInput } from '../../components/ui'
+import { useStore } from '../../store'
 
 function AddUserModal({ onClose }: { onClose: () => void }) {
+  const { addAdminUser } = useStore()
+  const [form, setForm] = useState({
+    fullName: '',
+    username: '',
+    contact: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    role: '',
+  })
+  const [error, setError] = useState('')
+
+  const set = (k: string) => (v: string) => setForm((f) => ({ ...f, [k]: v }))
+
+  const handleSubmit = () => {
+    if (!form.fullName || !form.username || !form.contact || !form.password || !form.role) {
+      setError('Please fill in all required fields.')
+      return
+    }
+    if (form.password !== form.confirmPassword) {
+      setError('Passwords do not match.')
+      return
+    }
+    const result = addAdminUser({
+      name: form.fullName,
+      position: form.role,
+      username: form.username,
+      password: form.password,
+      contact: form.contact,
+      email: form.email || undefined,
+      role: form.role as 'Administrator' | 'Benefits Officer' | 'Social Worker' | 'Records Officer',
+    })
+    if (result) {
+      setError(result)
+      return
+    }
+    onClose()
+  }
+
   return (
     <Modal open title="Add New Admin User" onClose={onClose} size="md">
       <div className="space-y-4">
-        <Input label="Full Name" placeholder="e.g., Juan dela Cruz" value="" onChange={() => {}} required />
-        <Input label="Position" placeholder="e.g., Benefits Officer" value="" onChange={() => {}} required />
-        <Input label="Username" placeholder="e.g., benefits.juan" value="" onChange={() => {}} required />
-        <Input label="Email Address" type="email" placeholder="juan@quezoncity.gov.ph" value="" onChange={() => {}} required />
+        {error && <p className="text-sm text-red-600 bg-red-50 rounded-xl p-3">{error}</p>}
+        <Input label="Full Name" placeholder="e.g., Juan dela Cruz" value={form.fullName} onChange={(e) => set('fullName')(e.target.value)} required />
+        <Input label="Username" placeholder="e.g., admin.juan" value={form.username} onChange={(e) => set('username')(e.target.value)} required />
+        <Input label="Contact Number" placeholder="e.g., +63 917 123 4567" value={form.contact} onChange={(e) => set('contact')(e.target.value)} required />
+        <Input label="Email Address" type="email" placeholder="juan@equalaccess.gov.ph (optional)" value={form.email} onChange={(e) => set('email')(e.target.value)} />
         <Select
           label="Role"
           options={[
@@ -19,13 +60,15 @@ function AddUserModal({ onClose }: { onClose: () => void }) {
             { value: 'Social Worker', label: 'Social Worker' },
             { value: 'Records Officer', label: 'Records Officer' },
           ]}
-          value=""
-          onChange={() => {}}
+          value={form.role}
+          onChange={set('role')}
           placeholder="Select role"
           required
         />
+        <PasswordInput label="Password" placeholder="Min. 8 characters" value={form.password} onChange={(e) => set('password')(e.target.value)} required />
+        <PasswordInput label="Confirm Password" placeholder="Re-enter password" value={form.confirmPassword} onChange={(e) => set('confirmPassword')(e.target.value)} required />
         <div className="flex gap-3 pt-2">
-          <Button fullWidth onClick={onClose}>Create User</Button>
+          <Button fullWidth onClick={handleSubmit}>Create User</Button>
           <Button variant="outline" fullWidth onClick={onClose}>Cancel</Button>
         </div>
       </div>
@@ -62,7 +105,7 @@ export default function UserManagement() {
             <table className="w-full text-sm" aria-label="Admin users table">
               <thead>
                 <tr className="bg-gray-50 border-b border-gray-200 text-left">
-                  {['Name', 'Role', 'Username', 'Status', 'Last Login', 'Date Created', 'Actions'].map((h) => (
+                  {['Name', 'Role', 'Username', 'Contact', 'Status', 'Last Login', 'Date Created', 'Actions'].map((h) => (
                     <th key={h} className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
@@ -87,6 +130,7 @@ export default function UserManagement() {
                       </span>
                     </td>
                     <td className="px-4 py-3 font-mono text-xs text-gray-600">{u.username}</td>
+                    <td className="px-4 py-3 text-xs text-gray-500">{u.contact || '—'}</td>
                     <td className="px-4 py-3">{statusBadge(u.status)}</td>
                     <td className="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{u.lastLogin}</td>
                     <td className="px-4 py-3 text-xs text-gray-500">{u.dateCreated}</td>

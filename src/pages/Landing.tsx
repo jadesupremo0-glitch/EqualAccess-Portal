@@ -54,7 +54,7 @@ const benefitCategories = [
 const steps = [
   { n: '01', title: 'Create Your Account', desc: 'Register with your personal and disability information on the EqualAccess Portal.' },
   { n: '02', title: 'PDAO Verification', desc: 'Submit your PWD ID for review. PDAO staff will verify your account within 3–5 business days.' },
-  { n: '03', title: 'Explore & Apply', desc: 'Browse benefits programs, apply for assistance, and find matching job opportunities.' },
+  { n: '03', title: 'Explore & Apply', desc: 'Browse benefits programs, apply for assistance, and view job recommendations matched to your profile.' },
   { n: '04', title: 'Track in Real Time', desc: 'Monitor your application status with a live timeline from submission to completion.' },
 ]
 

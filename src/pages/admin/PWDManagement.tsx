@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { UserCheck, Eye, Edit2, UserX } from 'lucide-react'
-import { pwdUsers, type PWDUser } from '../../data'
+import { type PWDUser } from '../../data'
 import { Card, Button, SearchBar, Select, statusBadge, Modal } from '../../components/ui'
+import { useStore } from '../../store'
 
 function PWDDetailModal({ user, onClose }: { user: PWDUser; onClose: () => void }) {
+  const { verifyPWD, deactivatePWD } = useStore()
   return (
     <Modal open title={`PWD Profile — ${user.id}`} onClose={onClose} size="lg">
       <div className="space-y-5">
@@ -27,6 +29,7 @@ function PWDDetailModal({ user, onClose }: { user: PWDUser; onClose: () => void 
             { label: 'Disability Type', value: user.disabilityType },
             { label: 'PWD ID Number', value: user.pwdIdNumber },
             { label: 'Date Registered', value: user.dateRegistered },
+            ...(user.age ? [{ label: 'Age', value: String(user.age) }] : []),
           ].map((f) => (
             <div key={f.label}>
               <p className="text-xs font-medium text-gray-500 mb-0.5">{f.label}</p>
@@ -37,14 +40,14 @@ function PWDDetailModal({ user, onClose }: { user: PWDUser; onClose: () => void 
 
         {user.verificationStatus === 'Pending' && (
           <div className="flex gap-3">
-            <Button icon={<UserCheck size={15} />} className="flex-1">Verify Account</Button>
-            <Button variant="danger" className="flex-1">Reject Verification</Button>
+            <Button icon={<UserCheck size={15} />} className="flex-1" onClick={() => { verifyPWD(user.id, 'Verified'); onClose() }}>Verify Account</Button>
+            <Button variant="danger" className="flex-1" onClick={() => { verifyPWD(user.id, 'Rejected'); onClose() }}>Reject Verification</Button>
           </div>
         )}
 
         <div className="flex gap-2">
           <Button variant="outline" icon={<Edit2 size={14} />} size="sm">Edit Profile</Button>
-          <Button variant="outline" icon={<UserX size={14} />} size="sm">Deactivate</Button>
+          <Button variant="outline" icon={<UserX size={14} />} size="sm" onClick={() => { deactivatePWD(user.id); onClose() }}>Deactivate</Button>
           <Button variant="outline" onClick={onClose} size="sm" className="ml-auto">Close</Button>
         </div>
       </div>
@@ -53,6 +56,7 @@ function PWDDetailModal({ user, onClose }: { user: PWDUser; onClose: () => void 
 }
 
 export default function PWDManagement() {
+  const { pwdUsers, verifyPWD, deactivatePWD } = useStore()
   const [search, setSearch] = useState('')
   const [barangayFilter, setBarangayFilter] = useState('')
   const [disabilityFilter, setDisabilityFilter] = useState('')
@@ -137,14 +141,14 @@ export default function PWDManagement() {
                         <Eye size={15} />
                       </button>
                       {u.verificationStatus === 'Pending' && (
-                        <button className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-colors" aria-label={`Verify ${u.name}`}>
+                        <button className="p-1.5 text-green-600 hover:bg-green-50 rounded-lg transition-colors" aria-label={`Verify ${u.name}`} onClick={() => verifyPWD(u.id, 'Verified')}>
                           <UserCheck size={15} />
                         </button>
                       )}
                       <button className="p-1.5 text-gray-400 hover:bg-gray-100 rounded-lg transition-colors" aria-label={`Edit ${u.name}`}>
                         <Edit2 size={15} />
                       </button>
-                      <button className="p-1.5 text-red-400 hover:bg-red-50 rounded-lg transition-colors" aria-label={`Deactivate ${u.name}`}>
+                      <button className="p-1.5 text-red-400 hover:bg-red-50 rounded-lg transition-colors" aria-label={`Deactivate ${u.name}`} onClick={() => deactivatePWD(u.id)}>
                         <UserX size={15} />
                       </button>
                     </div>

@@ -1,13 +1,29 @@
 import { useState } from 'react'
 import { Eye, CheckCircle, XCircle, MessageSquare, FileText } from 'lucide-react'
-import { assistanceRequests, type AssistanceRequest } from '../../data'
+import { type AssistanceRequest, type RequestStatus } from '../../data'
 import { Card, Button, Tabs, SearchBar, statusBadge, Modal, Timeline, Textarea, Alert } from '../../components/ui'
+import { useStore } from '../../store'
 
-const ALL_TABS = ['All', 'Pending', 'Under Review', 'Approved', 'Rejected', 'Completed']
+const ALL_TABS = ['All', 'Pending', 'Under Review', 'Requirements Needed', 'Approved', 'Available', 'Claimed', 'Rejected', 'Completed']
 
 function RequestDetailModal({ req, onClose }: { req: AssistanceRequest; onClose: () => void }) {
+  const { updateRequestStatus, addRequestComment } = useStore()
   const [comment, setComment] = useState('')
   const [updated, setUpdated] = useState(false)
+
+  const handleAction = (status: RequestStatus) => {
+    updateRequestStatus(req.id, status)
+    setUpdated(true)
+    setTimeout(() => setUpdated(false), 3000)
+  }
+
+  const handleComment = () => {
+    if (!comment.trim()) return
+    addRequestComment(req.id, 'Admin', comment.trim())
+    setComment('')
+    setUpdated(true)
+    setTimeout(() => setUpdated(false), 3000)
+  }
 
   return (
     <Modal open title={`Request — ${req.id}`} onClose={onClose} size="xl">
@@ -56,12 +72,13 @@ function RequestDetailModal({ req, onClose }: { req: AssistanceRequest; onClose:
             <p className="text-xs uppercase tracking-wide font-semibold text-gray-500">Admin Actions</p>
             {updated && <Alert type="success" message="Action performed successfully." />}
             <div className="flex flex-wrap gap-2">
-              <Button size="sm" icon={<CheckCircle size={14} />} onClick={() => setUpdated(true)}>Approve</Button>
-              <Button size="sm" variant="danger" icon={<XCircle size={14} />} onClick={() => setUpdated(true)}>Reject</Button>
-              <Button size="sm" variant="outline" icon={<FileText size={14} />} onClick={() => setUpdated(true)}>Request Documents</Button>
+              <Button size="sm" icon={<CheckCircle size={14} />} onClick={() => handleAction('Approved')}>Approve</Button>
+              <Button size="sm" variant="danger" icon={<XCircle size={14} />} onClick={() => handleAction('Rejected')}>Reject</Button>
+              <Button size="sm" variant="outline" icon={<FileText size={14} />} onClick={() => handleAction('Requirements Needed')}>Request Documents</Button>
+              <Button size="sm" variant="secondary" onClick={() => handleAction('Available')}>Mark Available</Button>
             </div>
             <Textarea label="Add Comment" value={comment} onChange={setComment} placeholder="Write a comment for the PWD user..." rows={3} />
-            <Button size="sm" variant="secondary" icon={<MessageSquare size={14} />} disabled={!comment.trim()} onClick={() => { setUpdated(true); setComment('') }}>
+            <Button size="sm" variant="secondary" icon={<MessageSquare size={14} />} disabled={!comment.trim()} onClick={handleComment}>
               Send Comment
             </Button>
           </div>
@@ -76,6 +93,7 @@ function RequestDetailModal({ req, onClose }: { req: AssistanceRequest; onClose:
 }
 
 export default function RequestManagement() {
+  const { assistanceRequests } = useStore()
   const [tab, setTab] = useState('All')
   const [search, setSearch] = useState('')
   const [selected, setSelected] = useState<AssistanceRequest | null>(null)

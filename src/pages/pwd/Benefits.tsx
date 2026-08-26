@@ -133,6 +133,8 @@ export default function Benefits({ onNavigate }: { onNavigate: (p: string) => vo
   const [showFilters, setShowFilters] = useState(false)
 
   const filtered = benefits.filter((b) => {
+    // PWDs only see Approved and Active programs
+    if (b.status !== 'Approved' && b.status !== 'Active') return false
     const q = globalSearch.toLowerCase()
     const matchSearch = !globalSearch || b.name.toLowerCase().includes(q) || b.description.toLowerCase().includes(q) || b.category.toLowerCase().includes(q)
     const matchCat = !category || b.category === category
@@ -176,7 +178,7 @@ export default function Benefits({ onNavigate }: { onNavigate: (p: string) => vo
           <div className="min-w-36">
             <Select
               label="Status"
-              options={[{ value: 'Active', label: 'Active' }, { value: 'Upcoming', label: 'Upcoming' }, { value: 'Inactive', label: 'Inactive' }]}
+              options={[{ value: 'Active', label: 'Active' }, { value: 'Approved', label: 'Approved' }]}
               value={statusFilter}
               onChange={setStatusFilter}
               placeholder="All Statuses"

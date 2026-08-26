@@ -8,10 +8,16 @@ import { useStore } from '../../store'
 const assistanceTypes = [
   { value: 'Financial Assistance', label: 'Financial Assistance' },
   { value: 'Medical Assistance', label: 'Medical Assistance' },
-  { value: 'Wheelchair / Assistive Device', label: 'Wheelchair / Assistive Device' },
+  { value: 'Assistive Devices', label: 'Assistive Devices' },
   { value: 'Educational Assistance', label: 'Educational Assistance' },
   { value: 'Livelihood Training', label: 'Livelihood Training' },
   { value: 'Other Service Assistance', label: 'Other Service Assistance' },
+]
+
+const assistiveDeviceOptions = [
+  { value: 'Wheelchair', label: 'Wheelchair' },
+  { value: 'Hearing Aid', label: 'Hearing Aid' },
+  { value: 'Prosthetic Limb', label: 'Prosthetic Limb' },
 ]
 
 function RequestRow({ req, onView }: { req: AssistanceRequest; onView: () => void }) {
@@ -102,6 +108,9 @@ function NewRequestForm({ onClose, onSubmit, initialType, initialTitle }: {
       <div className="space-y-4">
         {error && <Alert type="error" message={error} />}
         <Select label="Assistance Type" options={assistanceTypes} value={type} onChange={setType} placeholder="Select type of assistance" required />
+        {type === 'Assistive Devices' && (
+          <Select label="Type of Assistive Devices" options={assistiveDeviceOptions} value={''} onChange={() => {}} placeholder="Select assistive device" />
+        )}
         <Input label="Request Title" placeholder="Brief title for your request" value={title} onChange={(e) => setTitle(e.target.value)} required />
         <Textarea label="Description of Request" placeholder="Describe what you need assistance with..." value={description} onChange={setDescription} rows={4} required />
         <Textarea label="Reason for Request" placeholder="Explain why you need this assistance..." value={reason} onChange={setReason} rows={3} />

@@ -1,15 +1,18 @@
 export type DisabilityType =
-  | 'Visual Impairment'
-  | 'Hearing Impairment'
-  | 'Physical Disability'
-  | 'Mental Disability'
-  | 'Chronic Illness'
+  | 'Cancer (RA 11215)'
+  | 'Deaf or Hard of Hearing'
+  | 'Intellectual Disability'
   | 'Learning Disability'
+  | 'Mental Disability'
+  | 'Physical Disability'
   | 'Psychosocial Disability'
+  | 'Rare Disease (RA 10747)'
+  | 'Speech and Language Impairment'
+  | 'Visual Disability'
   | 'Other'
 
 export type VerificationStatus = 'Verified' | 'Pending' | 'Rejected' | 'Unverified'
-export type RequestStatus = 'Pending' | 'Under Review' | 'Approved' | 'Rejected' | 'Completed' | 'Requirements Needed'
+export type RequestStatus = 'Pending' | 'Under Review' | 'Requirements Needed' | 'Approved' | 'Rejected' | 'Available' | 'Claimed' | 'Completed'
 export type BenefitCategory =
   | 'Financial Assistance'
   | 'Medical Assistance'
@@ -19,6 +22,8 @@ export type BenefitCategory =
   | 'Social Services'
   | 'Employment'
   | 'Other Support Services'
+
+export type BenefitStatus = 'Draft' | 'Pending Approval' | 'Approved' | 'Active' | 'Closed'
 
 export type JobEmploymentType = 'Full-time' | 'Part-time' | 'Contract'
 export type WorkSetup = 'Office' | 'Remote' | 'Hybrid'
@@ -31,6 +36,7 @@ export interface PWDUser {
   name: string
   address: string
   barangay: string
+  age?: number
   contact: string
   email: string
   disabilityType: DisabilityType
@@ -64,7 +70,7 @@ export interface Benefit {
   applicationDeadline: string
   date: string
   time: string
-  status: 'Active' | 'Inactive' | 'Upcoming'
+  status: BenefitStatus
   requirements: string[]
   benefits: string[]
   contactPerson: string
@@ -130,6 +136,8 @@ export interface AdminUser {
   position: string
   username: string
   password: string
+  contact?: string
+  email?: string
   role: 'Administrator' | 'Benefits Officer' | 'Social Worker' | 'Records Officer'
   status: 'Active' | 'Inactive'
   lastLogin: string
@@ -161,10 +169,11 @@ export const currentUser: PWDUser = {
   barangay: 'Brgy. Malinta',
   contact: '+63 912 345 6789',
   email: 'maria.reyes@email.com',
-  disabilityType: 'Visual Impairment',
+  disabilityType: 'Visual Disability',
   verificationStatus: 'Verified',
   dateRegistered: '2024-01-15',
   pwdIdNumber: 'LB-VIS-2023-00421',
+  age: 28,
   avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=80&h=80&fit=crop&auto=format',
   skills: ['Data Entry', 'Microsoft Office', 'Computer Literacy', 'Communication', 'Customer Service'],
   education: 'Bachelor of Science in Information Technology',
@@ -194,6 +203,7 @@ export const pwdUsers: PWDUser[] = [
     verificationStatus: 'Verified',
     dateRegistered: '2024-01-22',
     pwdIdNumber: 'LB-PHY-2023-00312',
+    age: 34,
     skills: ['Administration', 'Typing', 'MS Office', 'Data Entry', 'Computer Literacy'],
     education: 'Bachelor of Science in Public Administration',
     workExperience: 'Barangay secretary assistant (records and encoding)',
@@ -215,10 +225,11 @@ export const pwdUsers: PWDUser[] = [
     barangay: 'Brgy. Putho-Tuntungin',
     contact: '+63 920 345 6789',
     email: 'ana.macaraeg@email.com',
-    disabilityType: 'Hearing Impairment',
+    disabilityType: 'Deaf or Hard of Hearing',
     verificationStatus: 'Pending',
     dateRegistered: '2024-02-05',
     pwdIdNumber: 'LB-HEA-2024-00018',
+    age: 25,
     skills: ['Writing', 'Design', 'Social Media', 'Photography'],
     education: 'Bachelor of Fine Arts',
     workExperience: 'Freelance graphic designer for student organizations',
@@ -244,6 +255,7 @@ export const pwdUsers: PWDUser[] = [
     verificationStatus: 'Verified',
     dateRegistered: '2024-02-14',
     pwdIdNumber: 'LB-MEN-2023-00156',
+    age: 31,
     skills: ['Horticulture', 'Manual Labor', 'Carpentry', 'Plant Care'],
     education: 'High School Graduate',
     workExperience: 'Farm helper and landscape maintenance worker',
@@ -265,10 +277,11 @@ export const pwdUsers: PWDUser[] = [
     barangay: 'Brgy. Anos',
     contact: '+63 919 567 8901',
     email: 'liza.corpuz@email.com',
-    disabilityType: 'Chronic Illness',
+    disabilityType: 'Cancer (RA 11215)',
     verificationStatus: 'Rejected',
     dateRegistered: '2024-02-28',
-    pwdIdNumber: 'LB-CHR-2024-00007',
+    pwdIdNumber: 'LB-CAN-2024-00007',
+    age: 45,
     skills: ['Cooking', 'Baking', 'Food Processing', 'Food Safety'],
     education: 'Vocational — Hotel and Restaurant Services',
     workExperience: 'Kitchen helper and food stall operator',
@@ -294,6 +307,7 @@ export const pwdUsers: PWDUser[] = [
     verificationStatus: 'Pending',
     dateRegistered: '2024-03-10',
     pwdIdNumber: 'LB-LEA-2024-00043',
+    age: 22,
     skills: ['Photography', 'Videography', 'Social Media', 'Video Editing'],
     education: 'Senior High School Graduate',
     workExperience: 'Event photo and video coverage assistant',
@@ -319,6 +333,7 @@ export const pwdUsers: PWDUser[] = [
     verificationStatus: 'Verified',
     dateRegistered: '2024-03-15',
     pwdIdNumber: 'LB-PSY-2024-00029',
+    age: 29,
     skills: ['Customer Service', 'English Proficiency', 'Communication', 'Typing'],
     education: 'Bachelor of Arts in Communication',
     workExperience: 'Call center customer support trainee',
@@ -360,7 +375,7 @@ export const benefits: Benefit[] = [
     applicationDeadline: '2024-03-31',
     date: '2024-03-20',
     time: '9:00 AM – 3:00 PM',
-    status: 'Upcoming',
+    status: 'Pending Approval',
     requirements: ['PWD ID', 'Medical Certificate', 'Referral Letter from Social Worker'],
     benefits: ['Free wheelchair or assistive device', 'Free fitting and orientation'],
     contactPerson: 'Ronaldo Agustin',
@@ -408,7 +423,7 @@ export const benefits: Benefit[] = [
     applicationDeadline: '2024-04-10',
     date: '2024-04-15',
     time: '8:00 AM – 4:00 PM',
-    status: 'Upcoming',
+    status: 'Approved',
     requirements: ['PWD ID', 'Barangay Certificate', '2x2 Photo'],
     benefits: ['Free training', 'Certificate of completion', 'Starter kit worth ₱3,000'],
     contactPerson: 'Ronaldo Agustin',
@@ -1056,21 +1071,32 @@ export const activityLog = [
 
 export const chartData = {
   byBarangay: [
-    { name: 'Brgy. Malinta', count: 38 },
-    { name: 'Brgy. Batong Malake', count: 45 },
-    { name: 'Brgy. Bayog', count: 29 },
-    { name: 'Brgy. Anos', count: 33 },
-    { name: 'Brgy. Maahas', count: 22 },
-    { name: 'Brgy. Putho-Tuntungin', count: 18 },
-    { name: 'Brgy. Bagong Kalsada', count: 27 },
+    { name: 'Anos', count: 33 },
+    { name: 'Bagong Silang', count: 15 },
+    { name: 'Bambang', count: 12 },
+    { name: 'Batong Malake', count: 45 },
+    { name: 'Baybayin', count: 8 },
+    { name: 'Bayog', count: 29 },
+    { name: 'Lalakay', count: 11 },
+    { name: 'Maahas', count: 22 },
+    { name: 'Malinta', count: 38 },
+    { name: 'Mayondon', count: 19 },
+    { name: 'Putho-Tuntungin', count: 18 },
+    { name: 'San Antonio', count: 14 },
+    { name: 'Tadlac', count: 10 },
+    { name: 'Timugan', count: 9 },
   ],
   byDisability: [
     { name: 'Physical', value: 76 },
     { name: 'Visual', value: 48 },
-    { name: 'Hearing', value: 39 },
+    { name: 'Deaf/HoH', value: 39 },
     { name: 'Mental', value: 28 },
-    { name: 'Chronic Illness', value: 24 },
+    { name: 'Psychosocial', value: 24 },
     { name: 'Learning', value: 17 },
+    { name: 'Intellectual', value: 12 },
+    { name: 'Cancer', value: 8 },
+    { name: 'Rare Disease', value: 5 },
+    { name: 'Speech/Lang', value: 6 },
   ],
   requestsTrend: [
     { month: 'Oct', requests: 24 },
