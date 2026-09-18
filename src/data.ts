@@ -168,7 +168,7 @@ export const currentUser: PWDUser = {
   address: '142 Pili Drive, Malinta',
   barangay: 'Brgy. Malinta',
   contact: '+63 912 345 6789',
-  email: 'maria.reyes@email.com',
+  email: 'jadesupremo0@gmail.com',
   disabilityType: 'Visual Disability',
   verificationStatus: 'Verified',
   dateRegistered: '2024-01-15',

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowLeft, AlertCircle, Accessibility, ChevronDown, ChevronUp } from 'lucide-react'
+import { ArrowLeft, AlertCircle, Accessibility, ChevronDown, ChevronUp, KeyRound } from 'lucide-react'
 import { Input, PasswordInput, Alert, Button } from '../components/ui'
 import { useStore } from '../store'
 import { requestResetCode, completePasswordReset } from '../lib/passwordReset'
@@ -273,7 +273,8 @@ export default function Login({
                         className="w-4 h-4 rounded border-gray-300 text-ea-teal-600 focus:ring-ea-teal-500" />
                       <span className="text-sm text-slate-600">Remember me</span>
                     </label>
-                    <button type="button" onClick={openReset} className="-mr-2 px-2 py-1 rounded-lg text-sm text-ea-teal-700 hover:text-ea-teal-800 hover:bg-ea-teal-50 font-medium transition-colors">
+                    <button type="button" onClick={openReset} className="inline-flex items-center gap-1.5 -mr-2 px-2.5 py-1.5 rounded-lg text-sm font-semibold text-ea-teal-700 hover:text-ea-teal-800 hover:bg-ea-teal-50 underline decoration-ea-teal-300 underline-offset-2 transition-colors">
+                      <KeyRound size={14} />
                       Forgot password?
                     </button>
                   </div>

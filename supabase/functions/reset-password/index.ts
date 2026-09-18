@@ -19,7 +19,7 @@ Deno.serve(async (req) => {
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Vary': 'Origin',
   }
-  if (req.method === 'OPTIONS') return new Response('ok', { status: 204, headers })
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers })
 
   try {
     const { kind, identifier, code, newPassword } = (await req.json()) as {
