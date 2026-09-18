@@ -26,7 +26,7 @@ import { loadStateFromSupabase, syncStateToSupabase, resetSupabaseData, type Loa
 
 // ── Persistence ────────────────────────────────────────────────────
 // v2: adds structured job postings and PWD employment-profile fields for
-// the TF-IDF / cosine-similarity job recommendation engine.
+// the hybrid weighted job recommendation engine (src/lib/recommend).
 const STORAGE_KEY = 'equalaccess-portal:v2'
 
 export interface ActivityEntry {

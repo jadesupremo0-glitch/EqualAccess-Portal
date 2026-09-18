@@ -28,6 +28,7 @@ Data is stored in Supabase and accessed through `@supabase/supabase-js` (no back
 - `src/lib/supabase.ts` — client (reads `VITE_SUPABASE_URL` / `VITE_SUPABASE_ANON_KEY`, works in Vite + Node)
 - `src/lib/db.ts` — snake_case ↔ camelCase mapping, load/sync helpers
 - `src/store.tsx` — loads all tables on startup and syncs every change back (falls back to localStorage if offline)
+- `src/lib/recommend/` — job recommendation engine (hybrid weighted scoring + accessibility fit). Config data lives in `src/lib/recommend/taxonomy.json` (synonyms, job families, education levels, stopwords, accessibility domains). Consumed by `src/pages/pwd/Jobs.tsx` and `src/pages/pwd/Dashboard.tsx`
 - `supabase/migrations/` — schema (push with `supabase db push`)
 - `supabase/functions/` — Edge Functions: `send-reset-code` (Gmail SMTP OTP) at `reset-password`
 - `scripts/seed.ts` — writes all demo data from `src/data.ts` into the database
@@ -35,6 +36,7 @@ Data is stored in Supabase and accessed through `@supabase/supabase-js` (no back
 Commands (requires `.env`, see `.env.example`):
 
 - `npm run seed` — wipe and re-seed all demo data
+- `npm run test` — run the vitest suite (recommendation engine accuracy, 19 cases)
 - `supabase db push` — apply migrations
 - `supabase functions deploy send-reset-code` / `supabase functions deploy reset-password`
 - `supabase secrets set SMTP_HOST=... SMTP_PORT=... SMTP_USER=... SMTP_PASS=...`

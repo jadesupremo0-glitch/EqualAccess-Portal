@@ -55,6 +55,7 @@ export interface PWDUser {
   jobInterests?: string[]
   preferredJobTypes?: JobEmploymentType[]
   preferredWorkSetup?: WorkSetup[]
+  preferredLocation?: string
   functionalCapabilities?: string[]
   accessibilityNeeds?: string[]
   accommodationRequirements?: string[]
@@ -117,6 +118,7 @@ export interface Job {
   experienceRequirement?: string
   workSetup?: WorkSetup
   workplaceConditions?: string[]
+  screenOrVisualDemands?: string[]
   accessibilityInfo: string
   accessibilityFeatures?: string[]
   physicalRequirements?: string[]
@@ -183,6 +185,7 @@ export const currentUser: PWDUser = {
   jobInterests: ['Data Entry', 'IT Support', 'Administrative Assistant'],
   preferredJobTypes: ['Full-time', 'Part-time'],
   preferredWorkSetup: ['Office', 'Remote'],
+  preferredLocation: 'Los Baños, Laguna',
   functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Verbal communication', 'Use standard computer applications', 'Read with assistive technology'],
   accessibilityNeeds: ['Accessible entrance', 'Screen reader compatible software'],
   accommodationRequirements: ['Screen reader software', 'High contrast display settings'],
@@ -209,10 +212,11 @@ export const pwdUsers: PWDUser[] = [
     workExperience: 'Barangay secretary assistant (records and encoding)',
     yearsOfExperience: 2,
     certifications: ['TESDA Computer Hardware Servicing NC II'],
-    jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
-    preferredJobTypes: ['Full-time'],
-    preferredWorkSetup: ['Office'],
-    functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Verbal communication', 'Use standard computer applications'],
+jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
+  preferredJobTypes: ['Full-time'],
+  preferredWorkSetup: ['Office'],
+  preferredLocation: 'Los Baños, Laguna',
+  functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Verbal communication', 'Use standard computer applications'],
     accessibilityNeeds: ['Wheelchair accessible entrance', 'Accessible restroom', 'Elevator access'],
     accommodationRequirements: ['Accessible workstation', 'Wheelchair accessible route'],
   },
@@ -770,6 +774,7 @@ export const jobs: Job[] = [
     experienceRequirement: '0–1 year',
     workSetup: 'Office',
     workplaceConditions: ['Climate-controlled office', 'Seated workstation', 'Low noise level'],
+    screenOrVisualDemands: ['Continuous screen and text-based data encoding'],
     accessibilityInfo: 'Municipal hall has a wheelchair ramp, elevators, and accessible restrooms. Priority placement for qualified PWD applicants under RA 7277.',
     accessibilityFeatures: ['Wheelchair accessible entrance', 'Accessible restroom', 'Elevator access'],
     physicalRequirements: ['Primarily seated work'],
@@ -870,6 +875,7 @@ export const jobs: Job[] = [
     experienceRequirement: '0–1 year',
     workSetup: 'Office',
     workplaceConditions: ['Office setting', 'Phone and computer based'],
+    screenOrVisualDemands: ['Continuous use of a computer screen and phone interface'],
     accessibilityInfo: 'Company office has ramp access, adjustable workstations, and dedicated HR support for PWD employees.',
     accessibilityFeatures: ['Wheelchair ramp access', 'Adjustable workstations', 'Dedicated HR support for PWD employees'],
     physicalRequirements: ['Primarily seated work'],

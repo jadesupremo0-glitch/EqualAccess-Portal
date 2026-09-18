@@ -2,6 +2,8 @@ import { Gift, FileText, ClipboardList, MessageSquare, CheckCircle, Clock, Brief
 import { Card, StatsCard, statusBadge, Button } from '../../components/ui'
 import { usePWDSession } from '../../context'
 import { useStore } from '../../store'
+import { useMemo } from 'react'
+import { getRecommendations } from '../../lib/recommend/score'
 
 export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) => void }) {
   const session = usePWDSession()
@@ -11,7 +13,8 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
 
   const userRequests = assistanceRequests.filter((r) => r.pwdId === currentUser.id)
   const unread = notifications.filter((n) => !n.read && (!n.userId || n.userId === currentUser.id))
-  const topJob = [...jobs].sort((a, b) => (b.matchPercent ?? 0) - (a.matchPercent ?? 0))[0]
+  const matchResult = useMemo(() => getRecommendations(currentUser, jobs), [currentUser, jobs])
+  const topJobRec = matchResult.recommendations[0]
 
   return (
     <div className="space-y-6">
@@ -74,7 +77,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
         <StatsCard label="Available Programs" value={benefits.filter((b) => b.status === 'Active' || b.status === 'Approved').length} icon={<Gift size={20} className="text-teal-600" />} color="bg-teal-50" />
         <StatsCard label="Pending Requests" value={userRequests.filter((r) => r.status === 'Pending' || r.status === 'Under Review').length} icon={<Clock size={20} className="text-amber-600" />} color="bg-amber-50" />
         <StatsCard label="Approved Requests" value={userRequests.filter((r) => r.status === 'Approved' || r.status === 'Completed').length} icon={<CheckCircle size={20} className="text-green-600" />} color="bg-green-50" />
-        <StatsCard label="Job Matches" value={jobs.filter((j) => (j.matchPercent ?? 0) >= 75).length} icon={<Briefcase size={20} className="text-blue-600" />} color="bg-blue-50" />
+        <StatsCard label="Job Matches" value={matchResult.recommendations.filter((r) => r.score >= 70).length} icon={<Briefcase size={20} className="text-blue-600" />} color="bg-blue-50" />
       </div>
 
       <div className="grid lg:grid-cols-5 gap-5">
@@ -107,7 +110,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
             ))}
           </div>
 
-          {topJob && (
+          {topJobRec && (
             <Card className="p-4 border-teal-100">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles size={14} className="text-teal-600" />
@@ -118,16 +121,16 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
                   <svg viewBox="0 0 50 50" className="w-12 h-12 -rotate-90">
                     <circle cx="25" cy="25" r="22" fill="none" stroke="#e2e8f0" strokeWidth="4" />
                     <circle cx="25" cy="25" r="22" fill="none" stroke="#0d9488" strokeWidth="4"
-                      strokeDasharray={`${((topJob.matchPercent ?? 0) / 100) * 138} 138`} strokeLinecap="round" />
+                      strokeDasharray={`${(topJobRec.score / 100) * 138} 138`} strokeLinecap="round" />
                   </svg>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-[10px] font-extrabold text-teal-700">{topJob.matchPercent}%</span>
+                    <span className="text-[10px] font-extrabold text-teal-700">{Math.round(topJobRec.score)}%</span>
                   </div>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="font-semibold text-gray-900 text-sm">{topJob.title}</p>
-                  <p className="text-xs text-teal-700 font-medium">{topJob.company}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">📍 {topJob.location} · {topJob.type}</p>
+                  <p className="font-semibold text-gray-900 text-sm">{topJobRec.job.title}</p>
+                  <p className="text-xs text-teal-700 font-medium">{topJobRec.job.company}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">📍 {topJobRec.job.location} · {topJobRec.job.type}</p>
                 </div>
                 <Button size="sm" variant="outline" onClick={() => onNavigate('pwd-jobs')}>View</Button>
               </div>

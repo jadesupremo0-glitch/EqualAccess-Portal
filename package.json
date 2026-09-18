@@ -8,7 +8,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "format": "oxfmt",
-    "seed": "tsx scripts/seed.ts"
+    "seed": "tsx scripts/seed.ts",
+    "test": "vitest run"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",
@@ -28,6 +29,7 @@
     "tailwindcss": "^4.0.0",
     "tsx": "^4.23.13",
     "typescript": "^5.7.0",
-    "vite": "^8.0.0"
+    "vite": "^8.0.0",
+    "vitest": "^5.0.1"
   }
 }

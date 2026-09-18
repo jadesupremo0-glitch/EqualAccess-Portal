@@ -1,0 +1,180 @@
+{
+  "synonyms": {
+    "microsoft office": [
+      "ms office",
+      "microsoft office",
+      "microsoft excel",
+      "ms excel",
+      "excel",
+      "advanced excel",
+      "microsoft word",
+      "word",
+      "powerpoint",
+      "ms word"
+    ],
+    "computer literacy": [
+      "computer skills",
+      "basic computer skills",
+      "computer literate",
+      "computer proficiency",
+      "it literacy",
+      "computer literacy"
+    ],
+    "customer service": [
+      "customer support",
+      "customer care",
+      "customer service"
+    ],
+    "communication": [
+      "verbal communication",
+      "written communication",
+      "communication skills",
+      "clear communication",
+      "interpersonal communication"
+    ],
+    "data entry": [
+      "data encoding",
+      "data encoder",
+      "encoding",
+      "data entry"
+    ],
+    "typing": [
+      "keyboarding",
+      "fast keyboarding",
+      "typing"
+    ],
+    "attention to detail": [
+      "attention to details",
+      "detail oriented",
+      "detail-oriented",
+      "meticulous"
+    ],
+    "organizing files": [
+      "filing",
+      "file organization",
+      "file management",
+      "records management"
+    ],
+    "social media": [
+      "social media management",
+      "social media content",
+      "social media"
+    ],
+    "design": [
+      "graphic design",
+      "visual design",
+      "creative design"
+    ],
+    "writing": [
+      "content writing",
+      "copywriting",
+      "article writing"
+    ],
+    "photography": [
+      "photo editing",
+      "photography skills"
+    ],
+    "video editing": [
+      "videography",
+      "video post-production",
+      "video editing"
+    ],
+    "english proficiency": [
+      "english",
+      "english language",
+      "english proficiency"
+    ],
+    "accounting": [
+      "bookkeeping",
+      "financial accounting"
+    ],
+    "research": [
+      "research skills",
+      "internet research"
+    ]
+  },
+  "families": [
+    {
+      "family": "Office/Admin",
+      "categories": ["Administrative"],
+      "keywords": ["data entry", "administrative assistant", "office clerk", "records clerk", "secretary", "encoder", "records section"]
+    },
+    {
+      "family": "Customer-facing",
+      "categories": ["Customer Service"],
+      "keywords": ["customer service", "call center", "receptionist", "support specialist", "sales", "front desk"]
+    },
+    {
+      "family": "Creative/Digital",
+      "categories": ["Media & Communications"],
+      "keywords": ["social media", "graphic designer", "photographer", "video editor", "content", "designer"]
+    },
+    {
+      "family": "Tech",
+      "categories": ["Technology"],
+      "keywords": ["it support", "software", "developer", "network", "web", "programmer", "systems", "data analyst"]
+    },
+    {
+      "family": "Finance",
+      "categories": ["Accounting & Finance"],
+      "keywords": ["accounting", "bookkeeping", "finance", "audit", "payroll"]
+    },
+    {
+      "family": "Inventory",
+      "categories": [],
+      "keywords": ["inventory", "warehouse", "stock clerk", "logistics", "store keeper"]
+    },
+    {
+      "family": "Writing/Education",
+      "categories": [],
+      "keywords": ["writer", "writing", "teacher", "tutor", "education", "instruction"]
+    },
+    {
+      "family": "Food",
+      "categories": [],
+      "keywords": ["food service", "kitchen", "bakeshop", "cook", "food processing", "restaurant", "food handler", "chef"]
+    }
+  ],
+  "educationLevels": [
+    { "level": "Post Graduate", "rank": 8, "keywords": ["master", "post graduate", "doctorate", "phd"] },
+    { "level": "College Graduate", "rank": 7, "keywords": ["bachelor", "college graduate", "college degree", "degree", "bs in", "ba in"] },
+    { "level": "College Level", "rank": 6, "keywords": ["college level", "some college", "undergraduate"] },
+    { "level": "Vocational", "rank": 5, "keywords": ["vocational", "technical", "tesda", "nc ii", "nc iii", "nc iv"] },
+    { "level": "Senior High School Graduate", "rank": 4, "keywords": ["senior high"] },
+    { "level": "High School Graduate", "rank": 3, "keywords": ["high school graduate", "hs graduate"] },
+    { "level": "High School Level", "rank": 2, "keywords": ["high school"] },
+    { "level": "Elementary", "rank": 1, "keywords": ["elementary"] }
+  ],
+  "stopwords": [
+    "the", "and", "for", "with", "from", "that", "this", "are", "was", "will", "can", "has", "have",
+    "into", "across", "their", "them", "your", "our", "its", "also", "such", "would", "should", "who",
+    "whom", "when", "where", "all", "any", "between", "both", "each", "few", "more", "most", "other",
+    "some", "which", "while", "via", "per", "or", "as", "at", "by", "in", "of", "on", "to",
+    "office", "staff", "team", "work", "works", "support", "provide", "provides", "assist", "assists",
+    "assisting", "ensure", "ensures", "maintain", "maintaining", "including", "required", "various",
+    "related", "local", "government", "municipal", "municipality", "company", "department", "across",
+    "within", "assistance", "help", "helps", "based", "use", "using", "may", "within", "role", "position"
+  ],
+  "accessibilityDomains": {
+    "visual": {
+      "need": ["screen reader", "braille", "visual", "vision", "magnification", "high contrast", "larger print"],
+      "demand": ["visual inspection", "driving", "color coding", "color vision", "sight", "visual acuity"],
+      "support": ["screen reader", "braille", "assistive technology", "magnifier", "high contrast", "text-to-speech"]
+    },
+    "hearing": {
+      "need": ["sign language", "hearing", "deaf", "hard of hearing", "sound alert", "visual alert", "captions", "spoken"],
+      "demand": ["phone calls", "phone call", "inbound calls", "answering calls", "call center", "voice calls", "verbal communication required"],
+      "support": ["sign language", "written communication", "visual notification", "visual alert", "captions", "chat support", "text-based"]
+    },
+    "mobility": {
+      "need": ["wheelchair", "mobility", "walking", "standing", "climbing", "ramp", "elevator", "accessible entrance", "accessible restroom"],
+      "demand": ["heavy lifting", "standing for long", "standing for extended", "climbing", "physical labor", "outdoor physical", "lifting heavy", "stair"],
+      "support": ["elevator", "ramp", "wheelchair", "accessible entrance", "accessible restroom", "accessible workstation", "seated", "ergonomic"]
+    },
+    "sensory": {
+      "need": ["quiet", "noise", "sensory", "bright light", "lighting", "rest breaks", "flexible schedule", "supportive supervision"],
+      "demand": ["noisy environment", "loud", "open office noise"],
+      "support": ["quiet workspace", "flexible schedule", "rest breaks", "private workspace"]
+    }
+  }
+}
