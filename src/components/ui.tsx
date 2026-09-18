@@ -1,6 +1,5 @@
-import { type ReactNode, type ButtonHTMLAttributes, type InputHTMLAttributes } from 'react'
+import { useState, useId, type ReactNode, type ButtonHTMLAttributes, type InputHTMLAttributes } from 'react'
 import { CheckCircle, Clock, XCircle, AlertCircle, Eye, EyeOff, X } from 'lucide-react'
-import { useState } from 'react'
 
 // --- Badge ---
 type BadgeVariant = 'success' | 'warning' | 'error' | 'info' | 'neutral' | 'blue'
@@ -417,6 +416,7 @@ export function FileUpload({ label, accept, helperText, onChange }: {
 }) {
   const [file, setFile] = useState<File | null>(null)
   const [drag, setDrag] = useState(false)
+  const inputId = useId()
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault()
@@ -433,10 +433,10 @@ export function FileUpload({ label, accept, helperText, onChange }: {
         onDragLeave={() => setDrag(false)}
         onDrop={handleDrop}
         className={`border-2 border-dashed rounded-2xl p-8 text-center transition-all cursor-pointer ${drag ? 'border-ea-teal-400 bg-ea-teal-50/60 scale-[1.01]' : 'border-ea-teal-200/80 hover:border-ea-teal-400 bg-white/50 hover:bg-white/80'}`}
-        onClick={() => document.getElementById('file-upload-input')?.click()}
+        onClick={() => document.getElementById(inputId)?.click()}
       >
         <input
-          id="file-upload-input"
+          id={inputId}
           type="file"
           accept={accept}
           className="hidden"
@@ -495,12 +495,14 @@ export function Pagination({ page, total, perPage, onChange }: {
 }) {
   const pages = Math.ceil(total / perPage)
   if (pages <= 1) return null
+  const start = Math.max(1, Math.min(page - 2, pages - 4))
+  const end = Math.min(pages, start + 4)
   return (
     <div className="flex items-center justify-between px-2 py-3">
       <p className="text-sm text-slate-500">Showing {(page - 1) * perPage + 1}–{Math.min(page * perPage, total)} of {total}</p>
       <div className="flex gap-1">
         <Button variant="outline" size="sm" disabled={page === 1} onClick={() => onChange(page - 1)}>Previous</Button>
-        {Array.from({ length: Math.min(pages, 5) }, (_, i) => i + 1).map((p) => (
+        {Array.from({ length: end - start + 1 }, (_, i) => start + i).map((p) => (
           <Button key={p} variant={p === page ? 'primary' : 'outline'} size="sm" onClick={() => onChange(p)}>{p}</Button>
         ))}
         <Button variant="outline" size="sm" disabled={page === pages} onClick={() => onChange(page + 1)}>Next</Button>

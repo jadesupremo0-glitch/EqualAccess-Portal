@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { Eye, Send } from 'lucide-react'
-import { feedbackTickets, type FeedbackTicket } from '../../data'
+import { type FeedbackTicket } from '../../data'
 import { Card, Tabs, statusBadge, Modal, Button, Textarea, Alert } from '../../components/ui'
+import { useStore } from '../../store'
 
 const ALL_TABS = ['All', 'Questions', 'Complaints', 'Reports', 'Feedback']
 
 function TicketDetailModal({ ticket, onClose }: { ticket: FeedbackTicket; onClose: () => void }) {
+  const { addFeedbackResponse, setFeedbackStatus } = useStore()
   const [reply, setReply] = useState('')
   const [internalNote, setInternalNote] = useState('')
-  const [sent, setSent] = useState(false)
+  const [ack, setAck] = useState('')
 
   return (
     <Modal open title={`Ticket — ${ticket.id}`} onClose={onClose} size="lg">
@@ -58,17 +60,17 @@ function TicketDetailModal({ ticket, onClose }: { ticket: FeedbackTicket; onClos
           </div>
         )}
 
-        {sent && <Alert type="success" message="Response sent successfully." />}
+        {ack && <Alert type="success" message={ack} />}
 
         {/* Reply area */}
         <div className="border-t border-gray-100 pt-4 space-y-3">
           <Textarea label="Reply to User" value={reply} onChange={setReply} placeholder="Type your reply to the user..." rows={3} />
           <Textarea label="Internal Note (not visible to user)" value={internalNote} onChange={setInternalNote} placeholder="Add an internal note for the team..." rows={2} />
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" icon={<Send size={14} />} disabled={!reply.trim()} onClick={() => { setSent(true); setReply('') }}>
+            <Button size="sm" icon={<Send size={14} />} disabled={!reply.trim()} onClick={() => { addFeedbackResponse(ticket.id, { author: 'PDAO Staff', message: reply.trim() }); setReply(''); setAck('Reply sent successfully.') }}>
               Send Reply
             </Button>
-            <Button size="sm" variant="secondary" disabled={!internalNote.trim()} onClick={() => { setSent(true); setInternalNote('') }}>
+            <Button size="sm" variant="secondary" disabled={!internalNote.trim()} onClick={() => { addFeedbackResponse(ticket.id, { author: 'PDAO Staff', message: internalNote.trim(), isInternal: true }); setInternalNote(''); setAck('Internal note added.') }}>
               Add Internal Note
             </Button>
           </div>
@@ -76,9 +78,9 @@ function TicketDetailModal({ ticket, onClose }: { ticket: FeedbackTicket; onClos
 
         {/* Status actions */}
         <div className="flex flex-wrap gap-2 pt-2 border-t border-gray-100">
-          <Button size="sm" variant="outline">Mark In Progress</Button>
-          <Button size="sm" variant="outline">Mark Resolved</Button>
-          <Button size="sm" variant="outline">Close Ticket</Button>
+          <Button size="sm" variant="outline" disabled={ticket.status === 'In Progress'} onClick={() => { setFeedbackStatus(ticket.id, 'In Progress'); setAck('Status updated to In Progress.') }}>Mark In Progress</Button>
+          <Button size="sm" variant="outline" disabled={ticket.status === 'Resolved'} onClick={() => { setFeedbackStatus(ticket.id, 'Resolved'); setAck('Status updated to Resolved.') }}>Mark Resolved</Button>
+          <Button size="sm" variant="outline" disabled={ticket.status === 'Closed'} onClick={() => { setFeedbackStatus(ticket.id, 'Closed'); setAck('Ticket closed.') }}>Close Ticket</Button>
           <Button size="sm" variant="ghost" onClick={onClose} className="ml-auto">Close</Button>
         </div>
       </div>
@@ -86,11 +88,19 @@ function TicketDetailModal({ ticket, onClose }: { ticket: FeedbackTicket; onClos
   )
 }
 
+const TAB_CATEGORY: Record<string, FeedbackTicket['category']> = {
+  Questions: 'Question',
+  Complaints: 'Complaint',
+  Reports: 'Report',
+  Feedback: 'Feedback',
+}
+
 export default function FeedbackAdmin() {
+  const { feedbackTickets } = useStore()
   const [tab, setTab] = useState('All')
   const [selected, setSelected] = useState<FeedbackTicket | null>(null)
 
-  const filtered = feedbackTickets.filter((t) => tab === 'All' || `${t.category}s` === tab)
+  const filtered = feedbackTickets.filter((t) => tab === 'All' || t.category === TAB_CATEGORY[tab])
 
   return (
     <div className="space-y-5">
@@ -145,7 +155,9 @@ export default function FeedbackAdmin() {
         </div>
       </Card>
 
-      {selected && <TicketDetailModal ticket={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <TicketDetailModal ticket={feedbackTickets.find((t) => t.id === selected.id) ?? selected} onClose={() => setSelected(null)} />
+      )}
     </div>
   )
 }

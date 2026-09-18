@@ -82,15 +82,17 @@ function RequestDetail({ req, onClose }: { req: AssistanceRequest; onClose: () =
   )
 }
 
-function NewRequestForm({ onClose, onSubmit, initialType, initialTitle }: {
+function NewRequestForm({ onClose, onSaveDraft, onSubmit, initialType, initialTitle }: {
   onClose: () => void
-  onSubmit: (data: { type: string; title: string; description: string }) => void
+  onSaveDraft: (draft: { type?: string; title?: string }) => void
+  onSubmit: (data: { type: string; title: string; description: string; device?: string }) => void
   initialType?: string
   initialTitle?: string
 }) {
   const [type, setType] = useState(initialType ?? '')
   const [title, setTitle] = useState(initialTitle ?? '')
   const [description, setDescription] = useState('')
+  const [device, setDevice] = useState('')
   const [reason, setReason] = useState('')
   const [error, setError] = useState('')
 
@@ -99,8 +101,12 @@ function NewRequestForm({ onClose, onSubmit, initialType, initialTitle }: {
       setError('Please complete the assistance type, title, and description.')
       return
     }
+    if (type === 'Assistive Devices' && !device) {
+      setError('Please select the assistive device you need.')
+      return
+    }
     setError('')
-    onSubmit({ type, title, description })
+    onSubmit({ type, title, description, device: type === 'Assistive Devices' ? device : undefined })
   }
 
   return (
@@ -109,7 +115,7 @@ function NewRequestForm({ onClose, onSubmit, initialType, initialTitle }: {
         {error && <Alert type="error" message={error} />}
         <Select label="Assistance Type" options={assistanceTypes} value={type} onChange={setType} placeholder="Select type of assistance" required />
         {type === 'Assistive Devices' && (
-          <Select label="Type of Assistive Devices" options={assistiveDeviceOptions} value={''} onChange={() => {}} placeholder="Select assistive device" />
+          <Select label="Type of Assistive Devices" options={assistiveDeviceOptions} value={device} onChange={setDevice} placeholder="Select assistive device" required />
         )}
         <Input label="Request Title" placeholder="Brief title for your request" value={title} onChange={(e) => setTitle(e.target.value)} required />
         <Textarea label="Description of Request" placeholder="Describe what you need assistance with..." value={description} onChange={setDescription} rows={4} required />
@@ -117,7 +123,7 @@ function NewRequestForm({ onClose, onSubmit, initialType, initialTitle }: {
         <FileUpload label="Supporting Documents (Optional)" accept=".pdf,.jpg,.png" helperText="Medical certificates, ID, or other supporting documents" />
         <div className="flex gap-3 pt-2">
           <Button onClick={handleSubmit} fullWidth>Submit Request</Button>
-          <Button variant="outline" onClick={onClose} fullWidth>Save as Draft</Button>
+          <Button variant="outline" onClick={() => onSaveDraft({ type, title })} fullWidth>Save as Draft</Button>
         </div>
       </div>
     </Modal>
@@ -153,19 +159,19 @@ export default function Requests() {
   const [selected, setSelected] = useState<AssistanceRequest | null>(null)
   const [newRequest, setNewRequest] = useState(false)
   const [justSubmitted, setJustSubmitted] = useState<AssistanceRequest | null>(null)
-  const [submitted, setSubmitted] = useState(false)
 
   const openNewRequest = () => {
     setNewRequest(true)
   }
 
-  const handleSubmitted = (data: { type: string; title: string; description: string }) => {
-    const req = addRequest(userId, data)
+  const handleSubmitted = (data: { type: string; title: string; description: string; device?: string }) => {
+    const description = data.device
+      ? `${data.description}${data.description ? '\n\n' : ''}Assistive device needed: ${data.device}`
+      : data.description
+    const req = addRequest(userId, { type: data.type, title: data.title, description })
     setRequestDraft(null)
     setNewRequest(false)
     setJustSubmitted(req)
-    setSubmitted(true)
-    setTimeout(() => setSubmitted(false), 4000)
   }
 
   return (
@@ -178,8 +184,14 @@ export default function Requests() {
         <Button icon={<Plus size={16} />} onClick={openNewRequest}>New Request</Button>
       </div>
 
-      {submitted && justSubmitted && (
-        <Alert type="success" title="Request Submitted" message={`Request ${justSubmitted.id} has been submitted and is pending review.`} />
+      {requestDraft?.type && (
+        <div className="flex items-center justify-between gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <p className="text-sm text-amber-900">You have a draft for <span className="font-semibold">{requestDraft.type}{requestDraft.title ? ` — ${requestDraft.title}` : ''}</span>.</p>
+          <div className="flex gap-2">
+            <Button size="sm" onClick={() => setNewRequest(true)}>Continue Draft</Button>
+            <Button size="sm" variant="ghost" onClick={() => setRequestDraft(null)}>Discard</Button>
+          </div>
+        </div>
       )}
 
       {/* Status summary */}
@@ -215,13 +227,14 @@ export default function Requests() {
       {selected && <RequestDetail req={selected} onClose={() => setSelected(null)} />}
       {newRequest && (
         <NewRequestForm
-          onClose={() => { setNewRequest(false); setRequestDraft(null) }}
+          onClose={() => setNewRequest(false)}
+          onSaveDraft={(draft) => { setRequestDraft(draft); setNewRequest(false) }}
           onSubmit={handleSubmitted}
           initialType={requestDraft?.type}
           initialTitle={requestDraft?.title}
         />
       )}
-      {justSubmitted && !submitted && <SubmittedModal req={justSubmitted} onClose={() => setJustSubmitted(null)} />}
+      {justSubmitted && <SubmittedModal req={justSubmitted} onClose={() => setJustSubmitted(null)} />}
     </div>
   )
 }

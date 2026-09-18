@@ -84,10 +84,10 @@ function nextId(prefix: string, items: { id: string }[]): string {
   return `${prefix}-${String(max + 1).padStart(3, '0')}`
 }
 
-function nextPWDId(): string {
+function nextPWDId(items: PWDUser[]): string {
   const year = new Date().getFullYear()
   const prefix = `PWD-LB-${year}-`
-  const max = seedPWDUsers
+  const max = items
     .filter((u) => u.id.startsWith(prefix))
     .reduce((m, u) => {
       const n = parseInt(u.id.slice(prefix.length), 10)
@@ -119,6 +119,8 @@ function makeTimeline(status: RequestStatus, date: string) {
     case 'Under Review': done = 1; active = 1; break
     case 'Requirements Needed': done = 2; active = 2; break
     case 'Approved': done = 3; active = 4; break
+    case 'Available': done = 3; active = 4; break
+    case 'Claimed': done = 4; active = 4; break
     case 'Rejected': done = 3; active = null; break
     case 'Completed': done = 5; active = null; break
   }
@@ -139,6 +141,8 @@ function mergeTimeline(prev: AssistanceRequest['timeline'], status: RequestStatu
     case 'Under Review': done = 1; active = 1; break
     case 'Requirements Needed': done = 2; active = 2; break
     case 'Approved': done = 3; active = 4; break
+    case 'Available': done = 3; active = 4; break
+    case 'Claimed': done = 4; active = 4; break
     case 'Rejected': done = 3; active = null; break
     case 'Completed': done = 5; active = null; break
   }
@@ -375,7 +379,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         }
         const disability = DISABILITY_LABELS[input.disabilityType] ?? (input.otherDisability?.trim() ? 'Other' as DisabilityType : 'Other')
         const user: PWDUser = {
-          id: nextPWDId(),
+          id: nextPWDId(s.pwdUsers),
           username: input.pwdIdNumber.trim(),
           password: input.password,
           name: input.fullName.trim(),
@@ -492,8 +496,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         status: 'Open',
         assignedStaff: 'Unassigned',
         responses: [],
-        ...(input.anonymous && user ? { userId } : {}),
-        ...(!input.anonymous && user ? { userId } : {}),
+        ...(user && !input.anonymous ? { userId: user.id } : {}),
       }
       setState((s) => ({
         ...s,

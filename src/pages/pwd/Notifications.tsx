@@ -1,7 +1,7 @@
-import { useState } from 'react'
 import { Bell, CheckCheck, CheckCircle, AlertCircle, Info } from 'lucide-react'
-import { notifications, type Notification } from '../../data'
 import { Button } from '../../components/ui'
+import { usePWDSession } from '../../context'
+import { useStore } from '../../store'
 
 const iconMap = {
   success: <CheckCircle size={20} className="text-green-600" />,
@@ -18,11 +18,11 @@ const bgMap = {
 }
 
 export default function Notifications() {
-  const [items, setItems] = useState<Notification[]>(notifications)
+  const session = usePWDSession()
+  const { pwdUsers, notifications, markNotificationRead, markAllNotificationsRead } = useStore()
+  const currentUserId = (session ? pwdUsers.find((u) => u.id === session.userId) ?? pwdUsers[0] : pwdUsers[0])?.id ?? ''
+  const items = notifications.filter((n) => !n.userId || n.userId === currentUserId)
   const unread = items.filter((n) => !n.read).length
-
-  const markRead = (id: string) => setItems((prev) => prev.map((n) => n.id === id ? { ...n, read: true } : n))
-  const markAllRead = () => setItems((prev) => prev.map((n) => ({ ...n, read: true })))
 
   return (
     <div className="space-y-5 max-w-2xl">
@@ -34,7 +34,7 @@ export default function Notifications() {
           </p>
         </div>
         {unread > 0 && (
-          <Button variant="outline" size="sm" icon={<CheckCheck size={15} />} onClick={markAllRead}>
+          <Button variant="outline" size="sm" icon={<CheckCheck size={15} />} onClick={markAllNotificationsRead}>
             Mark All Read
           </Button>
         )}
@@ -66,7 +66,7 @@ export default function Notifications() {
                 <p className="text-sm text-gray-600 leading-relaxed mt-0.5">{n.message}</p>
                 {!n.read && (
                   <button
-                    onClick={() => markRead(n.id)}
+                    onClick={() => markNotificationRead(n.id)}
                     className="text-xs text-blue-700 hover:text-blue-800 font-medium mt-2"
                   >
                     Mark as read

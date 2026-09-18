@@ -161,7 +161,9 @@ export default function FeedbackPage() {
         </div>
       )}
 
-      {selected && <TicketDetail ticket={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <TicketDetail ticket={feedbackTickets.find((t) => t.id === selected.id) ?? selected} onClose={() => setSelected(null)} />
+      )}
     </div>
   )
 }

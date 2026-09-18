@@ -266,13 +266,17 @@ export async function syncStateToSupabase(state: LoadedState): Promise<void> {
     supabase.from('activity_log').delete().neq('id', 0),
   ]
 
-  await Promise.all(tasks)
-  await supabase.from('activity_log').insert(state.activityLog.map(activityToRow))
+  const results = await Promise.all(tasks)
+  for (const r of results) {
+    if (r.error) console.error('[syncStateToSupabase] table sync failed:', r.error.message)
+  }
+  const { error: activityErr } = await supabase.from('activity_log').insert(state.activityLog.map(activityToRow))
+  if (activityErr) console.error('[syncStateToSupabase] activity_log sync failed:', activityErr.message)
 }
 
 export async function resetSupabaseData(seed: LoadedState): Promise<void> {
   if (!supabase) return
-  await Promise.all([
+  const results = await Promise.all([
     supabase.from('pwd_users').delete().neq('id', ''),
     supabase.from('benefits').delete().neq('id', ''),
     supabase.from('assistance_requests').delete().neq('id', ''),
@@ -283,5 +287,8 @@ export async function resetSupabaseData(seed: LoadedState): Promise<void> {
     supabase.from('job_applications').delete().neq('id', ''),
     supabase.from('activity_log').delete().neq('id', 0),
   ])
+  for (const r of results) {
+    if (r.error) console.error('[resetSupabaseData] table reset failed:', r.error.message)
+  }
   await syncStateToSupabase(seed)
 }

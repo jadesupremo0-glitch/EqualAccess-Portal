@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ArrowLeft, AlertCircle, Accessibility, ChevronDown, ChevronUp, KeyRound } from 'lucide-react'
 import { Input, PasswordInput, Alert, Button } from '../components/ui'
 import { useStore } from '../store'
@@ -35,6 +35,21 @@ export default function Login({
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [showDemo, setShowDemo] = useState(false)
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem('equalaccess-portal:remember-user')
+      if (saved) {
+        const parsed = JSON.parse(saved) as { tab: 'user' | 'admin'; username: string }
+        if (parsed.username && (parsed.tab === 'user' || parsed.tab === 'admin')) {
+          setTab(parsed.tab)
+          setUsername(parsed.username)
+        }
+      }
+    } catch {
+      // ignore malformed saved state
+    }
+  }, [])
 
   // Forgot-password flow
   const [mode, setMode] = useState<'login' | 'reset'>('login')
@@ -136,7 +151,16 @@ export default function Login({
     setTimeout(() => {
       setLoading(false)
       const err = onLogin(tab, username, password)
-      if (err) setError(err)
+      if (err) { setError(err); return }
+      try {
+        if (remember) {
+          window.localStorage.setItem('equalaccess-portal:remember-user', JSON.stringify({ tab, username }))
+        } else {
+          window.localStorage.removeItem('equalaccess-portal:remember-user')
+        }
+      } catch {
+        // storage unavailable — skip
+      }
     }, 600)
   }
 
