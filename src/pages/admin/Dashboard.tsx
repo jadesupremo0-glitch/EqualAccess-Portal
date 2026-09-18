@@ -135,7 +135,7 @@ function BenefitsOfficerView() {
         <StatsCard label="Active Programs" value={activePrograms} icon={<Star size={20} className="text-teal-600" />} color="bg-teal-50" />
         <StatsCard label="Approved Requests" value={approved} icon={<CheckCircle size={20} className="text-green-700" />} color="bg-green-50" />
         <StatsCard label="Medical Requests" value={medicalReqs} icon={<FileText size={20} className="text-blue-700" />} color="bg-blue-50" />
-        <StatsCard label="Upcoming Programs" value={benefits.filter((b) => b.status === 'Upcoming').length} icon={<TrendingUp size={20} className="text-amber-700" />} color="bg-amber-50" />
+        <StatsCard label="Upcoming Programs" value={benefits.filter((b) => b.status === 'Approved' || b.status === 'Pending Approval').length} icon={<TrendingUp size={20} className="text-amber-700" />} color="bg-amber-50" />
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">

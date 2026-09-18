@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { ArrowLeft, AlertCircle, Accessibility, ChevronDown, ChevronUp } from 'lucide-react'
 import { Input, PasswordInput, Alert, Button } from '../components/ui'
+import { useStore } from '../store'
+import { requestResetCode, completePasswordReset } from '../lib/passwordReset'
 
 const PWD_DEMO_ACCOUNTS = [
   { pwdId: 'LB-VIS-2023-00421', password: 'pwd123', name: 'Maria Santos Reyes', id: 'PWD-LB-2024-0042', type: 'Visual Disability', status: 'Verified' },
@@ -34,15 +36,84 @@ export default function Login({
   const [loading, setLoading] = useState(false)
   const [showDemo, setShowDemo] = useState(false)
 
-  const handleLogin = () => {
-    if (!username || !password) { setError(tab === 'user' ? 'Please enter your PWD ID No. and password.' : 'Please enter your username and password.'); return }
+  // Forgot-password flow
+  const [mode, setMode] = useState<'login' | 'reset'>('login')
+  const [resetStep, setResetStep] = useState<1 | 2>(1)
+  const [resetIdentifier, setResetIdentifier] = useState('')
+  const [resetCode, setResetCode] = useState('')
+  const [resetNewPw, setResetNewPw] = useState('')
+  const [resetConfirmPw, setResetConfirmPw] = useState('')
+  const [resetMsg, setResetMsg] = useState('')
+  const [resetErr, setResetErr] = useState('')
+  const [resetLoading, setResetLoading] = useState(false)
+  const [notice, setNotice] = useState('')
+  const { resetPassword } = useStore()
+
+  const openReset = () => {
+    setMode('reset')
+    setResetStep(1)
+    setResetIdentifier(tab === 'user' ? username : username)
+    setResetCode('')
+    setResetNewPw('')
+    setResetConfirmPw('')
+    setResetErr('')
+    setResetMsg('')
+    setNotice('')
     setError('')
-    setLoading(true)
-    setTimeout(() => {
-      setLoading(false)
-      const err = onLogin(tab, username, password)
-      if (err) setError(err)
-    }, 600)
+  }
+
+  const closeReset = () => {
+    setMode('login')
+    setResetErr('')
+    setResetMsg('')
+  }
+
+  const sendResetCode = async () => {
+    if (!resetIdentifier.trim()) {
+      setResetErr(tab === 'user' ? 'Please enter your PWD ID No. or email address.' : 'Please enter your username or email address.')
+      return
+    }
+    setResetErr('')
+    setResetMsg('')
+    setResetLoading(true)
+    const res = await requestResetCode(tab === 'user' ? 'pwd' : 'admin', resetIdentifier.trim())
+    setResetLoading(false)
+    if (!res.ok) {
+      setResetErr(res.error ?? 'Could not send the verification code.')
+      return
+    }
+    setResetStep(2)
+    setResetMsg(res.message ?? 'A verification code has been sent to your email.')
+  }
+
+  const submitReset = async () => {
+    if (!resetCode.trim()) {
+      setResetErr('Please enter the verification code from your email.')
+      return
+    }
+    if (resetNewPw.length < 8) {
+      setResetErr('New password must be at least 8 characters.')
+      return
+    }
+    if (resetNewPw !== resetConfirmPw) {
+      setResetErr('New passwords do not match.')
+      return
+    }
+    setResetErr('')
+    setResetMsg('')
+    setResetLoading(true)
+    const res = await completePasswordReset(tab === 'user' ? 'pwd' : 'admin', resetIdentifier.trim(), resetCode.trim(), resetNewPw)
+    setResetLoading(false)
+    if (!res.ok) {
+      setResetErr(res.error ?? 'Could not reset your password.')
+      return
+    }
+    resetPassword(tab, resetIdentifier.trim(), resetNewPw)
+    setUsername(resetIdentifier.trim())
+    setPassword(resetNewPw)
+    setMode('login')
+    setError('')
+    setNotice('Password updated successfully. You can now sign in with your new password.')
   }
 
   const fillDemo = (u: string, p: string) => {
@@ -173,67 +244,143 @@ export default function Login({
           </div>
 
           <div className="card-glass rounded-2xl p-7 space-y-5">
-            {error && <Alert type="error" message={error} />}
+            {notice && mode === 'login' && <Alert type="success" message={notice} />}
+            {error && mode === 'login' && <Alert type="error" message={error} />}
 
-            <form onSubmit={(e) => { e.preventDefault(); handleLoginWithTab() }} className="space-y-4">
-              <Input
-                label={tab === 'user' ? 'PWD ID No.' : 'Username'}
-                type="text"
-                placeholder={tab === 'user' ? 'Enter your PWD ID number' : 'Enter your PDAO staff username'}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                autoComplete={tab === 'user' ? 'off' : 'username'}
-                required
-              />
-              <PasswordInput
-                label="Password"
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                required
-              />
-              <div className="flex items-center justify-between">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)}
-                    className="w-4 h-4 rounded border-gray-300 text-ea-teal-600 focus:ring-ea-teal-500" />
-                  <span className="text-sm text-slate-600">Remember me</span>
-                </label>
-                <button type="button" className="text-sm text-ea-teal-700 hover:text-ea-teal-800 font-medium">
-                  Forgot password?
-                </button>
-              </div>
-              <Button type="submit" size="lg" fullWidth disabled={loading}>
-                {loading ? 'Signing in...' : `Sign In${tab === 'admin' ? ' — PDAO Staff' : ''}`}
-              </Button>
-            </form>
+            {mode === 'login' ? (
+              <>
+                <form onSubmit={(e) => { e.preventDefault(); handleLoginWithTab() }} className="space-y-4">
+                  <Input
+                    label={tab === 'user' ? 'PWD ID No.' : 'Username'}
+                    type="text"
+                    placeholder={tab === 'user' ? 'Enter your PWD ID number' : 'Enter your PDAO staff username'}
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    autoComplete={tab === 'user' ? 'off' : 'username'}
+                    required
+                  />
+                  <PasswordInput
+                    label="Password"
+                    placeholder="Enter your password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    autoComplete="current-password"
+                    required
+                  />
+                  <div className="flex items-center justify-between">
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked={remember} onChange={(e) => setRemember(e.target.checked)}
+                        className="w-4 h-4 rounded border-gray-300 text-ea-teal-600 focus:ring-ea-teal-500" />
+                      <span className="text-sm text-slate-600">Remember me</span>
+                    </label>
+                    <button type="button" onClick={openReset} className="text-sm text-ea-teal-700 hover:text-ea-teal-800 font-medium">
+                      Forgot password?
+                    </button>
+                  </div>
+                  <Button type="submit" size="lg" fullWidth disabled={loading}>
+                    {loading ? 'Signing in...' : `Sign In${tab === 'admin' ? ' — PDAO Staff' : ''}`}
+                  </Button>
+                </form>
 
-            {tab === 'user' && (
-              <p className="text-center text-sm text-slate-500">
-                Don't have an account?{' '}
-                <button onClick={() => onNavigate('register')} className="text-ea-teal-700 font-semibold hover:text-ea-teal-800">
-                  Register with PDAO
+                {tab === 'user' && (
+                  <p className="text-center text-sm text-slate-500">
+                    Don't have an account?{' '}
+                    <button onClick={() => onNavigate('register')} className="text-ea-teal-700 font-semibold hover:text-ea-teal-800">
+                      Register with PDAO
+                    </button>
+                  </p>
+                )}
+
+                <div className="pt-3 border-t border-white/60">
+                  <p className="text-xs font-semibold text-slate-500 mb-2.5">Quick demo sign-in</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    <button onClick={() => tab === 'user' ? fillDemo('LB-VIS-2023-00421', 'pwd123') : fillDemo('pdao.admin', 'admin123')}
+                      className="text-xs text-slate-600 bg-white/70 border border-white/70 rounded-xl px-3 py-2 hover:border-ea-teal-300 hover:text-ea-teal-700 transition-all text-left font-medium">
+                      {tab === 'user' ? '👤 Maria Reyes (PWD)' : '🛡️ PDAO Admin'}
+                    </button>
+                    <button onClick={() => tab === 'user' ? fillDemo('LB-PHY-2023-00312', 'pwd123') : fillDemo('pdao.benefits', 'admin123')}
+                      className="text-xs text-slate-600 bg-white/70 border border-white/70 rounded-xl px-3 py-2 hover:border-ea-teal-300 hover:text-ea-teal-700 transition-all text-left font-medium">
+                      {tab === 'user' ? '👤 Juan dela Cruz' : '🛡️ Benefits Officer'}
+                    </button>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <button type="button" onClick={closeReset} className="flex items-center gap-2 text-slate-500 hover:text-slate-700 text-sm font-medium">
+                  <ArrowLeft size={15} />
+                  Back to sign in
                 </button>
-              </p>
+
+                <div>
+                  <h3 className="font-display text-lg font-bold text-slate-900">Reset your password</h3>
+                  <p className="text-slate-500 text-sm mt-0.5">
+                    {resetStep === 1
+                      ? tab === 'user'
+                        ? 'Enter your PWD ID No. or email address and we will send a 6-digit verification code.'
+                        : 'Enter your username or email address and we will send a 6-digit verification code.'
+                      : 'Enter the 6-digit code sent to your email and choose a new password.'}
+                  </p>
+                </div>
+
+                {resetErr && <Alert type="error" message={resetErr} />}
+                {resetMsg && <Alert type="info" message={resetMsg} />}
+
+                {resetStep === 1 ? (
+                  <div className="space-y-4">
+                    <Input
+                      label={tab === 'user' ? 'PWD ID No. or Email' : 'Username or Email'}
+                      type="text"
+                      placeholder={tab === 'user' ? 'e.g. LB-VIS-2023-00421 or you@email.com' : 'e.g. pdao.admin or you@email.com'}
+                      value={resetIdentifier}
+                      onChange={(e) => setResetIdentifier(e.target.value)}
+                      required
+                    />
+                    <Button type="button" size="lg" fullWidth disabled={resetLoading} onClick={sendResetCode}>
+                      {resetLoading ? 'Sending code...' : 'Send verification code'}
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <Input
+                      label="Verification Code"
+                      type="text"
+                      placeholder="Enter the 6-digit code"
+                      value={resetCode}
+                      onChange={(e) => setResetCode(e.target.value)}
+                      required
+                    />
+                    <PasswordInput
+                      label="New Password"
+                      placeholder="At least 8 characters"
+                      value={resetNewPw}
+                      onChange={(e) => setResetNewPw(e.target.value)}
+                      required
+                    />
+                    <PasswordInput
+                      label="Confirm New Password"
+                      placeholder="Re-enter new password"
+                      value={resetConfirmPw}
+                      onChange={(e) => setResetConfirmPw(e.target.value)}
+                      required
+                    />
+                    <Button type="button" size="lg" fullWidth disabled={resetLoading} onClick={submitReset}>
+                      {resetLoading ? 'Resetting...' : 'Reset password'}
+                    </Button>
+                    <button type="button" onClick={sendResetCode} disabled={resetLoading}
+                      className="w-full text-center text-sm text-ea-teal-700 hover:text-ea-teal-800 font-medium disabled:opacity-50">
+                      Didn't get a code? Send again
+                    </button>
+                  </div>
+                )}
+              </>
             )}
-
-            <div className="pt-3 border-t border-white/60">
-              <p className="text-xs font-semibold text-slate-500 mb-2.5">Quick demo sign-in</p>
-              <div className="grid grid-cols-2 gap-2">
-                <button onClick={() => tab === 'user' ? fillDemo('LB-VIS-2023-00421', 'pwd123') : fillDemo('pdao.admin', 'admin123')}
-                  className="text-xs text-slate-600 bg-white/70 border border-white/70 rounded-xl px-3 py-2 hover:border-ea-teal-300 hover:text-ea-teal-700 transition-all text-left font-medium">
-                  {tab === 'user' ? '👤 Maria Reyes (PWD)' : '🛡️ PDAO Admin'}
-                </button>
-                <button onClick={() => tab === 'user' ? fillDemo('LB-PHY-2023-00312', 'pwd123') : fillDemo('pdao.benefits', 'admin123')}
-                  className="text-xs text-slate-600 bg-white/70 border border-white/70 rounded-xl px-3 py-2 hover:border-ea-teal-300 hover:text-ea-teal-700 transition-all text-left font-medium">
-                  {tab === 'user' ? '👤 Juan dela Cruz' : '🛡️ Benefits Officer'}
-                </button>
-              </div>
-            </div>
           </div>
 
-          {/* Demo accounts panel */}
-          <div className="mt-5 border border-amber-200/80 bg-amber-50/60 rounded-2xl overflow-hidden backdrop-blur">
+          {mode === 'login' && (
+            <>
+              {/* Demo accounts panel */}
+              <div className="mt-5 border border-amber-200/80 bg-amber-50/60 rounded-2xl overflow-hidden backdrop-blur">
             <button
               onClick={() => setShowDemo((v) => !v)}
               className="w-full flex items-center justify-between px-4 py-3 text-amber-800 text-sm font-semibold hover:bg-amber-100/60 transition-colors"
@@ -290,6 +437,8 @@ export default function Login({
               </div>
             )}
           </div>
+            </>
+          )}
 
           <div className="mt-4 p-4 bg-ea-teal-50/80 rounded-xl border border-ea-teal-100 backdrop-blur">
             <div className="flex gap-2">

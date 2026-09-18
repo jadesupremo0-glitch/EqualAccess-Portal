@@ -21,6 +21,8 @@ import {
   type BenefitCategory,
   type BenefitStatus,
 } from './data'
+import { isSupabaseConfigured } from './lib/supabase'
+import { loadStateFromSupabase, syncStateToSupabase, resetSupabaseData, type LoadedState } from './lib/db'
 
 // ── Persistence ────────────────────────────────────────────────────
 // v2: adds structured job postings and PWD employment-profile fields for
@@ -92,25 +94,6 @@ function nextPWDId(): string {
       return Number.isFinite(n) ? Math.max(m, n) : m
     }, 0)
   return `${prefix}${String(max + 1).padStart(4, '0')}`
-}
-
-function nextPWDIdNumber(disability: DisabilityType): string {
-  const year = new Date().getFullYear()
-  const code: Partial<Record<DisabilityType, string>> = {
-    'Visual Disability': 'VIS',
-    'Deaf or Hard of Hearing': 'HEA',
-    'Physical Disability': 'PHY',
-    'Mental Disability': 'MEN',
-    'Cancer (RA 11215)': 'CAN',
-    'Learning Disability': 'LEA',
-    'Psychosocial Disability': 'PSY',
-    'Intellectual Disability': 'INT',
-    'Rare Disease (RA 10747)': 'RAR',
-    'Speech and Language Impairment': 'SPC',
-    Other: 'OTH',
-  }
-  const n = Math.floor(100 + Math.random() * 900)
-  return `LB-${code[disability] ?? 'OTH'}-${year}-${String(n).padStart(5, '0')}`
 }
 
 const DISABILITY_LABELS: Record<string, DisabilityType> = {
@@ -257,6 +240,7 @@ interface StoreContextValue extends AppState {
   registerPWD: (input: RegisterInput) => { ok: boolean; error?: string }
   updateProfile: (userId: string, patch: Partial<PWDUser>) => void
   changePassword: (userId: string, current: string, next: string) => string | null
+  resetPassword: (kind: 'user' | 'admin', identifier: string, next: string) => { ok: boolean; error?: string }
   addRequest: (userId: string, input: { type: string; title: string; description: string }) => AssistanceRequest
   submitFeedback: (userId: string, input: { category: string; subject: string; message: string; anonymous: boolean }) => FeedbackTicket
   addFeedbackReply: (ticketId: string, author: string, message: string) => void
@@ -300,8 +284,49 @@ const StoreContext = createContext<StoreContextValue | null>(null)
 
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(loadState)
+  const [dbReady, setDbReady] = useState(false)
   const [globalSearch, setGlobalSearch] = useState('')
   const [requestDraft, setRequestDraft] = useState<{ type?: string; title?: string } | null>(null)
+
+  // Load from Supabase when the app starts. If the remote database has no
+  // rows yet, push the local seed data so the DB is provisioned on first run.
+  useEffect(() => {
+    let cancelled = false
+    async function init() {
+      if (!isSupabaseConfigured()) {
+        setDbReady(true)
+        return
+      }
+      let result: { state: LoadedState; seeded: boolean } | null = null
+      try {
+        result = await loadStateFromSupabase()
+      } catch {
+        // network/client error — fall back to the local copy
+      }
+      if (cancelled) return
+      setDbReady(true)
+      if (result && result.seeded) {
+        setState(result.state)
+      } else {
+        const seed: AppState = {
+          pwdUsers: seedPWDUsers,
+          benefits: seedBenefits,
+          assistanceRequests: seedRequests,
+          notifications: seedNotifications,
+          jobs: seedJobs,
+          adminUsers: seedAdminUsers,
+          feedbackTickets: seedFeedback,
+          activityLog: seedActivityLog,
+          jobApplications: [],
+        }
+        void syncStateToSupabase(seed)
+      }
+    }
+    void init()
+    return () => {
+      cancelled = true
+    }
+  }, [])
 
   useEffect(() => {
     try {
@@ -309,7 +334,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } catch {
       // storage unavailable — run in-memory
     }
-  }, [state])
+    if (!dbReady || !isSupabaseConfigured()) return
+    void syncStateToSupabase(state)
+  }, [state, dbReady])
 
   const addNotification = (s: AppState, title: string, message: string, type: Notification['type'], userId?: string): AppState => ({
     ...s,
@@ -400,6 +427,31 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       if (next.length < 8) return 'New password must be at least 8 characters.'
       setState((s) => ({ ...s, pwdUsers: s.pwdUsers.map((u) => (u.id === userId ? { ...u, password: next } : u)) }))
       return null
+    },
+
+    resetPassword(kind, identifier, next) {
+      const id = identifier.trim()
+      let ok = false
+      if (kind === 'admin') {
+        const admin = state.adminUsers.find((a) => a.username === id || (a.email ?? '') === id)
+        if (!admin) return { ok: false, error: 'No admin account found with that username or email.' }
+        setState((s) => ({
+          ...s,
+          adminUsers: s.adminUsers.map((a) => (a.id === admin.id ? { ...a, password: next } : a)),
+        }))
+        ok = true
+      } else {
+        const user = state.pwdUsers.find(
+          (u) => u.pwdIdNumber === id || u.username === id || u.id === id || (u.email ?? '').toLowerCase() === id.toLowerCase(),
+        )
+        if (!user) return { ok: false, error: 'No PWD account found with that email or ID.' }
+        setState((s) => ({
+          ...s,
+          pwdUsers: s.pwdUsers.map((u) => (u.id === user.id ? { ...u, password: next } : u)),
+        }))
+        ok = true
+      }
+      return ok ? { ok: true } : { ok: false }
     },
 
     addRequest(userId, input) {
@@ -740,7 +792,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       } catch {
         // ignore
       }
-      setState({
+      const seed: AppState = {
         pwdUsers: seedPWDUsers,
         benefits: seedBenefits,
         assistanceRequests: seedRequests,
@@ -750,7 +802,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         feedbackTickets: seedFeedback,
         activityLog: seedActivityLog,
         jobApplications: [],
-      })
+      }
+      setState(seed)
+      if (isSupabaseConfigured()) void resetSupabaseData(seed)
     },
   }
 
