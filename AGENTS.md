@@ -1,6 +1,6 @@
 # EqualAccess Portal
 
-React + Vite + Tailwind CSS project running inside Figma Make.
+React + Vite + Tailwind CSS project running inside Figma Make. Package manager is **npm** (a stale `pnpm-lock.yaml` was removed — do not reintroduce pnpm lockfiles, it breaks Vercel builds).
 
 ## Development Server
 
@@ -16,7 +16,6 @@ A Vite development server is **always running** on `$PORT` (default 8443). You d
 - `src/index.css` - Global styles and Tailwind CSS import
 - `package.json` - Dependencies and scripts
 - `vite.config.ts` - Vite configuration
-- `.mise.toml` - Toolchain versions (Node.js, pnpm)
 
 ## Styling
 
@@ -43,3 +42,11 @@ Commands (requires `.env`, see `.env.example`):
 Demo logins: PWD users use their PWD ID No. (e.g. `LB-VIS-2023-00421`) with password `pwd123`; admin staff use their username (e.g. `pdao.admin`) with password `admin123`.
 
 Password reset sends a 6-digit code by email (valid 15 minutes) via the Edge Functions above.
+
+## Deployment (Vercel)
+
+Production lives at `https://equal-access-portal.vercel.app/`, connected to the GitHub repo (branch `main`) with auto-deploys. Deploys are triggered on push; verify at Vercel → Deployments that `readyState` is `READY` (builds fail if `package-lock.json` is out of sync with `package.json`).
+
+Vercel builds need these env vars set (Vite inlines them at build time): `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`. They are already configured in Vercel, mirroring `.env`.
+
+To deploy a build manually without relying on the Git webhook, deploy from this directory with the Vercel CLI (`npx vercel --prod`, or via the REST API with a team-scoped token).
