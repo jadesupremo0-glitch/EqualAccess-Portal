@@ -5,12 +5,13 @@ import {
   Accessibility, BookOpen, HeartHandshake, Sparkles,
 } from 'lucide-react'
 import { Button } from '../components/ui'
+import logoUrl from '../assets/logo.png'
 
 function EALogo() {
   return (
     <div className="flex items-center gap-2.5">
-      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-ea-teal-600/25 ring-1 ring-white/40">
-        <span className="text-white font-black text-sm tracking-tight font-display">EA</span>
+      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center shrink-0 shadow-lg shadow-ea-teal-600/25 ring-1 ring-white/40 overflow-hidden">
+        <img src={logoUrl} alt="EqualAccess Portal logo" className="w-full h-full object-contain" draggable={false} />
       </div>
       <div>
         <p className="font-display font-extrabold text-slate-900 text-sm leading-tight tracking-tight">EqualAccess Portal</p>
@@ -374,8 +375,8 @@ export default function Landing({ onNavigate }: { onNavigate: (p: string) => voi
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2 mb-3">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center">
-                  <span className="text-white font-black text-xs font-display">EA</span>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center overflow-hidden">
+                  <img src={logoUrl} alt="EqualAccess Portal logo" className="w-full h-full object-contain" draggable={false} />
                 </div>
                 <p className="text-white font-bold text-sm font-display">EqualAccess Portal</p>
               </div>

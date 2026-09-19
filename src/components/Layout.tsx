@@ -39,16 +39,16 @@ const adminNav: NavItem[] = [
   { label: 'Settings', page: 'admin-settings', icon: <Settings size={17} /> },
 ]
 
+import logoUrl from '../assets/logo.png'
+
 function EALogo({ size = 32 }: { size?: number }) {
   return (
     <div
-      className="flex items-center justify-center rounded-xl bg-white/15 backdrop-blur ring-1 ring-white/25 shadow-inner shrink-0"
+      className="flex items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/25 shadow-inner shrink-0 overflow-hidden"
       style={{ width: size, height: size }}
       aria-label="EqualAccess Portal logo"
     >
-      <span className="text-white font-extrabold tracking-tight" style={{ fontSize: size * 0.42, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
-        EA
-      </span>
+      <img src={logoUrl} alt="EqualAccess Portal logo" className="w-full h-full object-contain" draggable={false} />
     </div>
   )
 }

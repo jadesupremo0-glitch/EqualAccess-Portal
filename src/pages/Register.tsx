@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react'
 import { Button, Input, PasswordInput, Select, FileUpload, Alert } from '../components/ui'
 import { useStore } from '../store'
+import logoUrl from '../assets/logo.png'
 
 const disabilityTypes = [
   { value: 'cancer', label: 'Cancer (RA 11215)' },
@@ -155,8 +156,8 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
       <header className="bg-white/70 backdrop-blur-xl border-b border-white/60 px-4 py-4 sticky top-0 z-30">
         <div className="max-w-3xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center shadow-lg shadow-ea-teal-600/25">
-              <span className="text-white font-black text-sm font-display">EA</span>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center shadow-lg shadow-ea-teal-600/25 overflow-hidden">
+              <img src={logoUrl} alt="EqualAccess Portal logo" className="w-full h-full object-contain" draggable={false} />
             </div>
             <div>
               <p className="text-sm font-bold text-slate-900 font-display tracking-tight">EqualAccess Portal</p>

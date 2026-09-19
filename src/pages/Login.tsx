@@ -3,6 +3,7 @@ import { ArrowLeft, AlertCircle, Accessibility, ChevronDown, ChevronUp, KeyRound
 import { Input, PasswordInput, Alert, Button } from '../components/ui'
 import { useStore } from '../store'
 import { requestResetCode, completePasswordReset } from '../lib/passwordReset'
+import logoUrl from '../assets/logo.png'
 
 const PWD_DEMO_ACCOUNTS = [
   { pwdId: 'LB-VIS-2023-00421', password: 'pwd123', name: 'Maria Santos Reyes', id: 'PWD-LB-2024-0042', type: 'Visual Disability', status: 'Verified' },
@@ -187,8 +188,8 @@ export default function Login({
 
         <div className="relative">
           <div className="flex items-center gap-3 mb-9">
-            <div className="w-13 h-13 rounded-2xl glass-dark flex items-center justify-center shadow-xl" style={{ width: 52, height: 52 }}>
-              <span className="text-white font-black text-lg font-display">EA</span>
+            <div className="w-13 h-13 rounded-2xl glass-dark flex items-center justify-center shadow-xl overflow-hidden" style={{ width: 52, height: 52 }}>
+              <img src={logoUrl} alt="EqualAccess Portal logo" className="w-full h-full object-contain" draggable={false} />
             </div>
             <div>
               <p className="font-display text-white font-bold text-base tracking-tight">EqualAccess Portal</p>
@@ -235,8 +236,8 @@ export default function Login({
           </button>
 
           <div className="flex items-center gap-2.5 mb-6 lg:hidden">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center shadow-lg shadow-ea-teal-600/25">
-              <span className="text-white font-black text-sm font-display">EA</span>
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-ea-teal-500 to-ea-blue-600 flex items-center justify-center shadow-lg shadow-ea-teal-600/25 overflow-hidden">
+              <img src={logoUrl} alt="EqualAccess Portal logo" className="w-full h-full object-contain" draggable={false} />
             </div>
             <div>
               <p className="font-display font-bold text-slate-900 text-sm tracking-tight">EqualAccess Portal</p>
