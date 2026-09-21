@@ -27,7 +27,6 @@ async function main() {
     adminUsers: seedAdminUsers,
     feedbackTickets: seedFeedback,
     activityLog: seedActivityLog,
-    jobApplications: [],
   }
 
   console.log('Seeding Supabase database...')

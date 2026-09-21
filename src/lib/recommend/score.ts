@@ -1,135 +1,181 @@
+import { manilaDate, normalizeDisability } from '../catalog'
 import { computeSkillsFit } from './skill'
-import { computeCapabilityFit } from './capabilities'
-import { computeFamilyFit } from './family'
-import { computeQualificationFit } from './education'
-import { computeExperienceFit } from './experience'
-import { computeAccessibilityFit } from './accessibility'
-import { normalizePhrase } from './taxonomy'
-import { bandForScore, type JobRecommendation, type RecommendationResult } from './types'
+import { computeEducationFit } from './education'
+import { computeAccommodationFit } from './accommodations'
+import { computeLocationFit } from './location'
+import { canRecommend } from './profile'
+import {
+  bandForScore,
+  type ComponentKey,
+  type MatchReason,
+  type MatchWeights,
+  type Recommendation,
+  type RecommendationResult,
+} from './types'
 import type { PWDUser, Job } from '../../data'
 
-const CLOSED_STATUS = new Set(['Closed', 'Inactive'])
-
-function activeJobs(jobs: Job[]): Job[] {
-  return jobs.filter((j) => (j.status ? !CLOSED_STATUS.has(j.status) : true))
+/** Points per component (sum = 100). Change here to reweight the whole engine. */
+export const DEFAULT_WEIGHTS: MatchWeights = {
+  skills: 35,
+  suitability: 25,
+  education: 15,
+  location: 15,
+  preference: 10,
 }
 
-/** Serialize a posting for duplicate detection (title + content). */
-function contentKey(job: Job): string {
-  return normalizePhrase(`${job.title} | ${job.description ?? ''}`)
+/** Listings scoring below this are hidden from the recommended list. */
+export const MIN_MATCH_SCORE = 40
+
+/**
+ * A listing must be covered by at least this share of the applicant's skills (a related skill counts as
+ * 0.4). Without it, the 65 points for accommodations, education, location and preferences let a job the
+ * applicant can barely do outrank one they are qualified for.
+ */
+export const MIN_SKILL_COVERAGE = 0.4
+
+// Suitability = disability suitability + accommodations fit. Disability type is used only
+// as a positive signal: listing it earns full credit, "open to all" earns most of it.
+const OPEN_TO_ALL_CREDIT = 0.7
+const DISABILITY_SHARE_WITH_NEEDS = 0.3
+
+const norm = (v: string) => v.trim().toLowerCase()
+// Legacy spellings (e.g. "Speech and Language Impairment") count as the current label.
+const sameDisability = (a: string, b: string) => norm(normalizeDisability(a)) === norm(normalizeDisability(b))
+
+/** True when the employer explicitly restricted the listing and this PWD is not on the list. */
+export function isRestrictedAgainst(user: PWDUser, job: Job): boolean {
+  const list = job.suitableDisabilities ?? []
+  if (list.length === 0) return false
+  return !list.some((d) => sameDisability(d, user.disabilityType))
 }
 
-function locationMatch(user: PWDUser, job: Job): boolean {
-  const pref = user.preferredLocation ?? ''
-  if (!pref.trim()) return false
-  const prefWords = new Set(pref.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter((w) => w.length >= 3))
-  const jobWords = new Set(job.location.toLowerCase().replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter((w) => w.length >= 3))
-  for (const w of prefWords) if (jobWords.has(w)) return true
-  return false
+/** A job is recommendable while it is Open and its deadline has not passed (Asia/Manila). */
+export function isOpenAndCurrent(job: Job, now: Date = new Date()): boolean {
+  if (job.status !== 'Open') return false
+  return !job.deadline || job.deadline >= manilaDate(now)
 }
 
-function jobIdRank(job: Job): number {
-  const m = job.id.match(/(\d+)$/)
-  return m ? parseInt(m[1], 10) : 0
+function preferenceFraction(preferred: string[] | undefined, actual: string): number {
+  if (!preferred || preferred.length === 0) return 0.5 // nothing stated → neutral
+  return preferred.some((p) => norm(p) === norm(actual)) ? 1 : 0
 }
 
-const FAMILY_LEVEL_VALUE: Record<JobRecommendation['family']['matchLevel'], number> = {
-  exact: 2,
-  family: 1,
-  none: 0,
+const shortAccommodation: Record<string, string> = {
+  'Wheelchair-accessible workplace': 'Wheelchair accessible',
+  'Screen-reader-compatible tools': 'Screen-reader compatible',
+  'Remote work': 'Remote work available',
 }
 
-/** Score a single job into a recommendation, or null when it conflicts with stated needs. */
-export function scoreJob(user: PWDUser, job: Job): JobRecommendation | null {
-  const accessibility = computeAccessibilityFit(user, job)
-  if (accessibility.fit.fit === 'Not compatible') return null
+/**
+ * Score one listing for one PWD (0–100), or return null when the employer explicitly
+ * restricted the listing to other disability types.
+ */
+export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAULT_WEIGHTS): Recommendation | null {
+  if (isRestrictedAgainst(user, job)) return null
 
   const skills = computeSkillsFit(user, job)
-  const capabilities = computeCapabilityFit(user, job)
-  const family = computeFamilyFit(user, job)
-  const qualification = computeQualificationFit(user, job)
-  const experience = computeExperienceFit(user, job)
+  const education = computeEducationFit(user, job)
+  const accommodation = computeAccommodationFit(user, job)
+  const location = computeLocationFit(user, job)
 
-  const raw =
-    skills.component + capabilities + family.component + qualification.component + experience + accessibility.fit.adjustment
-  const score = Math.max(0, Math.min(100, Math.round(raw * 10) / 10))
+  const disabilityListed = (job.suitableDisabilities ?? []).some((d) => sameDisability(d, user.disabilityType))
+  const disabilityFraction = disabilityListed ? 1 : OPEN_TO_ALL_CREDIT
+  const suitabilityFraction = accommodation.applicable
+    ? DISABILITY_SHARE_WITH_NEEDS * disabilityFraction + (1 - DISABILITY_SHARE_WITH_NEEDS) * accommodation.fraction
+    : disabilityFraction
+
+  const typeFraction = preferenceFraction(user.preferredJobTypes, job.employmentType)
+  const arrangementFraction = preferenceFraction(user.preferredWorkSetup, job.workArrangement)
+
+  const components: Record<ComponentKey, number> = {
+    skills: weights.skills * skills.coverage,
+    suitability: weights.suitability * suitabilityFraction,
+    education: weights.education * education.fraction,
+    location: weights.location * location.fraction,
+    preference: weights.preference * ((typeFraction + arrangementFraction) / 2),
+  }
+  const total = Object.values(components).reduce((a, b) => a + b, 0)
+  const weightSum = Object.values(weights).reduce((a, b) => a + b, 0) || 100
+  const score = Math.max(0, Math.min(100, Math.round((total / weightSum) * 100)))
+
+  const reasons: MatchReason[] = []
+  if (skills.matched.length > 0) {
+    const shown = skills.matched.slice(0, 3).map((s) => s.toLowerCase()).join(', ')
+    reasons.push({ label: `Skills: ${shown}${skills.matched.length > 3 ? ` +${skills.matched.length - 3}` : ''}`, tone: 'positive' })
+  }
+  if (skills.related.length > 0) {
+    reasons.push({ label: `Related skills: ${skills.related.slice(0, 2).map((s) => s.toLowerCase()).join(', ')}`, tone: 'positive' })
+  }
+  for (const m of accommodation.met.slice(0, 2)) {
+    reasons.push({ label: shortAccommodation[m] ?? m, tone: 'positive' })
+  }
+  if (disabilityListed) reasons.push({ label: 'Employer welcomes your disability type', tone: 'positive' })
+  if (location.level === 'barangay') reasons.push({ label: 'In your barangay', tone: 'positive' })
+  else if (location.level === 'municipality') reasons.push({ label: 'Near you, in Los Baños', tone: 'positive' })
+  else if (location.level === 'remote') reasons.push({ label: 'Work from home', tone: 'positive' })
+  if (education.status === 'Met') reasons.push({ label: 'Education requirement met', tone: 'positive' })
+  if (typeFraction === 1 && (user.preferredJobTypes?.length ?? 0) > 0) reasons.push({ label: `${job.employmentType}, as you prefer`, tone: 'positive' })
+  if (arrangementFraction === 1 && (user.preferredWorkSetup?.length ?? 0) > 0) reasons.push({ label: `${job.workArrangement}, as you prefer`, tone: 'positive' })
+
+  if (skills.missing.length > 0) reasons.push({ label: `Missing: ${skills.missing.slice(0, 2).join(', ')}`, tone: 'caution' })
+  if (accommodation.unmet.length > 0) reasons.push({ label: `Confirm: ${accommodation.unmet[0]}`, tone: 'caution' })
+  if (education.status === 'Nearly met' || education.status === 'Not met') reasons.push({ label: `Requires ${job.minEducation}`, tone: 'caution' })
 
   return {
     job,
-    duplicateJobIds: [],
     score,
     band: bandForScore(score),
-    components: {
-      skills: skills.component,
-      capabilities,
-      family: family.component,
-      qualifications: qualification.component,
-      experience,
-      accessibilityAdjustment: accessibility.fit.adjustment,
-    },
-    skills: skills.fit,
-    family: family.fit,
-    qualification: qualification.fit,
-    accessibility: accessibility.fit,
+    components,
+    skills,
+    education,
+    accommodation,
+    location,
+    disabilityListed,
+    reasons,
   }
 }
 
-/** Full hybrid recommendation pipeline: filter → score → dedup → rank → flag. */
-export function getRecommendations(user: PWDUser, allJobs: Job[]): RecommendationResult {
-  let excludedCount = 0
-  const scored: JobRecommendation[] = []
-  for (const job of activeJobs(allJobs)) {
-    const rec = scoreJob(user, job)
-    if (!rec) {
-      excludedCount += 1
-      continue
-    }
-    scored.push(rec)
+export interface RecommendOptions {
+  now?: Date
+  weights?: MatchWeights
+  minScore?: number
+}
+
+/** A listing is only relevant if the PWD's skills cover enough of what it asks for (a listing that asks for none is open to anyone). */
+export function hasEnoughSkills(rec: Recommendation): boolean {
+  return rec.job.skills.length === 0 || rec.skills.coverage >= MIN_SKILL_COVERAGE
+}
+
+/**
+ * Locked (empty) until skills and education are entered. Then score every open, non-expired listing;
+ * keep those at/above the threshold whose required skills the PWD sufficiently covers, best first.
+ * Neutral defaults (nothing stated → half credit) would otherwise "match" everything, so skills
+ * are what make a listing worth recommending.
+ */
+export function getRecommendations(user: PWDUser, jobs: Job[], options: RecommendOptions = {}): RecommendationResult {
+  const { now = new Date(), weights = DEFAULT_WEIGHTS, minScore = MIN_MATCH_SCORE } = options
+  // Nothing is recommended until the PWD has said what they can do and how far they studied.
+  if (!canRecommend(user)) return { locked: true, recommendations: [], considered: 0, hidden: 0, restricted: 0 }
+
+  const current = jobs.filter((j) => isOpenAndCurrent(j, now))
+
+  let restricted = 0
+  const scored: Recommendation[] = []
+  for (const job of current) {
+    const rec = scoreJob(user, job, weights)
+    if (rec) scored.push(rec)
+    else restricted += 1
   }
 
-  // Merge duplicate postings (same title + content, different Job_ID).
-  const byContent = new Map<string, JobRecommendation>()
-  for (const rec of scored.sort((a, b) => b.score - a.score)) {
-    const key = contentKey(rec.job)
-    const existing = byContent.get(key)
-    if (existing) {
-      existing.duplicateJobIds = [...existing.duplicateJobIds, rec.job.id].sort()
-    } else {
-      byContent.set(key, rec)
-    }
-  }
-
-  // Enforce unique titles — keep the highest-scoring posting per title.
-  const byTitle = new Map<string, JobRecommendation>()
-  for (const rec of Array.from(byContent.values()).sort((a, b) => b.score - a.score)) {
-    const titleKey = normalizePhrase(rec.job.title)
-    if (!byTitle.has(titleKey)) byTitle.set(titleKey, rec)
-  }
-
-  const recommendations = Array.from(byTitle.values()).sort((a, b) => compareRecommendations(user, a, b))
-
-  const best = recommendations[0]
-  const weakMatch = !best || best.score < 50
-
-  const improvementsSet = new Set<string>()
-  for (const rec of recommendations.slice(0, 5)) {
-    for (const skill of rec.skills.missing) improvementsSet.add(skill)
-  }
+  const recommendations = scored
+    .filter((r) => r.score >= minScore && hasEnoughSkills(r))
+    .sort((a, b) => b.score - a.score || b.skills.coverage - a.skills.coverage || a.job.title.localeCompare(b.job.title))
 
   return {
+    locked: false,
     recommendations,
-    weakMatch,
-    suggestedImprovements: Array.from(improvementsSet),
-    excludedCount,
+    considered: current.length,
+    hidden: scored.length - recommendations.length,
+    restricted,
   }
-}
-
-function compareRecommendations(user: PWDUser, a: JobRecommendation, b: JobRecommendation): number {
-  if (a.score !== b.score) return b.score - a.score
-  if (a.skills.coverage !== b.skills.coverage) return b.skills.coverage - a.skills.coverage
-  const famDiff = FAMILY_LEVEL_VALUE[b.family.matchLevel] - FAMILY_LEVEL_VALUE[a.family.matchLevel]
-  if (famDiff !== 0) return famDiff
-  const locDiff = Number(locationMatch(user, b.job)) - Number(locationMatch(user, a.job))
-  if (locDiff !== 0) return locDiff
-  return jobIdRank(a.job) - jobIdRank(b.job)
 }

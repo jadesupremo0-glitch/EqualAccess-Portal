@@ -2,7 +2,7 @@ import { type ReactNode, useState } from 'react'
 import {
   LayoutDashboard, User, Gift, FileText, MessageSquare, Briefcase,
   Bell, Settings, LogOut, Menu, X, ChevronDown, Search,
-  Users, BarChart2, Shield, ClipboardList, HelpCircle, Phone, Mail, MapPin,
+  Users, BarChart2, Shield, ClipboardList, HelpCircle, Phone, Mail, MapPin, Table2, PanelLeftClose, PanelLeftOpen,
 } from 'lucide-react'
 import { useSession } from '../context'
 import { useStore } from '../store'
@@ -34,6 +34,7 @@ const adminNav: NavItem[] = [
   { label: 'Benefits & Programs', page: 'admin-benefits', icon: <Gift size={17} /> },
   { label: 'Assistance Requests', page: 'admin-requests', icon: <FileText size={17} /> },
   { label: 'Reports & Analytics', page: 'admin-reports', icon: <BarChart2 size={17} /> },
+  { label: 'Recapitulation', page: 'admin-recapitulation', icon: <Table2 size={17} /> },
   { label: 'Feedback & Support', page: 'admin-feedback', icon: <MessageSquare size={17} /> },
   { label: 'User Management', page: 'admin-users', icon: <Shield size={17} /> },
   { label: 'Settings', page: 'admin-settings', icon: <Settings size={17} /> },
@@ -64,9 +65,32 @@ function DecorBackground() {
   )
 }
 
+const COLLAPSE_KEY = 'equalaccess-portal:sidebar-collapsed'
+
+/** Desktop sidebar: expanded (labels) or collapsed (icons only). Remembered per browser; mobile is unaffected. */
+function useSidebarCollapsed(): [boolean, () => void] {
+  const [collapsed, setCollapsed] = useState(() => {
+    try {
+      return window.localStorage.getItem(COLLAPSE_KEY) === '1'
+    } catch {
+      return false
+    }
+  })
+  const toggle = () => {
+    const next = !collapsed
+    setCollapsed(next)
+    try {
+      window.localStorage.setItem(COLLAPSE_KEY, next ? '1' : '0')
+    } catch {
+      // storage unavailable: the choice lasts until the page is reloaded
+    }
+  }
+  return [collapsed, toggle]
+}
+
 function SidebarNav({
   items, current, onNavigate, onLogout,
-  isAdmin = false, isMobile = false, onClose,
+  isAdmin = false, isMobile = false, collapsed = false, onClose,
   userLabel, userSub,
 }: {
   items: NavItem[]
@@ -75,6 +99,8 @@ function SidebarNav({
   onLogout: () => void
   isAdmin?: boolean
   isMobile?: boolean
+  /** Icons only (desktop). Ignored on mobile. */
+  collapsed?: boolean
   onClose?: () => void
   userLabel: string
   userSub: string
@@ -84,15 +110,15 @@ function SidebarNav({
 
   return (
     <nav className={`flex flex-col h-full ${isAdmin ? 'bg-gradient-to-b from-slate-900 via-slate-900 to-ea-blue-950' : 'bg-gradient-to-b from-ea-teal-900 via-ea-teal-900 to-ea-blue-950'}`} aria-label="Main navigation">
-      <div className="relative px-5 py-5">
+      <div className={`relative py-5 ${collapsed ? 'px-2' : 'px-5'}`}>
         <div className="absolute inset-0 overflow-hidden rounded-b-3xl" aria-hidden="true">
           <div className="absolute -top-16 -right-10 w-44 h-44 rounded-full bg-white/10 blur-2xl" />
           <div className="absolute top-2 left-1/3 w-24 h-24 rounded-full bg-ea-teal-400/20 blur-2xl" />
         </div>
-        <div className="relative flex items-center justify-between">
+        <div className={`relative flex items-center ${collapsed ? 'justify-center' : 'justify-between'}`}>
           <div className="flex items-center gap-3 min-w-0">
             <EALogo size={38} />
-            <div className="min-w-0">
+            <div className={`min-w-0 ${collapsed ? 'sr-only' : ''}`}>
               <p className="font-display text-white font-extrabold text-sm leading-tight tracking-tight">EqualAccess Portal</p>
               <p className="text-white/50 text-[11px] truncate">PDAO — Los Baños, Laguna</p>
             </div>
@@ -105,7 +131,7 @@ function SidebarNav({
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto px-3 py-4">
+      <div className={`flex-1 overflow-y-auto py-4 ${collapsed ? 'px-2' : 'px-3'}`}>
         <ul className="space-y-1" role="list">
           {items.map((item) => {
             const active = current === item.page
@@ -114,13 +140,15 @@ function SidebarNav({
                 <button
                   onClick={() => { onNavigate(item.page); onClose?.() }}
                   aria-current={active ? 'page' : undefined}
-                  className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${active ? activeClass : inactiveClass} ${active ? 'translate-x-0.5' : 'hover:translate-x-0.5'}`}
+                  title={collapsed ? item.label : undefined}
+                  className={`relative w-full flex items-center rounded-xl text-sm font-medium transition-all duration-200 ${collapsed ? 'justify-center py-2.5' : 'gap-3 px-3 py-2.5'} ${active ? activeClass : inactiveClass} ${collapsed ? '' : active ? 'translate-x-0.5' : 'hover:translate-x-0.5'}`}
                 >
                   <span className={`shrink-0 ${active ? 'text-teal-300' : ''}`}>{item.icon}</span>
-                  <span className="flex-1 text-left">{item.label}</span>
+                  <span className={collapsed ? 'sr-only' : 'flex-1 text-left'}>{item.label}</span>
                   {item.badge != null && (
-                    <span className="bg-gradient-to-r from-rose-500 to-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-md shadow-rose-500/30">
+                    <span className={`bg-gradient-to-r from-rose-500 to-red-500 text-white text-[10px] font-bold rounded-full min-w-[18px] h-[18px] flex items-center justify-center px-1 shadow-md shadow-rose-500/30 ${collapsed ? 'absolute -top-1 -right-1' : ''}`}>
                       {item.badge}
+                      {collapsed && <span className="sr-only"> new</span>}
                     </span>
                   )}
                 </button>
@@ -130,23 +158,24 @@ function SidebarNav({
         </ul>
       </div>
 
-      <div className="p-3">
-        <div className="glass-dark rounded-2xl p-3">
-          <div className="flex items-center gap-3 mb-3 px-1">
+      <div className={collapsed ? 'p-2' : 'p-3'}>
+        <div className={`glass-dark rounded-2xl ${collapsed ? 'p-2' : 'p-3'}`}>
+          <div className={`flex items-center gap-3 ${collapsed ? 'justify-center mb-2' : 'mb-3 px-1'}`} title={collapsed ? `${userLabel} — ${userSub}` : undefined}>
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-ea-teal-400 to-ea-blue-600 ring-2 ring-white/20 flex items-center justify-center text-white font-bold text-sm shrink-0">
               {userLabel.charAt(0)}
             </div>
-            <div className="min-w-0">
+            <div className={`min-w-0 ${collapsed ? 'sr-only' : ''}`}>
               <p className="text-white text-xs font-semibold truncate">{userLabel}</p>
               <p className="text-white/40 text-[11px] truncate font-mono">{userSub}</p>
             </div>
           </div>
           <button
             onClick={onLogout}
-            className="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm text-white/70 hover:bg-white/10 hover:text-white transition-colors border border-white/10"
+            title={collapsed ? 'Logout' : undefined}
+            className={`w-full flex items-center justify-center gap-2 py-2 rounded-xl text-sm text-white/70 hover:bg-white/10 hover:text-white transition-colors border border-white/10 ${collapsed ? 'px-0' : 'px-3'}`}
           >
             <LogOut size={15} />
-            Logout
+            <span className={collapsed ? 'sr-only' : ''}>Logout</span>
           </button>
         </div>
       </div>
@@ -158,6 +187,7 @@ export function PWDLayout({ children, current, onNavigate, onLogout }: {
   children: ReactNode; current: Page; onNavigate: (p: Page) => void; onLogout: () => void
 }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [collapsed, toggleCollapsed] = useSidebarCollapsed()
   const [notifOpen, setNotifOpen] = useState(false)
   const session = useSession()
   const { pwdUsers, notifications, globalSearch, setGlobalSearch } = useStore()
@@ -189,8 +219,8 @@ export function PWDLayout({ children, current, onNavigate, onLogout }: {
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
       <DecorBackground />
-      <aside className="hidden lg:flex flex-col w-64 shrink-0" aria-label="Sidebar">
-        <SidebarNav {...sidebarProps} />
+      <aside id="app-sidebar" className={`hidden lg:flex flex-col shrink-0 transition-[width] duration-200 ease-out ${collapsed ? 'w-[4.5rem]' : 'w-60'}`} aria-label="Sidebar">
+        <SidebarNav {...sidebarProps} collapsed={collapsed} />
       </aside>
 
       {mobileOpen && (
@@ -203,9 +233,19 @@ export function PWDLayout({ children, current, onNavigate, onLogout }: {
       )}
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="sticky top-0 z-30 bg-white/70 backdrop-blur-xl border-b border-white/60 shadow-sm px-4 lg:px-6 py-3 flex items-center gap-4" role="banner">
+        <header className="sticky top-0 z-30 bg-white/70 backdrop-blur-xl border-b border-white/60 shadow-sm px-3 sm:px-4 lg:px-5 py-3 flex items-center gap-4" role="banner">
           <button onClick={() => setMobileOpen(true)} className="lg:hidden text-slate-500 hover:text-slate-700 p-1" aria-label="Open navigation">
             <Menu size={22} />
+          </button>
+          <button
+            onClick={toggleCollapsed}
+            className="hidden lg:inline-flex p-2 text-slate-500 hover:text-slate-800 hover:bg-white rounded-xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ea-teal-500"
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-expanded={!collapsed}
+            aria-controls="app-sidebar"
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {collapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}
           </button>
           <div className="flex-1 max-w-md">
             <div className="relative group">
@@ -263,7 +303,7 @@ export function PWDLayout({ children, current, onNavigate, onLogout }: {
             </button>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6" role="main" id="main-content">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5" role="main" id="main-content">
           {children}
         </main>
       </div>
@@ -275,6 +315,7 @@ export function AdminLayout({ children, current, onNavigate, onLogout }: {
   children: ReactNode; current: Page; onNavigate: (p: Page) => void; onLogout: () => void
 }) {
   const [mobileOpen, setMobileOpen] = useState(false)
+  const [collapsed, toggleCollapsed] = useSidebarCollapsed()
   const [activityOpen, setActivityOpen] = useState(false)
   const [helpOpen, setHelpOpen] = useState(false)
   const session = useSession()
@@ -296,8 +337,8 @@ export function AdminLayout({ children, current, onNavigate, onLogout }: {
   return (
     <div className="flex h-screen overflow-hidden bg-slate-50">
       <DecorBackground />
-      <aside className="hidden lg:flex flex-col w-64 shrink-0" aria-label="Admin sidebar">
-        <SidebarNav {...sidebarProps} />
+      <aside id="app-sidebar" className={`hidden lg:flex flex-col shrink-0 transition-[width] duration-200 ease-out ${collapsed ? 'w-[4.5rem]' : 'w-60'}`} aria-label="Admin sidebar">
+        <SidebarNav {...sidebarProps} collapsed={collapsed} />
       </aside>
 
       {mobileOpen && (
@@ -310,12 +351,22 @@ export function AdminLayout({ children, current, onNavigate, onLogout }: {
       )}
 
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="sticky top-0 z-30 bg-white/70 backdrop-blur-xl border-b border-white/60 shadow-sm px-4 lg:px-6 py-3 flex items-center gap-4" role="banner">
+        <header className="sticky top-0 z-30 bg-white/70 backdrop-blur-xl border-b border-white/60 shadow-sm px-3 sm:px-4 lg:px-5 py-3 flex items-center gap-4" role="banner">
           <button onClick={() => setMobileOpen(true)} className="lg:hidden text-slate-500 hover:text-slate-700 p-1" aria-label="Open navigation">
             <Menu size={22} />
           </button>
+          <button
+            onClick={toggleCollapsed}
+            className="hidden lg:inline-flex p-2 text-slate-500 hover:text-slate-800 hover:bg-white rounded-xl transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-ea-teal-500"
+            aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            aria-expanded={!collapsed}
+            aria-controls="app-sidebar"
+            title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+          >
+            {collapsed ? <PanelLeftOpen size={19} /> : <PanelLeftClose size={19} />}
+          </button>
           <div className="flex items-center gap-2 min-w-0">
-            <span className="text-xs font-medium text-slate-400 hidden sm:block">EqualAccess Portal</span>
+            <span className="text-xs font-medium text-slate-600 hidden sm:block">EqualAccess Portal</span>
             <span className="text-slate-200 hidden sm:block">›</span>
             <span className="text-xs font-semibold text-slate-600 hidden sm:block">Admin Portal</span>
             {admin && (
@@ -384,7 +435,7 @@ export function AdminLayout({ children, current, onNavigate, onLogout }: {
             </button>
           </div>
         </header>
-        <main className="flex-1 overflow-y-auto p-4 lg:p-6" role="main" id="main-content">
+        <main className="flex-1 overflow-y-auto p-3 sm:p-4 lg:p-5" role="main" id="main-content">
           {children}
         </main>
       </div>

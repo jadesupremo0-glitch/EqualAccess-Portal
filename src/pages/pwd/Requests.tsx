@@ -4,15 +4,9 @@ import { type AssistanceRequest } from '../../data'
 import { Card, Button, statusBadge, Modal, Timeline, Alert, Textarea, Select, FileUpload, Input } from '../../components/ui'
 import { usePWDSession } from '../../context'
 import { useStore } from '../../store'
+import { ASSISTANCE_TYPES } from '../../lib/catalog'
 
-const assistanceTypes = [
-  { value: 'Financial Assistance', label: 'Financial Assistance' },
-  { value: 'Medical Assistance', label: 'Medical Assistance' },
-  { value: 'Assistive Devices', label: 'Assistive Devices' },
-  { value: 'Educational Assistance', label: 'Educational Assistance' },
-  { value: 'Livelihood Training', label: 'Livelihood Training' },
-  { value: 'Other Service Assistance', label: 'Other Service Assistance' },
-]
+const assistanceTypes = ASSISTANCE_TYPES.map((t) => ({ value: t, label: t }))
 
 const assistiveDeviceOptions = [
   { value: 'Wheelchair', label: 'Wheelchair' },

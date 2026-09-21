@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import {
   pwdUsers as seedPWDUsers,
   benefits as seedBenefits,
@@ -22,12 +22,18 @@ import {
   type BenefitStatus,
 } from './data'
 import { isSupabaseConfigured } from './lib/supabase'
-import { loadStateFromSupabase, syncStateToSupabase, resetSupabaseData, type LoadedState } from './lib/db'
+import { loadStateFromSupabase, syncStateToSupabase, resetSupabaseData, EMPTY_STATE, type LoadedState } from './lib/db'
+import { DISABILITY_LABEL_BY_SLUG, OTHER_DISABILITY, manilaDate } from './lib/catalog'
+import { normalizeJob, normalizeUser } from './lib/normalize'
 
 // ── Persistence ────────────────────────────────────────────────────
-// v2: adds structured job postings and PWD employment-profile fields for
-// the hybrid weighted job recommendation engine (src/lib/recommend).
+// v2: structured job postings and PWD employment-profile fields for the job
+// recommendation engine. Older shapes are upgraded on read (src/lib/normalize.ts),
+// so the key does not change.
 const STORAGE_KEY = 'equalaccess-portal:v2'
+
+/** How often the app re-reads the database in the background (also on window focus). */
+const REFRESH_INTERVAL_MS = 30_000
 
 export interface ActivityEntry {
   user: string
@@ -35,15 +41,6 @@ export interface ActivityEntry {
   date: string
   time: string
   activity: string
-}
-
-export interface JobApplication {
-  id: string
-  userId: string
-  jobId: string
-  jobTitle: string
-  company: string
-  appliedDate: string
 }
 
 interface AppState {
@@ -55,14 +52,11 @@ interface AppState {
   adminUsers: AdminUser[]
   feedbackTickets: FeedbackTicket[]
   activityLog: ActivityEntry[]
-  jobApplications: JobApplication[]
 }
 
+/** Today's date (YYYY-MM-DD) in Asia/Manila, so month boundaries match the dashboard's. */
 function today(): string {
-  const d = new Date()
-  const m = String(d.getMonth() + 1).padStart(2, '0')
-  const day = String(d.getDate()).padStart(2, '0')
-  return `${d.getFullYear()}-${m}-${day}`
+  return manilaDate()
 }
 
 function nowTime(): string {
@@ -94,20 +88,6 @@ function nextPWDId(items: PWDUser[]): string {
       return Number.isFinite(n) ? Math.max(m, n) : m
     }, 0)
   return `${prefix}${String(max + 1).padStart(4, '0')}`
-}
-
-const DISABILITY_LABELS: Record<string, DisabilityType> = {
-  cancer: 'Cancer (RA 11215)',
-  deaf: 'Deaf or Hard of Hearing',
-  intellectual: 'Intellectual Disability',
-  learning: 'Learning Disability',
-  mental: 'Mental Disability',
-  physical: 'Physical Disability',
-  psychosocial: 'Psychosocial Disability',
-  rare: 'Rare Disease (RA 10747)',
-  speech: 'Speech and Language Impairment',
-  visual: 'Visual Disability',
-  other: 'Other',
 }
 
 function makeTimeline(status: RequestStatus, date: string) {
@@ -159,33 +139,33 @@ function mergeTimeline(prev: AssistanceRequest['timeline'], status: RequestStatu
 }
 
 // ── Seed / load ────────────────────────────────────────────────────
+const seedState = (): AppState => ({
+  pwdUsers: seedPWDUsers,
+  benefits: seedBenefits,
+  assistanceRequests: seedRequests,
+  notifications: seedNotifications,
+  jobs: seedJobs,
+  adminUsers: seedAdminUsers,
+  feedbackTickets: seedFeedback,
+  activityLog: seedActivityLog,
+})
+
 function loadState(): AppState {
-  const fallback: AppState = {
-    pwdUsers: seedPWDUsers,
-    benefits: seedBenefits,
-    assistanceRequests: seedRequests,
-    notifications: seedNotifications,
-    jobs: seedJobs,
-    adminUsers: seedAdminUsers,
-    feedbackTickets: seedFeedback,
-    activityLog: seedActivityLog,
-    jobApplications: [],
-  }
+  const fallback = seedState()
   if (typeof window === 'undefined') return fallback
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY)
     if (!raw) return fallback
     const parsed = JSON.parse(raw) as Partial<AppState>
     return {
-      pwdUsers: parsed.pwdUsers ?? seedPWDUsers,
+      pwdUsers: (parsed.pwdUsers ?? seedPWDUsers).map(normalizeUser),
       benefits: parsed.benefits ?? seedBenefits,
       assistanceRequests: parsed.assistanceRequests ?? seedRequests,
       notifications: parsed.notifications ?? seedNotifications,
-      jobs: parsed.jobs ?? seedJobs,
+      jobs: (parsed.jobs ?? seedJobs).map((j) => normalizeJob(j as unknown as Record<string, unknown>)),
       adminUsers: parsed.adminUsers ?? seedAdminUsers,
       feedbackTickets: parsed.feedbackTickets ?? seedFeedback,
       activityLog: parsed.activityLog ?? seedActivityLog,
-      jobApplications: parsed.jobApplications ?? [],
     }
   } catch {
     return fallback
@@ -234,6 +214,15 @@ export interface AdminUserInput {
 
 // ── Store context ──────────────────────────────────────────────────
 interface StoreContextValue extends AppState {
+  /**
+   * Bumps every time the database and this browser are known to agree again: after a
+   * local change has been written, or after a background refresh brought in someone
+   * else's change. Aggregates that live outside the store re-read when it changes.
+   */
+  dataVersion: number
+  /** Re-reads the database now (no-op offline, or while local changes are still being written). */
+  refreshFromServer: () => Promise<void>
+
   // navigation / search helpers
   globalSearch: string
   setGlobalSearch: (v: string) => void
@@ -250,13 +239,15 @@ interface StoreContextValue extends AppState {
   addFeedbackReply: (ticketId: string, author: string, message: string) => void
   markNotificationRead: (id: string) => void
   markAllNotificationsRead: () => void
-  applyToJob: (userId: string, job: Job) => void // kept for compat
+  toggleSavedJob: (userId: string, jobId: string) => void
 
   // Admin — PWD
   verifyPWD: (userId: string, status: 'Verified' | 'Rejected') => void
   updatePWD: (userId: string, patch: Partial<PWDUser>) => void
   deactivatePWD: (userId: string) => void
   reactivatePWD: (userId: string) => void
+  /** Soft delete: the record disappears from every list and count but is kept in the database. */
+  deletePWD: (userId: string) => void
 
   // Admin — benefits
   addBenefit: (input: BenefitInput) => void
@@ -280,20 +271,80 @@ interface StoreContextValue extends AppState {
   deleteAdminUser: (id: string) => void
 
   // Admin — misc
-  logActivity: (action: string, activity: string) => void
+  /** Append to the admin activity log. `user` defaults to the built-in administrator account. */
+  logActivity: (action: string, activity: string, user?: string) => void
   resetData: () => void
 }
 
 const StoreContext = createContext<StoreContextValue | null>(null)
 
+let warnedSyncError = ''
+
 export function StoreProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(loadState)
   const [dbReady, setDbReady] = useState(false)
+  const [dataVersion, setDataVersion] = useState(0)
   const [globalSearch, setGlobalSearch] = useState('')
   const [requestDraft, setRequestDraft] = useState<{ type?: string; title?: string } | null>(null)
 
+  // `synced` is the last state known to be in the database. Changes are written as a diff
+  // against it, one write at a time, so overlapping edits can never reorder or clobber each other.
+  const stateRef = useRef(state)
+  stateRef.current = state
+  const synced = useRef<LoadedState>(EMPTY_STATE)
+  const queue = useRef<Promise<void>>(Promise.resolve())
+  const inFlight = useRef(0)
+
+  function flush() {
+    inFlight.current += 1
+    queue.current = queue.current
+      .then(async () => {
+        const next = stateRef.current
+        if (next === synced.current) return
+        await syncStateToSupabase(synced.current, next)
+        synced.current = next
+        setDataVersion((v) => v + 1)
+      })
+      .catch((err: unknown) => {
+        // Keep `synced` as-is: the next change retries the same diff.
+        const message = err instanceof Error ? err.message : String(err)
+        if (message !== warnedSyncError) {
+          warnedSyncError = message
+          console.warn(
+            `[sync] Could not write changes to the database: ${message}. ` +
+              'If this mentions a missing column or function, apply the latest migrations with `supabase db push`.',
+          )
+        }
+      })
+      .finally(() => {
+        inFlight.current -= 1
+      })
+  }
+
+  async function refreshFromServer() {
+    if (!isSupabaseConfigured() || !dbReady) return
+    // Never replace state while local edits are unwritten: they would be lost.
+    if (inFlight.current > 0 || stateRef.current !== synced.current) return
+    let result: Awaited<ReturnType<typeof loadStateFromSupabase>> = null
+    try {
+      result = await loadStateFromSupabase()
+    } catch {
+      return // offline or schema behind: keep what we have
+    }
+    if (!result || !result.seeded) return
+    if (inFlight.current > 0 || stateRef.current !== synced.current) return // edited while we were reading
+    const remote = result.state
+    if (JSON.stringify(remote) === JSON.stringify(stateRef.current)) return
+    synced.current = remote
+    stateRef.current = remote
+    setState(remote)
+    setDataVersion((v) => v + 1)
+  }
+  const refreshRef = useRef(refreshFromServer)
+  refreshRef.current = refreshFromServer
+
   // Load from Supabase when the app starts. If the remote database has no
-  // rows yet, push the local seed data so the DB is provisioned on first run.
+  // rows yet, the local seed data is written to it so it is provisioned on first run.
   useEffect(() => {
     let cancelled = false
     async function init() {
@@ -305,26 +356,16 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       try {
         result = await loadStateFromSupabase()
       } catch {
-        // network/client error — fall back to the local copy
+        // network/client error: fall back to the local copy
       }
       if (cancelled) return
-      setDbReady(true)
       if (result && result.seeded) {
+        synced.current = result.state
+        stateRef.current = result.state
         setState(result.state)
-      } else {
-        const seed: AppState = {
-          pwdUsers: seedPWDUsers,
-          benefits: seedBenefits,
-          assistanceRequests: seedRequests,
-          notifications: seedNotifications,
-          jobs: seedJobs,
-          adminUsers: seedAdminUsers,
-          feedbackTickets: seedFeedback,
-          activityLog: seedActivityLog,
-          jobApplications: [],
-        }
-        void syncStateToSupabase(seed)
       }
+      // Otherwise `synced` stays empty, so the first flush writes everything we have.
+      setDbReady(true)
     }
     void init()
     return () => {
@@ -336,11 +377,32 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     try {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
     } catch {
-      // storage unavailable — run in-memory
+      // storage unavailable: run in-memory
     }
     if (!dbReady || !isSupabaseConfigured()) return
-    void syncStateToSupabase(state)
+    flush()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, dbReady])
+
+  // Keep every open page current: re-read on a timer and whenever the tab regains focus.
+  useEffect(() => {
+    if (!dbReady || !isSupabaseConfigured()) return
+    const tick = () => void refreshRef.current()
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') tick()
+    }
+    const id = window.setInterval(tick, REFRESH_INTERVAL_MS)
+    window.addEventListener('focus', tick)
+    document.addEventListener('visibilitychange', onVisible)
+    return () => {
+      window.clearInterval(id)
+      window.removeEventListener('focus', tick)
+      document.removeEventListener('visibilitychange', onVisible)
+    }
+  }, [dbReady])
+
+  // Soft-deleted PWDs are invisible everywhere; the full list stays in `state` for syncing.
+  const visiblePwdUsers = useMemo(() => state.pwdUsers.filter((u) => !u.deletedAt), [state.pwdUsers])
 
   const addNotification = (s: AppState, title: string, message: string, type: Notification['type'], userId?: string): AppState => ({
     ...s,
@@ -365,6 +427,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
   const value: StoreContextValue = {
     ...state,
+    pwdUsers: visiblePwdUsers,
+    dataVersion,
+    refreshFromServer,
     globalSearch,
     setGlobalSearch,
     requestDraft,
@@ -377,7 +442,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           error = 'That PWD ID No. is already registered. Please check your ID number.'
           return s
         }
-        const disability = DISABILITY_LABELS[input.disabilityType] ?? (input.otherDisability?.trim() ? 'Other' as DisabilityType : 'Other')
+        const disability: DisabilityType = DISABILITY_LABEL_BY_SLUG[input.disabilityType] ?? OTHER_DISABILITY
         const user: PWDUser = {
           id: nextPWDId(s.pwdUsers),
           username: input.pwdIdNumber.trim(),
@@ -528,25 +593,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setState((s) => ({ ...s, notifications: s.notifications.map((n) => ({ ...n, read: true })) }))
     },
 
-    applyToJob(userId, job) {
-      setState((s) => {
-        let next: AppState = {
-          ...s,
-          jobApplications: [
-            {
-              id: nextId('APP', s.jobApplications),
-              userId,
-              jobId: job.id,
-              jobTitle: job.title,
-              company: job.company,
-              appliedDate: today(),
-            },
-            ...s.jobApplications,
-          ],
-        }
-        next = addNotification(next, 'Application Submitted', `Your application for ${job.title} at ${job.company} has been submitted.`, 'success', userId)
-        return next
-      })
+    toggleSavedJob(userId, jobId) {
+      setState((s) => ({
+        ...s,
+        pwdUsers: s.pwdUsers.map((u) => {
+          if (u.id !== userId) return u
+          const saved = u.savedJobIds ?? []
+          return { ...u, savedJobIds: saved.includes(jobId) ? saved.filter((id) => id !== jobId) : [...saved, jobId] }
+        }),
+      }))
     },
 
     verifyPWD(userId, status) {
@@ -601,6 +656,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           pwdUsers: s.pwdUsers.map((u) => (u.id === userId ? { ...u, active: true, verificationStatus: 'Verified' as VerificationStatus } : u)),
         }
         next = log(next, 'pdao.admin', 'Reactivated Account', `Reactivated PWD account ${userId} (${user?.name ?? 'Unknown'})`)
+        return next
+      })
+    },
+
+    deletePWD(userId) {
+      setState((s) => {
+        const user = s.pwdUsers.find((u) => u.id === userId)
+        if (!user || user.deletedAt) return s
+        let next: AppState = {
+          ...s,
+          pwdUsers: s.pwdUsers.map((u) => (u.id === userId ? { ...u, deletedAt: today(), active: false } : u)),
+        }
+        next = log(next, 'pdao.admin', 'Deleted PWD Record', `Deleted PWD record ${userId} (${user.name})`)
         return next
       })
     },
@@ -785,8 +853,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       })
     },
 
-    logActivity(action, activity) {
-      setState((s) => log(s, 'pdao.admin', action, activity))
+    logActivity(action, activity, user = 'pdao.admin') {
+      setState((s) => log(s, user, action, activity))
     },
 
     resetData() {
@@ -795,19 +863,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       } catch {
         // ignore
       }
-      const seed: AppState = {
-        pwdUsers: seedPWDUsers,
-        benefits: seedBenefits,
-        assistanceRequests: seedRequests,
-        notifications: seedNotifications,
-        jobs: seedJobs,
-        adminUsers: seedAdminUsers,
-        feedbackTickets: seedFeedback,
-        activityLog: seedActivityLog,
-        jobApplications: [],
-      }
+      const seed = seedState()
       setState(seed)
-      if (isSupabaseConfigured()) void resetSupabaseData(seed)
+      if (isSupabaseConfigured()) {
+        // The reset rewrites the whole database, so the state we set is now the synced state.
+        synced.current = seed
+        void resetSupabaseData(seed)
+          .then(() => setDataVersion((v) => v + 1))
+          .catch((err) => console.warn('[sync] Reset failed:', err))
+      }
     },
   }
 

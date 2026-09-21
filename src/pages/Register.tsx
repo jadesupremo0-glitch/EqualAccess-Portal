@@ -3,37 +3,10 @@ import { ArrowLeft, ArrowRight, CheckCircle } from 'lucide-react'
 import { Button, Input, PasswordInput, Select, FileUpload, Alert } from '../components/ui'
 import { useStore } from '../store'
 import logoUrl from '../assets/logo.png'
+import { BARANGAYS, DISABILITY_FORM_OPTIONS, barangayLabel } from '../lib/catalog'
 
-const disabilityTypes = [
-  { value: 'cancer', label: 'Cancer (RA 11215)' },
-  { value: 'deaf', label: 'Deaf or Hard of Hearing' },
-  { value: 'intellectual', label: 'Intellectual Disability' },
-  { value: 'learning', label: 'Learning Disability' },
-  { value: 'mental', label: 'Mental Disability' },
-  { value: 'physical', label: 'Physical Disability' },
-  { value: 'psychosocial', label: 'Psychosocial Disability' },
-  { value: 'rare', label: 'Rare Disease (RA 10747)' },
-  { value: 'speech', label: 'Speech and Language Impairment' },
-  { value: 'visual', label: 'Visual Disability' },
-  { value: 'other', label: 'Other' },
-]
-
-const barangays = [
-  { value: 'anos', label: 'Anos' },
-  { value: 'bagong-silang', label: 'Bagong Silang' },
-  { value: 'bambang', label: 'Bambang' },
-  { value: 'batong-malake', label: 'Batong Malake' },
-  { value: 'baybayin', label: 'Baybayin' },
-  { value: 'bayog', label: 'Bayog' },
-  { value: 'lalakay', label: 'Lalakay' },
-  { value: 'maahas', label: 'Maahas' },
-  { value: 'malinta', label: 'Malinta' },
-  { value: 'mayondon', label: 'Mayondon' },
-  { value: 'putho-tuntungin', label: 'Putho-Tuntungin' },
-  { value: 'san-antonio', label: 'San Antonio' },
-  { value: 'tadlac', label: 'Tadlac' },
-  { value: 'timugan', label: 'Timugan' },
-]
+// Shown as the plain barangay name; the stored value keeps the "Brgy." form used by existing records.
+const barangayOptions = BARANGAYS.map((b) => ({ value: barangayLabel(b), label: b }))
 
 const steps = [
   { n: 1, label: 'Personal Info' },
@@ -54,15 +27,6 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
     agreeTerms: false,
   })
   const [errors, setErrors] = useState<Record<string, string>>({})
-
-  // Map barangay slug value → display label
-  const barangayLabelMap: Record<string, string> = {
-    anos: 'Brgy. Anos', 'bagong-silang': 'Brgy. Bagong Silang', bambang: 'Brgy. Bambang',
-    'batong-malake': 'Brgy. Batong Malake', baybayin: 'Brgy. Baybayin', bayog: 'Brgy. Bayog',
-    lalakay: 'Brgy. Lalakay', maahas: 'Brgy. Maahas', malinta: 'Brgy. Malinta',
-    mayondon: 'Brgy. Mayondon', 'putho-tuntungin': 'Brgy. Putho-Tuntungin',
-    'san-antonio': 'Brgy. San Antonio', tadlac: 'Brgy. Tadlac', timugan: 'Brgy. Timugan',
-  }
 
   const set = (k: string, v: string | boolean) => setForm((f) => ({ ...f, [k]: v }))
 
@@ -96,7 +60,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
           fullName: form.fullName.trim(),
           age: Number(form.age),
           address: form.address.trim(),
-          barangay: barangayLabelMap[form.barangay] ?? form.barangay,
+          barangay: form.barangay,
           contact: form.contact.trim(),
           email: form.email.trim(),
           disabilityType: form.disabilityType,
@@ -215,14 +179,14 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
                   <Input label="Full Name" placeholder="e.g., Maria Santos Reyes" value={form.fullName} onChange={(e) => set('fullName', e.target.value)} error={errors.fullName} required />
                   <Input label="Age" type="number" placeholder="e.g., 25" value={form.age} onChange={(e) => set('age', e.target.value)} error={errors.age} required />
                   <Input label="Home Address" placeholder="House No., Street Name" value={form.address} onChange={(e) => set('address', e.target.value)} error={errors.address} required />
-                  <Select label="Barangay (Los Baños)" options={barangays} value={form.barangay} onChange={(v) => set('barangay', v)} placeholder="Select your barangay" error={errors.barangay} required />
+                  <Select label="Barangay (Los Baños)" options={barangayOptions} value={form.barangay} onChange={(v) => set('barangay', v)} placeholder="Select your barangay" error={errors.barangay} required />
                   <Input label="Contact Number" type="tel" placeholder="+63 9XX XXX XXXX" value={form.contact} onChange={(e) => set('contact', e.target.value)} error={errors.contact} required />
                   <Input label="Email Address (optional)" type="email" placeholder="your.email@example.com" value={form.email} onChange={(e) => set('email', e.target.value)} />
                 </>
               )}
               {step === 2 && (
                 <>
-                  <Select label="Type of Disability" options={disabilityTypes} value={form.disabilityType} onChange={(v) => set('disabilityType', v)} placeholder="Select disability type" error={errors.disabilityType} required />
+                  <Select label="Type of Disability" options={DISABILITY_FORM_OPTIONS} value={form.disabilityType} onChange={(v) => set('disabilityType', v)} placeholder="Select disability type" error={errors.disabilityType} required />
                   {form.disabilityType === 'other' && (
                     <Input label="Please specify your disability" placeholder="Describe your disability" value={form.otherDisability} onChange={(e) => set('otherDisability', e.target.value)} />
                   )}

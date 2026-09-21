@@ -1,4 +1,4 @@
-import { useState, useId, type ReactNode, type ButtonHTMLAttributes, type InputHTMLAttributes } from 'react'
+import { useState, useId, useEffect, useRef, type ReactNode, type ButtonHTMLAttributes, type InputHTMLAttributes } from 'react'
 import { CheckCircle, Clock, XCircle, AlertCircle, Eye, EyeOff, X } from 'lucide-react'
 
 // --- Badge ---
@@ -196,6 +196,8 @@ export function PasswordInput({ label, error, ...props }: Omit<InputProps, 'type
 // --- Select ---
 interface SelectProps {
   label?: string
+  /** Accessible name when no visible label is shown (e.g. a filter dropdown). */
+  ariaLabel?: string
   error?: string
   options: { value: string; label: string }[]
   value: string
@@ -204,16 +206,21 @@ interface SelectProps {
   required?: boolean
 }
 
-export function Select({ label, error, options, value, onChange, placeholder, required }: SelectProps) {
+export function Select({ label, ariaLabel, error, options, value, onChange, placeholder, required }: SelectProps) {
+  const id = useId()
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label className="text-sm font-medium text-slate-700">
+        <label htmlFor={id} className="text-sm font-medium text-slate-700">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
       <select
+        id={id}
+        aria-label={label ? undefined : ariaLabel ?? placeholder}
+        aria-invalid={error ? true : undefined}
+        aria-required={required || undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className={`w-full border rounded-xl text-sm text-slate-900 bg-white/70 backdrop-blur transition-all focus:outline-none focus:ring-4 focus:ring-ea-teal-500/20 focus:border-ea-teal-400 pl-3.5 pr-3.5 py-2.5 ${error ? 'border-red-400' : 'border-white/70 shadow-sm'}`}
@@ -241,15 +248,18 @@ interface TextareaProps {
 }
 
 export function Textarea({ label, error, helperText, rows = 4, placeholder, value, onChange, required }: TextareaProps) {
+  const id = useId()
   return (
     <div className="flex flex-col gap-1.5">
       {label && (
-        <label className="text-sm font-medium text-slate-700">
+        <label htmlFor={id} className="text-sm font-medium text-slate-700">
           {label}
           {required && <span className="text-red-500 ml-1">*</span>}
         </label>
       )}
       <textarea
+        id={id}
+        aria-invalid={error ? true : undefined}
         rows={rows}
         placeholder={placeholder}
         value={value}
@@ -262,7 +272,46 @@ export function Textarea({ label, error, helperText, rows = 4, placeholder, valu
   )
 }
 
+// --- CheckboxGroup ---
+export function CheckboxGroup({ legend, options, value, onChange, helperText, columns = 2 }: {
+  legend: string
+  options: readonly string[]
+  value: string[]
+  onChange: (next: string[]) => void
+  helperText?: string
+  columns?: 1 | 2
+}) {
+  const groupId = useId()
+  const toggle = (option: string) =>
+    onChange(value.includes(option) ? value.filter((v) => v !== option) : [...value, option])
+  return (
+    <fieldset className="min-w-0" aria-describedby={helperText ? `${groupId}-help` : undefined}>
+      <legend className="text-sm font-medium text-slate-700 mb-1.5">{legend}</legend>
+      <div className={`grid gap-x-4 gap-y-1 ${columns === 2 ? 'sm:grid-cols-2' : ''}`}>
+        {options.map((o) => {
+          const id = `${groupId}-${o.replace(/\W+/g, '-').toLowerCase()}`
+          return (
+            <label key={o} htmlFor={id} className="flex items-center gap-2 py-1.5 text-sm text-slate-700 cursor-pointer">
+              <input
+                id={id}
+                type="checkbox"
+                checked={value.includes(o)}
+                onChange={() => toggle(o)}
+                className="h-4 w-4 rounded border-slate-300 text-ea-teal-600 focus:ring-2 focus:ring-ea-teal-500/40"
+              />
+              {o}
+            </label>
+          )
+        })}
+      </div>
+      {helperText && <p id={`${groupId}-help`} className="text-xs text-slate-500 mt-1">{helperText}</p>}
+    </fieldset>
+  )
+}
+
 // --- Modal ---
+const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+
 export function Modal({ open, onClose, title, children, size = 'md' }: {
   open: boolean
   onClose: () => void
@@ -270,12 +319,49 @@ export function Modal({ open, onClose, title, children, size = 'md' }: {
   children: ReactNode
   size?: 'sm' | 'md' | 'lg' | 'xl'
 }) {
+  const dialogRef = useRef<HTMLDivElement>(null)
+  const onCloseRef = useRef(onClose)
+  onCloseRef.current = onClose
+
+  // Keyboard support: move focus into the dialog, keep Tab inside it, close on Escape,
+  // and hand focus back to whatever opened it.
+  useEffect(() => {
+    if (!open) return
+    const opener = document.activeElement as HTMLElement | null
+    const dialog = dialogRef.current
+    dialog?.focus()
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.stopPropagation()
+        onCloseRef.current()
+        return
+      }
+      if (e.key !== 'Tab' || !dialog) return
+      const items = Array.from(dialog.querySelectorAll<HTMLElement>(FOCUSABLE))
+      if (items.length === 0) return
+      const first = items[0]
+      const last = items[items.length - 1]
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === dialog)) {
+        e.preventDefault()
+        last.focus()
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault()
+        first.focus()
+      }
+    }
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      opener?.focus?.()
+    }
+  }, [open])
+
   if (!open) return null
   const widths = { sm: 'max-w-sm', md: 'max-w-lg', lg: 'max-w-2xl', xl: 'max-w-4xl' }
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label={title}>
       <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-md animate-fade-in" onClick={onClose} />
-      <div className={`relative glass-strong rounded-2xl shadow-2xl shadow-slate-900/20 w-full ${widths[size]} max-h-[90vh] overflow-y-auto animate-scale-in`}>
+      <div ref={dialogRef} tabIndex={-1} className={`relative glass-strong rounded-2xl shadow-2xl shadow-slate-900/20 w-full ${widths[size]} max-h-[90vh] overflow-y-auto animate-scale-in focus:outline-none`}>
         <div className="relative h-1.5 rounded-t-2xl bg-gradient-to-r from-ea-teal-500 via-sky-500 to-ea-blue-600" aria-hidden="true" />
         <div className="flex items-center justify-between p-6 pb-4">
           <h2 className="font-display text-lg font-bold text-slate-900">{title}</h2>
@@ -339,12 +425,13 @@ export function EmptyState({ icon, title, message, action }: {
 }
 
 // --- StatsCard ---
-export function StatsCard({ label, value, icon, color, delta }: {
+export function StatsCard({ label, value, icon, color, delta, note }: {
   label: string
   value: string | number
   icon: ReactNode
   color: string
   delta?: string
+  note?: string
 }) {
   return (
     <Card className="p-5 group hover:-translate-y-0.5 hover:shadow-lift transition-all duration-300">
@@ -353,6 +440,7 @@ export function StatsCard({ label, value, icon, color, delta }: {
           <p className="text-sm text-slate-500 font-medium mb-1">{label}</p>
           <p className="font-display text-2xl font-extrabold text-slate-900">{value}</p>
           {delta && <p className="text-xs text-emerald-600 mt-1 font-semibold">{delta}</p>}
+          {note && <p className="text-xs text-slate-500 mt-1">{note}</p>}
         </div>
         <div className={`p-3 rounded-xl ${color} ring-1 ring-inset ring-white/70 shadow-sm`}>
           {icon}
@@ -398,6 +486,7 @@ export function SearchBar({ value, onChange, placeholder = 'Search...' }: {
       </svg>
       <input
         type="search"
+        aria-label={placeholder}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}

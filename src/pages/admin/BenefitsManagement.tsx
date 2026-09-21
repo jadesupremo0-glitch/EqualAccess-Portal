@@ -3,13 +3,14 @@ import { Plus, Eye, Edit2, Trash2, Power } from 'lucide-react'
 import { type BenefitStatus } from '../../data'
 import { Card, Button, SearchBar, Select, statusBadge, Modal, Input, Textarea } from '../../components/ui'
 import { useStore, type BenefitInput } from '../../store'
+import { ALL_BARANGAYS_LABEL, BARANGAYS, barangayLabel } from '../../lib/catalog'
 
 function AddProgramModal({ onClose }: { onClose: () => void }) {
   const { addBenefit } = useStore()
   const [form, setForm] = useState({ name: '', description: '', eligibility: '', barangay: '', date: '', time: '', deadline: '', status: 'Draft' as BenefitStatus })
   const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }))
   const programStatuses: BenefitStatus[] = ['Draft', 'Pending Approval', 'Approved', 'Active', 'Closed']
-  const barangays = ['All Barangays', 'Anos', 'Bagong Silang', 'Bambang', 'Batong Malake', 'Baybayin', 'Bayog', 'Lalakay', 'Maahas', 'Malinta', 'Mayondon', 'Putho-Tuntungin', 'San Antonio', 'Tadlac', 'Timugan']
+  const barangays = [ALL_BARANGAYS_LABEL, ...BARANGAYS.map(barangayLabel)]
 
   const handleSave = () => {
     if (!form.name) return

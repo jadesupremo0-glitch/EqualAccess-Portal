@@ -1,19 +1,22 @@
 import { describe, it, expect } from 'vitest'
 import type { PWDUser, Job } from '../../data'
-import { getRecommendations, scoreJob } from './score'
-import { bandForScore } from './types'
+import { getRecommendations, scoreJob, isOpenAndCurrent, DEFAULT_WEIGHTS, MIN_MATCH_SCORE } from './score'
+import { canRecommend, profileGaps, requiredGaps } from './profile'
+import { canonicalAccommodations } from './accommodations'
 
 // ── Fixtures ───────────────────────────────────────────────────────
+const NOW = new Date('2026-09-22T04:00:00Z') // 12:00 in Asia/Manila
+
 const baseUser: PWDUser = {
-  id: 'USR-001',
+  id: 'PWD-1',
   username: 'tester',
   password: 'pwd123',
   name: 'Test Applicant',
   address: 'Test St.',
-  barangay: 'Brgy. San Isidro',
+  barangay: 'Brgy. Malinta',
   contact: '+63 900 000 0000',
   email: 'tester@example.com',
-  disabilityType: 'Other',
+  disabilityType: 'Physical Disability',
   verificationStatus: 'Verified',
   dateRegistered: '2026-01-01',
   pwdIdNumber: 'LB-TST-2026-00001',
@@ -23,320 +26,250 @@ const baseJob: Job = {
   id: 'JOB-900',
   title: 'Generic Job',
   company: 'ACME Corp',
+  description: 'A job.',
   location: 'Los Baños, Laguna',
-  type: 'Full-time',
-  accessibilityInfo: 'PWD-friendly workplace.',
+  employmentType: 'Full-time',
+  workArrangement: 'On-site',
   skills: ['Data Entry'],
-  postedDate: '2026-01-01',
+  minEducation: '',
+  suitableDisabilities: [],
+  accommodations: [],
+  slots: 1,
   deadline: '2026-12-31',
-  status: 'Active',
+  postedDate: '2026-06-01',
+  status: 'Open',
 }
 
-const user = (o: Partial<PWDUser>): PWDUser => ({ ...baseUser, ...o })
-const job = (o: Partial<Job>): Job => ({ ...baseJob, ...o })
+const user = (o: Partial<PWDUser> = {}): PWDUser => ({ ...baseUser, ...o })
+const job = (o: Partial<Job> = {}): Job => ({ ...baseJob, ...o })
 
-// Designer profile with strong Office/Admin-fit credentials.
 const maria = user({
-  skills: ['Data Entry', 'Microsoft Office', 'Computer Literacy', 'Communication', 'Customer Service'],
-  education: 'Bachelor of Science in Information Technology',
-  workExperience: 'Computer Technician Intern at a local IT services shop',
-  yearsOfExperience: 1,
-  jobInterests: ['Data Entry', 'IT Support', 'Administrative Assistant'],
-  preferredWorkSetup: ['Office', 'Remote'],
-  preferredLocation: 'Los Baños, Laguna',
-  functionalCapabilities: [
-    'Computer-based tasks',
-    'Seated work',
-    'Verbal communication',
-    'Use standard computer applications',
-    'Read with assistive technology',
-  ],
-  accessibilityNeeds: ['Accessible entrance', 'Screen reader compatible software'],
-  accommodationRequirements: ['Screen reader software', 'High contrast display settings'],
+  disabilityType: 'Visual Disability',
+  skills: ['Data Entry', 'Microsoft Office', 'Computer Literacy', 'Customer Service'],
+  educationLevel: 'College Graduate',
+  workExperience: 'IT intern',
+  preferredJobTypes: ['Full-time'],
+  preferredWorkSetup: ['On-site', 'Remote'],
+  accommodationRequirements: ['Screen-reader-compatible tools'],
 })
 
-const jobOfficeAdmin = job({
-  id: 'JOB-004',
-  title: 'Office Administrative Assistant',
-  company: 'IRRI Human Resources',
-  location: 'Los Baños, Laguna',
-  category: 'Administrative',
-  workSetup: 'Hybrid',
-  description:
-    'Provides administrative support including scheduling, document preparation, records management, and staff coordination for the HR office.',
-  skills: ['Administration', 'Microsoft Office', 'Computer Literacy', 'Customer Service'],
-  educationRequirement: 'College Graduate',
-  experienceRequirement: '1 year',
-  functionalRequirements: ['Computer-based tasks', 'Seated work', 'Verbal communication'],
-  accessibilityFeatures: ['Wheelchair accessible entrance', 'Accessible restroom', 'Elevator access', 'Accessible workstations'],
-  accommodationSupport: 'Yes',
-})
-
-describe('skill normalization & synonym-aware coverage', () => {
-  it('matches a clear, direct fit into the Good/Excellent band', () => {
-    const rec = scoreJob(maria, jobOfficeAdmin)!
-    expect(rec).not.toBeNull()
-    expect(rec.score).toBeGreaterThanOrEqual(70)
-    expect(rec.skills.matched).toContain('Microsoft Office')
-    expect(rec.skills.matched).toContain('Customer Service')
-    expect(rec.skills.missing).toContain('Administration')
+describe('weights', () => {
+  it('default weights are 35 / 25 / 15 / 15 / 10 and add up to 100', () => {
+    expect(DEFAULT_WEIGHTS).toEqual({ skills: 35, suitability: 25, education: 15, location: 15, preference: 10 })
+    expect(Object.values(DEFAULT_WEIGHTS).reduce((a, b) => a + b, 0)).toBe(100)
   })
 
-  it('merges synonyms: MS Office / Basic Computer Skills / Customer Support = same skills', () => {
-    const rec = scoreJob(
-      user({
-        skills: ['MS Office', 'Basic Computer Skills', 'Customer Support', 'Data Encoding'],
-        education: 'Senior High School Graduate',
-        jobInterests: ['Office Clerk'],
-        functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Data encoding'],
-      }),
+  it('scores stay within 0–100 and the perfect case reaches 100', () => {
+    const perfect = scoreJob(
+      user({ ...maria, barangay: 'Brgy. Malinta', disabilityType: 'Visual Disability' }),
       job({
-        id: 'JOB-001',
-        title: 'Data Entry Assistant',
-        category: 'Administrative',
-        description: 'Assists the municipal records section with encoding, organizing, and maintaining digital records.',
-        skills: ['Data Entry', 'Microsoft Office', 'Computer Literacy', 'Customer Service'],
-        educationRequirement: 'College Graduate or Vocational',
-        experienceRequirement: '0\u20131 year',
-        functionalRequirements: ['Computer-based tasks', 'Seated work', 'Data encoding'],
-        accessibilityFeatures: ['Wheelchair ramp access', 'Accessible restroom'],
-        accommodationSupport: 'Available upon request',
+        skills: ['Data Entry'],
+        location: 'Brgy. Malinta',
+        suitableDisabilities: ['Visual Disability'],
+        accommodations: ['Screen-reader-compatible tools'],
+        minEducation: 'Vocational',
       }),
     )!
-    expect(rec.skills.coverage).toBe(1)
-    expect(rec.skills.missing).toHaveLength(0)
-    expect(rec.score).toBeGreaterThanOrEqual(50)
+    expect(perfect.score).toBe(100)
   })
 
-  it('does not over-match: unrelated extra skills stay neutral', () => {
-    const itApplicant = user({
-      skills: ['Computer Literacy', 'HTML', 'CSS', 'Network Troubleshooting'],
-      jobInterests: ['IT Support'],
-    })
-    const withCooking = scoreJob(
-      user({ ...itApplicant, skills: ['Computer Literacy', 'HTML', 'CSS', 'Network Troubleshooting', 'Cooking'] }),
-      job({ id: 'JOB-002', title: 'IT Support Staff', category: 'Technology', skills: ['Computer Literacy', 'HTML', 'CSS'] }),
-    )!
-    const withoutCooking = scoreJob(itApplicant, job({ id: 'JOB-002', title: 'IT Support Staff', category: 'Technology', skills: ['Computer Literacy', 'HTML', 'CSS'] }))!
-    expect(withCooking.score).toBe(withoutCooking.score)
+  it('can be reweighted', () => {
+    const skillsOnly = { skills: 100, suitability: 0, education: 0, location: 0, preference: 0 }
+    const rec = scoreJob(maria, job({ skills: ['Data Entry', 'Welding'] }), skillsOnly)!
+    expect(rec.score).toBe(50)
   })
 })
 
-describe('field-weighted scoring', () => {
-  it('mismatched skills score far below matched skills for the same job', () => {
-    const strong = scoreJob(
-      user({ skills: ['Computer Literacy', 'HTML', 'CSS', 'Network Troubleshooting', 'Microsoft Office'], jobInterests: ['IT Support'] }),
-      job({ id: 'JOB-002', title: 'IT Support Staff', category: 'Technology', skills: ['Computer Literacy', 'HTML', 'CSS', 'Network Troubleshooting', 'Microsoft Office'] }),
+describe('skills match (35)', () => {
+  it('is synonym-aware and reports matched vs missing skills', () => {
+    const rec = scoreJob(
+      user({ skills: ['MS Office', 'Data Encoding'] }),
+      job({ skills: ['Microsoft Office', 'Data Entry', 'Welding'] }),
     )!
-    const weak = scoreJob(
-      user({ skills: ['Cooking', 'Baking', 'Food Processing'], jobInterests: ['Kitchen Staff'], functionalCapabilities: ['Standing work for short periods'] }),
-      job({ id: 'JOB-002', title: 'IT Support Staff', category: 'Technology', skills: ['Computer Literacy', 'HTML', 'CSS', 'Network Troubleshooting', 'Microsoft Office'] }),
-    )!
-    expect(strong.score).toBeGreaterThan(weak.score + 30)
-    expect(weak.skills.missing).toContain('HTML')
-  })
-
-  it('reports qualification status Met / Partly met / Not met', () => {
-    const met = scoreJob(maria, jobOfficeAdmin)!
-    expect(met.qualification.status).toBe('Met')
-
-    const partly = scoreJob(
-      user({ education: 'Vocational — Computer Servicing', skills: ['Microsoft Office', 'Computer Literacy'] }),
-      job({ id: 'JOB-001', title: 'Data Entry Assistant', category: 'Administrative', skills: ['Microsoft Office'], educationRequirement: 'College level' }),
-    )!
-    expect(partly.qualification.status).toBe('Partly met')
-  })
-
-  it('experience is a boost, never a hard filter, for entry-level roles', () => {
-    const freshIdo = scoreJob(
-      user({ workExperience: 'Intern at a records office', yearsOfExperience: 0, skills: ['Data Entry', 'Microsoft Office'] }),
-      job({ id: 'JOB-001', title: 'Data Entry Assistant', category: 'Administrative', skills: ['Data Entry', 'Microsoft Office'], experienceRequirement: '0\u20131 year' }),
-    )!
-    expect(freshIdo.components.experience).toBe(10)
-    expect(freshIdo.score).toBeGreaterThanOrEqual(50)
+    expect(rec.skills.matched).toEqual(['Microsoft Office', 'Data Entry'])
+    expect(rec.skills.missing).toEqual(['Welding'])
+    expect(rec.components.skills).toBeCloseTo((35 * 2) / 3, 5)
   })
 })
 
-describe('job-family alignment', () => {
-  it('boosts same-family matches and prefers exact preferred-job title matches', () => {
-    const exact = scoreJob(
-      user({ jobInterests: ['Administrative Assistant'], skills: ['Microsoft Office'] }),
-      job({ id: 'JOB-004', title: 'Office Administrative Assistant', category: 'Administrative', skills: ['Microsoft Office'] }),
-    )!
-    const sameFamily = scoreJob(
-      user({ jobInterests: ['Office Clerk'], skills: ['Microsoft Office'] }),
-      job({ id: 'JOB-004', title: 'Office Administrative Assistant', category: 'Administrative', skills: ['Microsoft Office'] }),
-    )!
-    const differentFamily = scoreJob(
-      user({ jobInterests: ['Call Center Agent'], skills: ['Microsoft Office'] }),
-      job({ id: 'JOB-004', title: 'Office Administrative Assistant', category: 'Administrative', skills: ['Microsoft Office'] }),
-    )!
-    expect(exact.components.family).toBe(15)
-    expect(sameFamily.components.family).toBe(9)
-    expect(differentFamily.components.family).toBe(2.25)
-  })
-})
-
-describe('accessibility-fit layer', () => {
-  it('skips entirely ("Not assessed") when no accessibility fields are volunteered', () => {
-    const rec = scoreJob(
-      user({ skills: ['Microsoft Office'], preferredWorkSetup: ['Office'] }),
-      job({ id: 'JOB-001', title: 'Data Entry Assistant', skills: ['Microsoft Office'] }),
-    )!
-    expect(rec.accessibility.fit).toBe('Not assessed')
-    expect(rec.accessibility.adjustment).toBe(0)
-    expect(rec.accessibility.needsAssessed).toBe(false)
-  })
-
-  it('excludes jobs that explicitly conflict with a stated need', () => {
-    const result = getRecommendations(
-      user({
-        skills: ['Microsoft Office', 'Data Entry'],
-        accessibilityNeeds: ['Wheelchair accessible entrance', 'Accessible restroom'],
-      }),
-      [
-        job({
-          id: 'JOB-100',
-          title: 'Warehouse Assistant',
-          skills: ['Microsoft Office'],
-          physicalRequirements: ['Heavy lifting', 'Standing for long periods', 'Climbing stairs'],
-          accessibilityFeatures: [],
-          accommodationSupport: 'None',
-        }),
-      ],
-    )
-    expect(result.recommendations).toHaveLength(0)
-    expect(result.excludedCount).toBe(1)
-  })
-
-  it('defaults to "Needs confirmation" (adjustment -8) when the job data is silent, never "Not compatible"', () => {
-    const rec = scoreJob(
-      user({
-        skills: ['Microsoft Office'],
-        accessibilityNeeds: ['Screen reader compatible software'],
-      }),
-      job({
-        id: 'JOB-200',
-        title: 'Admin Clerk',
-        skills: ['Microsoft Office'],
-        description: 'Performs general clerical duties.',
-        accessibilityFeatures: [],
-        accommodationSupport: '',
-      }),
-    )!
-    expect(rec.accessibility.fit).toBe('Needs confirmation')
-    expect(rec.accessibility.adjustment).toBe(-8)
-    expect(rec.accessibility.questionsToConfirm[0]).toMatch(/screen reader/i)
-  })
-
-  it('marks explicit offers that meet a stated need as Compatible with a +5 adjustment', () => {
-    const rec = scoreJob(
-      user({
-        skills: ['Microsoft Office'],
-        accessibilityNeeds: ['Wheelchair accessible entrance', 'Screen reader compatible software'],
-        accommodationRequirements: ['Screen reader software'],
-      }),
-      job({
-        id: 'JOB-201',
-        title: 'Admin Clerk',
-        skills: ['Microsoft Office'],
-        accessibilityFeatures: ['Wheelchair accessible entrance', 'Screen reader compatible software'],
-        accommodationSupport: 'Yes',
-      }),
-    )!
-    expect(rec.accessibility.fit).toBe('Compatible')
-    expect(rec.accessibility.adjustment).toBe(5)
-  })
-
-  it('scores "Compatible with accommodation" with -3 when needs are silent but the job advertises accessibility', () => {
-    const rec = scoreJob(
-      user({ skills: ['Microsoft Office'], accessibilityNeeds: ['Quiet workspace', 'Rest breaks'] }),
-      job({
-        id: 'JOB-202',
-        title: 'Records Assistant',
-        skills: ['Microsoft Office'],
-        accessibilityFeatures: ['Wheelchair ramp access'],
-        accommodationSupport: 'Available upon request',
-      }),
-    )!
-    expect(rec.accessibility.fit).toBe('Compatible with accommodation')
-    expect(rec.accessibility.adjustment).toBe(-3)
-  })
-
-  it('counts remote only as a positive when the applicant explicitly prefers it', () => {
-    const remotePref = scoreJob(
-      user({ skills: ['Writing'], preferredWorkSetup: ['Remote'] }),
-      job({ id: 'JOB-300', title: 'Content Writer', workSetup: 'Remote', skills: ['Writing'], accessibilityFeatures: [] }),
-    )!
-    const noRemotePref = scoreJob(
-      user({ skills: ['Writing'], preferredWorkSetup: ['Office'] }),
-      job({ id: 'JOB-300', title: 'Content Writer', workSetup: 'Remote', skills: ['Writing'], accessibilityFeatures: [] }),
-    )!
-    expect(remotePref.accessibility.adjustment).toBe(5)
-    expect(remotePref.accessibility.fit).toBe('Compatible')
-    expect(noRemotePref.accessibility.adjustment).toBe(0)
-    expect(noRemotePref.accessibility.fit).toBe('Not assessed')
-  })
-
-  it('never surfaces a disability label in recommendation text', () => {
-    const rec = scoreJob(
-      user({ disabilityType: 'Visual Disability', accessibilityNeeds: ['Screen reader software'] }),
-      job({
-        id: 'JOB-203',
-        title: 'Clerk',
-        skills: ['Microsoft Office'],
-        accessibilityFeatures: [],
-        accommodationSupport: ''
-      }),
-    )!
-    const text = [rec.accessibility.note, ...rec.accessibility.questionsToConfirm, rec.qualification.note].join(' ')
-    expect(text).not.toContain('Disability')
-    expect(text).not.toContain('visual')
-  })
-})
-
-describe('deduplication, ranking & banding', () => {
-  it('merges duplicate postings (same title + content) into one recommendation', () => {
-    const jobA = job({ id: 'JOB-401', title: 'Data Entry Assistant', skills: ['Data Entry', 'Microsoft Office'], description: 'Encoding and records work.' })
-    const jobB = job({ id: 'JOB-402', title: 'Data Entry Assistant', skills: ['Data Entry', 'Microsoft Office'], description: 'Encoding and records work.' })
-    const result = getRecommendations(user({ skills: ['Data Entry', 'Microsoft Office'] }), [jobA, jobB])
-    expect(result.recommendations).toHaveLength(1)
-    expect(result.recommendations[0].duplicateJobIds).toContain('JOB-402')
-  })
-
-  it('returns at most one recommendation per job title', () => {
-    const result = getRecommendations(user({ skills: ['Data Entry'] }), [
-      job({ id: 'JOB-501', title: 'Data Entry Assistant', skills: ['Data Entry'] }),
-      job({ id: 'JOB-502', title: 'Data Entry Assistant', skills: ['Data Entry'], description: 'Different content here.' }),
-    ])
-    expect(new Set(result.recommendations.map((r) => r.job.title)).size).toBe(result.recommendations.length)
-  })
-
-  it('flags a weak overall result (best < 50) and lists missing skills', () => {
-    const result = getRecommendations(
-      user({ skills: ['Cooking', 'Baking'], jobInterests: ['Kitchen Staff'] }),
-      [jobOfficeAdmin, job({ id: 'JOB-002', title: 'IT Support Staff', category: 'Technology', skills: ['HTML', 'CSS', 'Network Troubleshooting'] })],
-    )
-    expect(result.weakMatch).toBe(true)
-    expect(result.suggestedImprovements.length).toBeGreaterThan(0)
-    for (const rec of result.recommendations) expect(rec.score).toBeLessThan(50)
-  })
-
-  it('uses the stated location preference as a tie-break at equal scores', () => {
-    const target = user({ skills: ['Data Entry'], preferredLocation: 'Los Baños' })
-    const local = job({ id: 'JOB-601', title: 'Data Clerk', location: 'Los Baños, Laguna', description: 'Helps the records section in town.', skills: ['Data Entry'] })
-    const distant = job({ id: 'JOB-602', title: 'Data Clerk B', location: 'Bay, Bulacan', description: 'Helps the records section in town.', skills: ['Data Entry'] })
-    const result = getRecommendations(target, [local, distant])
-    expect(result.recommendations[0].job.id).toBe('JOB-601')
-  })
-
-  it('sorts by final score descending and applies the correct score bands', () => {
-    const strongJob = job({ id: 'JOB-701', title: 'Data Entry Assistant', category: 'Administrative', skills: ['Data Entry', 'Microsoft Office'] })
-    const weakJob = job({ id: 'JOB-702', title: 'Graphic Designer', category: 'Media & Communications', skills: ['Design', 'Photography'] })
-    const result = getRecommendations(user({ skills: ['Data Entry', 'Microsoft Office'], jobInterests: ['Data Entry'] }), [weakJob, strongJob])
-    expect(result.recommendations[0].job.id).toBe('JOB-701')
-    for (const rec of result.recommendations) {
-      expect(rec.band).toBe(bandForScore(rec.score))
+describe('disability suitability & accommodations (25)', () => {
+  it('never hides a job because of disability type when the listing is open to all', () => {
+    for (const disabilityType of ['Physical Disability', 'Visual Disability', 'Deaf or Hard of Hearing', 'Rare Disease (RA 10747)', 'Speech & Language Impairment'] as const) {
+      const rec = scoreJob(user({ disabilityType, skills: ['Data Entry'] }), job())
+      expect(rec).not.toBeNull()
     }
+  })
+
+  it('excludes a job only when the employer explicitly restricted the listing to other types', () => {
+    const restricted = job({ suitableDisabilities: ['Visual Disability'] })
+    expect(scoreJob(user({ disabilityType: 'Physical Disability' }), restricted)).toBeNull()
+    expect(scoreJob(user({ disabilityType: 'Visual Disability' }), restricted)).not.toBeNull()
+  })
+
+  it('treats an explicit suitable-disability listing as a positive signal', () => {
+    const openToAll = scoreJob(user({ disabilityType: 'Visual Disability' }), job())!
+    const listed = scoreJob(user({ disabilityType: 'Visual Disability' }), job({ suitableDisabilities: ['Visual Disability'] }))!
+    expect(listed.components.suitability).toBeGreaterThan(openToAll.components.suitability)
+    expect(listed.reasons.map((r) => r.label)).toContain('Employer welcomes your disability type')
+  })
+
+  it('rewards matching accommodations and flags unmet needs without hiding the job', () => {
+    const needy = user({ accommodationRequirements: ['Wheelchair-accessible workplace', 'Sign-language interpreter'] })
+    const met = scoreJob(needy, job({ accommodations: ['Wheelchair-accessible workplace', 'Sign-language interpreter'] }))!
+    const partial = scoreJob(needy, job({ accommodations: ['Wheelchair-accessible workplace'] }))!
+    const none = scoreJob(needy, job({ accommodations: [] }))!
+    expect(met.components.suitability).toBeGreaterThan(partial.components.suitability)
+    expect(partial.components.suitability).toBeGreaterThan(none.components.suitability)
+    expect(none).not.toBeNull()
+    expect(partial.reasons.some((r) => r.tone === 'caution' && r.label.includes('Sign-language interpreter'))).toBe(true)
+    expect(met.reasons.map((r) => r.label)).toContain('Wheelchair accessible')
+  })
+
+  it('does not require workplace access for a fully remote job', () => {
+    const rec = scoreJob(
+      user({ accommodationRequirements: ['Wheelchair-accessible workplace'] }),
+      job({ workArrangement: 'Remote', accommodations: [] }),
+    )!
+    expect(rec.accommodation.unmet).toEqual([])
+  })
+
+  it('reads legacy free-text needs and offers', () => {
+    expect(canonicalAccommodations(['Accessible entrance', 'Screen reader software', 'Flexible schedule'])).toEqual([
+      'Wheelchair-accessible workplace',
+      'Screen-reader-compatible tools',
+      'Flexible hours',
+    ])
+  })
+})
+
+describe('education fit (15)', () => {
+  it('meets or exceeds the minimum → full marks; each level below costs points but never excludes', () => {
+    const j = job({ minEducation: 'College Graduate' })
+    const grad = scoreJob(user({ educationLevel: 'College Graduate' }), j)!
+    const level = scoreJob(user({ educationLevel: 'College Level' }), j)!
+    const hs = scoreJob(user({ educationLevel: 'High School Graduate' }), j)!
+    expect(grad.components.education).toBe(15)
+    expect(level.components.education).toBeCloseTo(9, 5)
+    expect(hs.components.education).toBeLessThan(level.components.education)
+    expect(hs.components.education).toBeGreaterThan(0)
+  })
+
+  it('infers a level from free-text education when no explicit level is set', () => {
+    const rec = scoreJob(user({ education: 'Bachelor of Science in Information Technology' }), job({ minEducation: 'College Graduate' }))!
+    expect(rec.education.status).toBe('Met')
+  })
+})
+
+describe('location proximity (15)', () => {
+  it('ranks same barangay > Los Baños > elsewhere in Laguna > far / remote is a full pass', () => {
+    const u = user({ barangay: 'Brgy. Malinta' })
+    const same = scoreJob(u, job({ location: 'Brgy. Malinta' }))!
+    const town = scoreJob(u, job({ location: 'Los Baños, Laguna' }))!
+    const otherBrgy = scoreJob(u, job({ location: 'Brgy. Anos' }))!
+    const province = scoreJob(u, job({ location: 'Bay, Laguna' }))!
+    const far = scoreJob(u, job({ location: 'Quezon City' }))!
+    const remote = scoreJob(u, job({ location: 'Quezon City', workArrangement: 'Remote' }))!
+    expect(same.components.location).toBe(15)
+    expect(same.reasons.map((r) => r.label)).toContain('In your barangay')
+    expect(same.components.location).toBeGreaterThan(town.components.location)
+    expect(town.components.location).toBe(otherBrgy.components.location)
+    expect(town.components.location).toBeGreaterThan(province.components.location)
+    expect(province.components.location).toBeGreaterThan(far.components.location)
+    expect(remote.components.location).toBe(15)
+  })
+})
+
+describe('work arrangement / employment type preference (10)', () => {
+  it('rewards matching preferences, is neutral when none are stated, and zero on a mismatch', () => {
+    const match = scoreJob(user({ preferredJobTypes: ['Full-time'], preferredWorkSetup: ['On-site'] }), job())!
+    const neutral = scoreJob(user(), job())!
+    const mismatch = scoreJob(user({ preferredJobTypes: ['Freelance'], preferredWorkSetup: ['Remote'] }), job())!
+    expect(match.components.preference).toBe(10)
+    expect(neutral.components.preference).toBe(5)
+    expect(mismatch.components.preference).toBe(0)
+  })
+})
+
+describe('getRecommendations', () => {
+  const jobs = [
+    job({ id: 'JOB-A', title: 'Data Entry Clerk', skills: ['Data Entry', 'Microsoft Office'], accommodations: ['Screen-reader-compatible tools'] }),
+    job({ id: 'JOB-B', title: 'Welder', skills: ['Welding', 'Metal Fabrication'], employmentType: 'Freelance', workArrangement: 'Hybrid', location: 'Quezon City', minEducation: 'Post Graduate' }),
+    job({ id: 'JOB-C', title: 'Draft Job', status: 'Draft' }),
+    job({ id: 'JOB-D', title: 'Closed Job', status: 'Closed' }),
+    job({ id: 'JOB-E', title: 'Archived Job', status: 'Archived' }),
+    job({ id: 'JOB-F', title: 'Expired Job', deadline: '2026-09-21' }),
+    job({ id: 'JOB-G', title: 'Deadline Today', deadline: '2026-09-22' }),
+    job({ id: 'JOB-H', title: 'Restricted Job', suitableDisabilities: ['Deaf or Hard of Hearing'] }),
+  ]
+
+  it('only considers open, non-expired listings', () => {
+    const open = jobs.filter((j) => isOpenAndCurrent(j, NOW)).map((j) => j.id)
+    expect(open).toEqual(['JOB-A', 'JOB-B', 'JOB-G', 'JOB-H'])
+  })
+
+  it('sorts by score, hides those under the threshold, and counts what it hid', () => {
+    const res = getRecommendations(maria, jobs, { now: NOW })
+    expect(res.considered).toBe(4)
+    expect(res.restricted).toBe(1)
+    const scores = res.recommendations.map((r) => r.score)
+    expect(scores).toEqual([...scores].sort((a, b) => b - a))
+    expect(res.recommendations.every((r) => r.score >= MIN_MATCH_SCORE)).toBe(true)
+    expect(res.recommendations[0].job.id).toBe('JOB-A')
+    expect(res.recommendations.find((r) => r.job.id === 'JOB-B')).toBeUndefined()
+    expect(res.hidden).toBeGreaterThanOrEqual(1)
+  })
+
+  it('needs at least one matching required skill, so a profile with unrelated skills is not "matched" to everything', () => {
+    const unrelated = getRecommendations(user({ skills: ['Piloting'], educationLevel: 'College Graduate' }), jobs, { now: NOW })
+    expect(unrelated.locked).toBe(false)
+    expect(unrelated.recommendations).toEqual([])
+    expect(unrelated.hidden).toBeGreaterThan(0)
+    // …but a listing that asks for no particular skills stays eligible for anyone.
+    const anyone = getRecommendations(user({ skills: ['Piloting'], educationLevel: 'College Graduate' }), [job({ id: 'JOB-Z', skills: [] })], { now: NOW })
+    expect(anyone.recommendations.map((r) => r.job.id)).toEqual(['JOB-Z'])
+  })
+
+  it('recommends nothing until skills AND education have been entered', () => {
+    const none = getRecommendations(user(), jobs, { now: NOW })
+    const skillsOnly = getRecommendations(user({ skills: ['Data Entry'] }), jobs, { now: NOW })
+    const educationOnly = getRecommendations(user({ educationLevel: 'College Graduate' }), jobs, { now: NOW })
+    for (const res of [none, skillsOnly, educationOnly]) {
+      expect(res.locked).toBe(true)
+      expect(res.recommendations).toEqual([])
+    }
+    expect(getRecommendations(user({ skills: ['Data Entry'], educationLevel: 'College Graduate' }), jobs, { now: NOW }).locked).toBe(false)
+    // a course name is enough to infer the level
+    expect(canRecommend(user({ skills: ['Data Entry'], education: 'Bachelor of Science in Accountancy' }))).toBe(true)
+    // blank or whitespace-only skills do not count
+    expect(canRecommend(user({ skills: ['  '], educationLevel: 'College Graduate' }))).toBe(false)
+    expect(requiredGaps(user()).map((g) => g.field)).toEqual(['skills', 'educationLevel'])
+  })
+
+  it('recomputes when the profile changes', () => {
+    const before = getRecommendations(user({ skills: [] }), jobs, { now: NOW })
+    expect(before.locked).toBe(true)
+    const after = getRecommendations(user({ skills: ['Data Entry', 'Microsoft Office'], educationLevel: 'College Graduate' }), jobs, { now: NOW })
+    expect(after.recommendations.length).toBeGreaterThanOrEqual(before.recommendations.length)
+    expect(after.recommendations[0].score).toBeGreaterThan(before.recommendations[0]?.score ?? 0)
+  })
+
+  it('gives "why this match" reasons for a strong match', () => {
+    const rec = getRecommendations(maria, jobs, { now: NOW }).recommendations[0]
+    const labels = rec.reasons.map((r) => r.label)
+    expect(labels.some((l) => l.startsWith('Skills:'))).toBe(true)
+    expect(labels).toContain('Screen-reader compatible')
+  })
+
+  it('returns an empty list, not an error, when nothing matches', () => {
+    const res = getRecommendations(user({ skills: ['Welding'], educationLevel: 'College Graduate', preferredJobTypes: ['Freelance'] }), [jobs[1], jobs[0]].map((j) => ({ ...j, skills: ['Piloting'], location: 'Cebu', minEducation: 'Post Graduate' })), { now: NOW })
+    expect(res.recommendations).toEqual([])
+  })
+})
+
+describe('profile completeness', () => {
+  it('lists the missing fields that drive matching, never accommodation needs', () => {
+    const gaps = profileGaps(user()).map((g) => g.field)
+    expect(gaps).toEqual(['skills', 'educationLevel', 'workExperience', 'preferredJobTypes', 'preferredWorkSetup'])
+    expect(profileGaps(maria)).toEqual([])
   })
 })

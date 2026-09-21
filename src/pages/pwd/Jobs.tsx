@@ -1,405 +1,469 @@
-import { useState, useMemo } from 'react'
-import { Briefcase, MapPin, Clock, CheckCircle, Star, Info, AlertTriangle } from 'lucide-react'
-import { Card, Button, SearchBar, Select, Modal } from '../../components/ui'
+import { useMemo, useState } from 'react'
+import {
+  Briefcase, MapPin, Clock, CheckCircle, Bookmark, BookmarkCheck, AlertTriangle, Info, Users, Wallet, Pencil,
+} from 'lucide-react'
+import { Card, Button, SearchBar, Select, Modal, Tabs, EmptyState } from '../../components/ui'
 import { usePWDSession } from '../../context'
 import { useStore } from '../../store'
-import { getRecommendations } from '../../lib/recommend/score'
-import { type JobRecommendation, type ScoreBreakdown } from '../../lib/recommend/types'
-
-type Rec = JobRecommendation
+import { EMPLOYMENT_TYPES, WORK_ARRANGEMENTS } from '../../lib/catalog'
+import { DEFAULT_WEIGHTS, MIN_MATCH_SCORE, MIN_SKILL_COVERAGE, getRecommendations, isOpenAndCurrent, scoreJob } from '../../lib/recommend/score'
+import { profileGaps } from '../../lib/recommend/profile'
+import type { ComponentKey, MatchBand, Recommendation } from '../../lib/recommend/types'
+import type { Job } from '../../data'
+import RecommendationSetup from './RecommendationSetup'
 
 // ── Presentation helpers ────────────────────────────────────────────
 
-const BAND_STYLE: Record<Rec['band'], string> = {
-  Excellent: 'bg-teal-50 text-teal-700 border-teal-200',
-  Good: 'bg-blue-50 text-blue-700 border-blue-200',
-  Fair: 'bg-amber-50 text-amber-700 border-amber-200',
-  Weak: 'bg-rose-50 text-rose-700 border-rose-200',
+const BAND_STYLE: Record<MatchBand, string> = {
+  Excellent: 'bg-teal-50 text-teal-800 border-teal-200',
+  Good: 'bg-blue-50 text-blue-800 border-blue-200',
+  Fair: 'bg-amber-50 text-amber-800 border-amber-200',
 }
 
-const BAND_COLOR: Record<Rec['band'], string> = {
-  Excellent: '#0d9488',
-  Good: '#2563eb',
-  Fair: '#d97706',
-  Weak: '#e11d48',
+const BAND_COLOR: Record<MatchBand, string> = {
+  Excellent: '#0f766e',
+  Good: '#1d4ed8',
+  Fair: '#b45309',
 }
 
-const ACCESS_STYLE: Record<Rec['accessibility']['fit'], string> = {
-  'Not assessed': 'bg-gray-100 text-gray-600 border-gray-200',
-  Compatible: 'bg-green-50 text-green-700 border-green-200',
-  'Compatible with accommodation': 'bg-sky-50 text-sky-700 border-sky-200',
-  'Needs confirmation': 'bg-amber-50 text-amber-700 border-amber-200',
-  'Not compatible': 'bg-rose-50 text-rose-700 border-rose-200',
+const COMPONENT_LABEL: Record<ComponentKey, string> = {
+  skills: 'Skills match',
+  suitability: 'Suitability & accommodations',
+  education: 'Education fit',
+  location: 'Location',
+  preference: 'Work type & arrangement',
 }
 
-function MatchRing({ percent, band }: { percent: number; band: Rec['band'] }) {
+const formatDate = (iso: string) =>
+  iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No end date'
+
+const LOCATION_FILTERS = [
+  { value: 'mine', label: 'My barangay' },
+  { value: 'losbanos', label: 'Anywhere in Los Baños' },
+  { value: 'outside', label: 'Outside Los Baños' },
+  { value: 'remote', label: 'Work from home' },
+]
+
+function matchesLocation(rec: Recommendation | null, filter: string): boolean {
+  if (!filter) return true
+  if (!rec) return false
+  const level = rec.location.level
+  if (filter === 'mine') return level === 'barangay'
+  if (filter === 'losbanos') return level === 'barangay' || level === 'municipality'
+  if (filter === 'outside') return level === 'province' || level === 'far'
+  return level === 'remote'
+}
+
+function MatchRing({ percent, band }: { percent: number; band: MatchBand }) {
   const r = 22
   const c = 2 * Math.PI * r
-  const dash = (percent / 100) * c
   return (
-    <div className="relative w-14 h-14 shrink-0">
-      <svg viewBox="0 0 50 50" className="w-14 h-14 -rotate-90">
+    <div className="relative w-14 h-14 shrink-0" role="img" aria-label={`${percent} percent match, ${band} fit`}>
+      <svg viewBox="0 0 50 50" className="w-14 h-14 -rotate-90" aria-hidden="true">
         <circle cx="25" cy="25" r={r} fill="none" stroke="#e2e8f0" strokeWidth="4" />
-        <circle
-          cx="25" cy="25" r={r} fill="none" stroke={BAND_COLOR[band]} strokeWidth="4"
-          strokeDasharray={`${dash} ${c}`} strokeLinecap="round"
-        />
+        <circle cx="25" cy="25" r={r} fill="none" stroke={BAND_COLOR[band]} strokeWidth="4" strokeDasharray={`${(percent / 100) * c} ${c}`} strokeLinecap="round" />
       </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center" aria-hidden="true">
         <span className="text-xs font-extrabold" style={{ color: BAND_COLOR[band] }}>{percent}%</span>
       </div>
     </div>
   )
 }
 
-function FitBadge({ band }: { band: Rec['band'] }) {
+function ReasonChips({ rec, limit }: { rec: Recommendation; limit?: number }) {
+  const reasons = limit ? rec.reasons.slice(0, limit) : rec.reasons
   return (
-    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${BAND_STYLE[band]}`}>
-      {band}
-    </span>
+    <ul className="flex flex-wrap gap-1.5" aria-label="Why this match">
+      {reasons.map((r) => (
+        <li
+          key={r.label}
+          className={`text-[11px] px-2 py-0.5 rounded-full border font-medium ${
+            r.tone === 'positive' ? 'bg-teal-50 text-teal-800 border-teal-200' : 'bg-amber-50 text-amber-800 border-amber-200'
+          }`}
+        >
+          {r.tone === 'caution' && <span className="sr-only">Check: </span>}
+          {r.label}
+        </li>
+      ))}
+    </ul>
   )
 }
 
-function AccessBadge({ fit }: { fit: Rec['accessibility']['fit'] }) {
-  return (
-    <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${ACCESS_STYLE[fit]}`}>
-      {fit === 'Needs confirmation' ? 'Confirm accessibility' : fit === 'Not assessed' ? 'Accessibility not assessed' : fit}
-    </span>
-  )
-}
+// ── Cards ───────────────────────────────────────────────────────────
 
-function matchReasonChips(rec: Rec): { label: string; tone: 'teal' | 'amber' | 'blue' }[] {
-  const chips: { label: string; tone: 'teal' | 'amber' | 'blue' }[] = []
-  const matched = rec.skills.matched
-  if (matched.length > 0) {
-    chips.push({ label: `Skills: ${matched.slice(0, 4).join(', ')}${matched.length > 4 ? ' +' : ''}`, tone: 'teal' })
-  }
-  if (rec.family.matchLevel === 'exact') {
-    chips.push({ label: 'Matches your preferred job', tone: 'blue' })
-  } else if (rec.family.matchLevel === 'family') {
-    chips.push({ label: `In your field: ${rec.family.jobFamily ?? 'similar roles'}`, tone: 'blue' })
-  }
-  if (rec.qualification.status === 'Met') {
-    chips.push({ label: 'Education requirement met', tone: 'blue' })
-  } else if (rec.qualification.status === 'Partly met') {
-    chips.push({ label: 'Education partly met', tone: 'amber' })
-  }
-  if (rec.skills.missing.length > 0) {
-    chips.push({ label: `Missing: ${rec.skills.missing.slice(0, 2).join(', ')}`, tone: 'amber' })
-  }
-  return chips
-}
-
-function BreakdownBar({ label, value, max }: { label: string; value: number; max: number }) {
-  const pct = Math.round((value / max) * 100)
-  return (
-    <div>
-      <div className="flex justify-between text-xs mb-1">
-        <span className="text-gray-600 font-medium">{label}</span>
-        <span className="text-gray-400">{pct}%</span>
-      </div>
-      <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden">
-        <div className="h-full rounded-full bg-teal-500" style={{ width: `${Math.min(100, pct)}%` }} />
-      </div>
-    </div>
-  )
-}
-
-function ScoreBreakdownPanel({ components, adjustment }: { components: ScoreBreakdown; adjustment: number }) {
-  const base = components.skills + components.capabilities + components.family + components.qualifications + components.experience
-  return (
-    <div className="space-y-2.5">
-      <BreakdownBar label="Skills fit (40%)" value={components.skills} max={40} />
-      <BreakdownBar label="Capabilities vs. duties (25%)" value={components.capabilities} max={25} />
-      <BreakdownBar label="Job-family alignment (15%)" value={components.family} max={15} />
-      <BreakdownBar label="Qualifications (10%)" value={components.qualifications} max={10} />
-      <BreakdownBar label="Experience (10%)" value={components.experience} max={10} />
-      <div className="flex justify-between text-xs pt-1 border-t border-gray-100">
-        <span className="text-gray-600 font-medium">Base score</span>
-        <span className="text-gray-400">{Math.round(base * 10) / 10}</span>
-      </div>
-      <div className="flex justify-between text-xs">
-        <span className="text-gray-600 font-medium">Accessibility fit adjustment</span>
-        <span className={adjustment >= 0 ? 'text-green-600 font-semibold' : 'text-amber-600 font-semibold'}>
-          {adjustment === 0 ? '0' : `${adjustment > 0 ? '+' : ''}${adjustment}`}
-        </span>
-      </div>
-    </div>
-  )
-}
-
-function JobCard({ rec, onView }: { rec: Rec; onView: () => void }) {
-  const job = rec.job
-  const typeColor: Record<string, string> = {
-    'Full-time': 'bg-blue-50 text-blue-700',
-    'Part-time': 'bg-purple-50 text-purple-700',
-    'Contract': 'bg-amber-50 text-amber-700',
-    'Remote': 'bg-green-50 text-green-700',
-  }
-  const chips = matchReasonChips(rec)
-
+function JobCard({ job, rec, saved, onView, onToggleSave }: {
+  job: Job
+  rec: Recommendation | null
+  saved: boolean
+  onView: () => void
+  onToggleSave: () => void
+}) {
+  const open = isOpenAndCurrent(job)
   return (
     <Card className="p-5 flex flex-col hover:shadow-md transition-shadow">
-      <div className="flex items-start gap-3 mb-4">
-        <MatchRing percent={Math.round(rec.score)} band={rec.band} />
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center justify-between gap-2 mb-1">
-            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${typeColor[job.type] ?? 'bg-gray-100 text-gray-600'}`}>
-              {job.type}
-            </span>
-            <FitBadge band={rec.band} />
+      <div className="flex items-start gap-3 mb-3">
+        {rec ? (
+          <MatchRing percent={rec.score} band={rec.band} />
+        ) : (
+          <div className="w-14 h-14 shrink-0 rounded-full bg-slate-100 flex items-center justify-center" aria-hidden="true">
+            <Briefcase size={20} className="text-slate-400" />
           </div>
-          <h3 className="font-semibold text-gray-900 text-sm leading-snug">{job.title}</h3>
-          <p className="text-sm text-teal-700 font-medium">{job.company}</p>
-        </div>
-      </div>
-
-      <div className="space-y-1.5 mb-4 flex-1">
-        <div className="flex items-center gap-1.5 text-xs text-gray-500">
-          <MapPin size={11} className="shrink-0 text-gray-400" />{job.location}
-        </div>
-        <div className="flex items-start gap-1.5 text-xs text-teal-700">
-          <CheckCircle size={11} className="shrink-0 mt-0.5 text-teal-500" />
-          <span className="line-clamp-2">{job.accessibilityInfo}</span>
-        </div>
-        {rec.accessibility.needsAssessed && <AccessBadge fit={rec.accessibility.fit} />}
-        {rec.duplicateJobIds.length > 0 && (
-          <p className="text-[10px] text-gray-400">Also listed as: {rec.duplicateJobIds.join(', ')}</p>
         )}
+        <div className="flex-1 min-w-0">
+          <h3 className="font-semibold text-gray-900 text-sm leading-snug">{job.title}</h3>
+          <p className="text-sm text-teal-800 font-medium">{job.company}</p>
+          <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
+            {rec && <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${BAND_STYLE[rec.band]}`}>{rec.band} match</span>}
+            {!open && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-slate-100 text-slate-700 border-slate-200">No longer open</span>}
+          </div>
+        </div>
+        <button
+          onClick={onToggleSave}
+          aria-pressed={saved}
+          aria-label={saved ? `Remove ${job.title} from saved jobs` : `Save ${job.title}`}
+          className={`p-2 rounded-lg transition-colors ${saved ? 'text-ea-teal-700 bg-ea-teal-50' : 'text-slate-500 hover:bg-slate-100'}`}
+        >
+          {saved ? <BookmarkCheck size={18} /> : <Bookmark size={18} />}
+        </button>
       </div>
 
-      {chips.length > 0 && (
-        <div className="mb-4">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1.5">Why Recommended</p>
-          <div className="flex flex-wrap gap-1.5">
-            {chips.map((c, i) => (
-              <span
-                key={i}
-                className={`text-[11px] px-2 py-0.5 rounded-full border font-medium ${
-                  c.tone === 'teal'
-                    ? 'bg-teal-50 text-teal-700 border-teal-100'
-                    : c.tone === 'blue'
-                      ? 'bg-blue-50 text-blue-700 border-blue-100'
-                      : 'bg-amber-50 text-amber-700 border-amber-100'
-                }`}
-              >
-                {c.label}
-              </span>
-            ))}
-          </div>
+      <ul className="space-y-1 mb-3 text-xs text-gray-600">
+        <li className="flex items-center gap-1.5"><MapPin size={12} className="shrink-0 text-gray-600" aria-hidden="true" />{job.location}</li>
+        <li className="flex items-center gap-1.5"><Briefcase size={12} className="shrink-0 text-gray-600" aria-hidden="true" />{job.employmentType} · {job.workArrangement}</li>
+        <li className="flex items-center gap-1.5"><Clock size={12} className="shrink-0 text-gray-600" aria-hidden="true" />Open until {formatDate(job.deadline)}</li>
+      </ul>
+
+      {rec && rec.reasons.length > 0 && (
+        <div className="mb-4 flex-1">
+          <p className="text-[10px] font-bold text-gray-600 uppercase tracking-wide mb-1.5">Why this match</p>
+          <ReasonChips rec={rec} limit={5} />
         </div>
       )}
+      {!rec && <div className="flex-1" />}
 
-      <div className="flex flex-wrap gap-1.5 mb-4">
-        {rec.skills.matched.concat(rec.skills.missing).slice(0, 5).map((s) => (
-          <span key={s} className="text-[11px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{s}</span>
-        ))}
-      </div>
-
-      <Button size="sm" variant="outline" onClick={onView} fullWidth>
-        View Details
-      </Button>
+      <Button size="sm" variant="outline" onClick={onView} fullWidth>View Details</Button>
     </Card>
   )
 }
 
-function JobDetail({ rec, onClose }: { rec: Rec; onClose: () => void }) {
-  const job = rec.job
+function JobDetail({ job, rec, saved, onClose, onToggleSave }: {
+  job: Job
+  rec: Recommendation | null
+  saved: boolean
+  onClose: () => void
+  onToggleSave: () => void
+}) {
+  const open = isOpenAndCurrent(job)
   return (
     <Modal open title={job.title} onClose={onClose} size="lg">
       <div className="space-y-5">
-        {/* Match banner */}
-        <div className="flex items-center gap-4 p-4 bg-teal-50 rounded-xl border border-teal-100">
-          <MatchRing percent={Math.round(rec.score)} band={rec.band} />
-          <div className="flex-1">
-            <p className="font-bold text-teal-800 text-sm">{Math.round(rec.score)}% Match — {rec.band} Fit</p>
-            <p className="text-teal-600 text-xs mt-0.5">
-              Hybrid scoring: skills 40% · capabilities 25% · job-family 15% · education 10% · experience 10%, plus an accessibility-fit check.
-            </p>
-          </div>
-          {rec.duplicateJobIds.length > 0 && (
-            <p className="text-[10px] text-teal-600 shrink-0">Also listed as {rec.duplicateJobIds.join(', ')}</p>
-          )}
-        </div>
-
-        <div>
-          <p className="text-base font-bold text-teal-700">{job.company}</p>
-          <div className="flex flex-wrap gap-4 mt-2 text-sm text-gray-600">
-            <span className="flex items-center gap-1"><MapPin size={13} />{job.location}</span>
-            <span className="flex items-center gap-1"><Briefcase size={13} />{job.type}</span>
-            <span className="flex items-center gap-1"><Clock size={13} />Deadline: {job.deadline}</span>
-          </div>
-        </div>
-
-        <div className="grid md:grid-cols-2 gap-5">
-          <div>
-            <p className="text-xs uppercase tracking-wide font-bold text-gray-400 mb-2">How the score is built</p>
-            <ScoreBreakdownPanel components={rec.components} adjustment={rec.accessibility.adjustment} />
-          </div>
-          <div>
-            <p className="text-xs uppercase tracking-wide font-bold text-gray-400 mb-2">Requirement check</p>
-            <div className="bg-gray-50 rounded-xl p-4 text-sm space-y-3">
-              <div>
-                <p className="text-[11px] font-bold text-gray-500 uppercase">Qualifications</p>
-                <p className="text-gray-700 mt-0.5">{rec.qualification.status} — {rec.qualification.note}</p>
-              </div>
-              <div>
-                <p className="text-[11px] font-bold text-gray-500 uppercase">Accessibility fit</p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <AccessBadge fit={rec.accessibility.fit} />
-                </div>
-                {rec.accessibility.needsAssessed && rec.accessibility.note && (
-                  <p className="text-gray-700 mt-1 text-xs leading-relaxed">{rec.accessibility.note}</p>
-                )}
-              </div>
-              {rec.accessibility.questionsToConfirm.length > 0 && (
-                <div>
-                  <p className="text-[11px] font-bold text-gray-500 uppercase">Questions to confirm with the employer</p>
-                  <ul className="mt-1 space-y-1">
-                    {rec.accessibility.questionsToConfirm.map((q, i) => (
-                      <li key={i} className="text-xs text-amber-700 flex items-start gap-1.5">
-                        <span className="text-amber-500 mt-0.5">•</span>{q}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {rec.skills.missing.length > 0 && (
-          <div>
-            <p className="text-xs uppercase tracking-wide font-bold text-gray-400 mb-2">Skills you still need for this role</p>
-            <div className="flex flex-wrap gap-2">
-              {rec.skills.missing.map((s) => (
-                <span key={s} className="bg-amber-50 text-amber-800 text-sm px-3 py-1 rounded-full border border-amber-200">{s}</span>
-              ))}
+        {rec && (
+          <div className="flex items-center gap-4 p-4 bg-teal-50 rounded-xl border border-teal-100">
+            <MatchRing percent={rec.score} band={rec.band} />
+            <div className="flex-1">
+              <p className="font-bold text-teal-900 text-sm">{rec.score}% match — {rec.band} fit</p>
+              <p className="text-teal-800 text-xs mt-0.5">Your skills, accommodations, education, location and preferences compared with this listing.</p>
             </div>
           </div>
         )}
 
         <div>
-          <p className="text-xs uppercase tracking-wide font-bold text-gray-400 mb-2">Job Description</p>
+          <p className="text-base font-bold text-teal-800">{job.company}</p>
+          <ul className="flex flex-wrap gap-x-5 gap-y-1.5 mt-2 text-sm text-gray-700">
+            <li className="flex items-center gap-1.5"><MapPin size={14} aria-hidden="true" />{job.location}</li>
+            <li className="flex items-center gap-1.5"><Briefcase size={14} aria-hidden="true" />{job.employmentType} · {job.workArrangement}</li>
+            <li className="flex items-center gap-1.5"><Clock size={14} aria-hidden="true" />Open until {formatDate(job.deadline)}</li>
+            <li className="flex items-center gap-1.5"><Users size={14} aria-hidden="true" />{job.slots} slot{job.slots === 1 ? '' : 's'}</li>
+            {job.salary && <li className="flex items-center gap-1.5"><Wallet size={14} aria-hidden="true" />{job.salary}</li>}
+          </ul>
+        </div>
+
+        {rec && (
+          <div className="grid md:grid-cols-2 gap-5">
+            <div>
+              <h3 className="text-xs uppercase tracking-wide font-bold text-gray-600 mb-2">Why this match</h3>
+              <ReasonChips rec={rec} />
+            </div>
+            <div>
+              <h3 className="text-xs uppercase tracking-wide font-bold text-gray-600 mb-2">How the score is built</h3>
+              <ul className="space-y-2">
+                {(Object.keys(COMPONENT_LABEL) as ComponentKey[]).map((k) => {
+                  const max = DEFAULT_WEIGHTS[k]
+                  const pts = Math.round(rec.components[k] * 10) / 10
+                  return (
+                    <li key={k}>
+                      <div className="flex justify-between text-xs mb-1">
+                        <span className="text-gray-700 font-medium">{COMPONENT_LABEL[k]}</span>
+                        <span className="text-gray-600">{pts} / {max}</span>
+                      </div>
+                      <div className="h-1.5 rounded-full bg-gray-100 overflow-hidden" role="presentation">
+                        <div className="h-full rounded-full bg-teal-600" style={{ width: `${Math.min(100, (pts / max) * 100)}%` }} />
+                      </div>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          </div>
+        )}
+
+        <div>
+          <h3 className="text-xs uppercase tracking-wide font-bold text-gray-600 mb-2">Job description</h3>
           <p className="text-sm text-gray-700 bg-gray-50 rounded-xl p-4 leading-relaxed">{job.description}</p>
         </div>
 
-        <div>
-          <p className="text-xs uppercase tracking-wide font-bold text-gray-400 mb-2">Required Skills</p>
-          <div className="flex flex-wrap gap-2">
-            {job.skills.map((s) => (
-              <span key={s} className="bg-gray-100 text-gray-700 text-sm px-3 py-1 rounded-full">{s}</span>
-            ))}
-          </div>
-        </div>
-
-        <div>
-          <p className="text-xs uppercase tracking-wide font-bold text-gray-400 mb-2">Accessibility & PWD Support</p>
-          <div className="flex gap-2 bg-green-50 rounded-xl p-4 border border-green-100">
-            <CheckCircle size={17} className="text-green-600 shrink-0 mt-0.5" />
-            <p className="text-sm text-green-800">{job.accessibilityInfo}</p>
-          </div>
-        </div>
-
-        {/* IMPORTANT: No apply button — recommendation only */}
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
-          <Info size={17} className="text-amber-600 shrink-0 mt-0.5" />
+        <div className="grid md:grid-cols-2 gap-5">
           <div>
-            <p className="text-sm font-semibold text-amber-800">For Information & Reference Only</p>
-            <p className="text-xs text-amber-700 mt-0.5">
-              This is a job recommendation based on your profile. To pursue this opportunity, please coordinate directly with the employer or your local PDAO office.
+            <h3 className="text-xs uppercase tracking-wide font-bold text-gray-600 mb-2">Required skills</h3>
+            {job.skills.length === 0 ? (
+              <p className="text-sm text-gray-600">No specific skills listed.</p>
+            ) : (
+              <ul className="flex flex-wrap gap-2">
+                {job.skills.map((s) => {
+                  const have = rec?.skills.matched.includes(s)
+                  const close = rec?.skills.related.includes(s)
+                  return (
+                    <li key={s} className={`text-sm px-3 py-1 rounded-full border ${have ? 'bg-teal-50 text-teal-800 border-teal-200' : close ? 'bg-sky-50 text-sky-800 border-sky-200' : 'bg-gray-50 text-gray-700 border-gray-200'}`}>
+                      {have && <CheckCircle size={12} className="inline mr-1 -mt-0.5" aria-hidden="true" />}
+                      {s}
+                      {have && <span className="sr-only"> (you have this skill)</span>}
+                      {close && <span className="text-xs"> · related to your skills</span>}
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+            <p className="text-xs text-gray-600 mt-3">
+              <span className="font-semibold">Minimum education:</span> {job.minEducation || 'None required'}
             </p>
           </div>
+          <div>
+            <h3 className="text-xs uppercase tracking-wide font-bold text-gray-600 mb-2">Accommodations offered</h3>
+            {job.accommodations.length === 0 ? (
+              <p className="text-sm text-gray-600">The employer has not listed any. Worth asking about if you need one.</p>
+            ) : (
+              <ul className="space-y-1">
+                {job.accommodations.map((a) => (
+                  <li key={a} className="flex items-start gap-2 text-sm text-gray-800">
+                    <CheckCircle size={15} className="text-green-700 shrink-0 mt-0.5" aria-hidden="true" />{a}
+                  </li>
+                ))}
+              </ul>
+            )}
+            {job.accessibilityInfo && <p className="text-xs text-gray-600 mt-3 leading-relaxed">{job.accessibilityInfo}</p>}
+          </div>
         </div>
 
-        <div className="flex gap-3 pt-2">
-          <Button size="lg" variant="outline" onClick={onClose} fullWidth>Close</Button>
+        {rec && rec.accommodation.unmet.length > 0 && (
+          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex gap-3">
+            <AlertTriangle size={17} className="text-amber-700 shrink-0 mt-0.5" aria-hidden="true" />
+            <p className="text-sm text-amber-900">
+              Not listed by the employer: <strong>{rec.accommodation.unmet.join(', ')}</strong>. PDAO can help you ask about these.
+            </p>
+          </div>
+        )}
+
+        <div className="border-t border-gray-100 pt-4 space-y-3">
+          <div className="bg-sky-50 border border-sky-200 rounded-xl p-4 flex gap-3">
+            <Info size={17} className="text-sky-700 shrink-0 mt-0.5" aria-hidden="true" />
+            <p className="text-xs text-sky-900 leading-relaxed">
+              This is a recommendation only. Applications are not taken on this portal{open ? '' : ', and this listing is no longer open'}.
+            </p>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            <Button size="lg" variant="outline" onClick={onToggleSave} aria-pressed={saved} icon={saved ? <BookmarkCheck size={16} /> : <Bookmark size={16} />}>
+              <span className="ml-1.5">{saved ? 'Saved' : 'Save'}</span>
+            </Button>
+            <Button size="lg" variant="ghost" onClick={onClose}>Close</Button>
+          </div>
         </div>
       </div>
     </Modal>
   )
 }
 
-export default function Jobs() {
+// ── Page ────────────────────────────────────────────────────────────
+
+export default function Jobs({ onNavigate }: { onNavigate: (p: string) => void }) {
   const session = usePWDSession()
-  const { pwdUsers, jobs } = useStore()
-  const currentUser = session ? (pwdUsers.find((u) => u.id === session.userId) ?? pwdUsers[0]) : pwdUsers[0]
+  const { pwdUsers, jobs, toggleSavedJob } = useStore()
+  const user = (session ? pwdUsers.find((u) => u.id === session.userId) : undefined) ?? pwdUsers[0]
+
+  const [tab, setTab] = useState<'Recommended' | 'Saved'>('Recommended')
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
-  const [selected, setSelected] = useState<Rec | null>(null)
+  const [arrangementFilter, setArrangementFilter] = useState('')
+  const [locationFilter, setLocationFilter] = useState('')
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [editingSetup, setEditingSetup] = useState(false)
 
-  const result = useMemo(() => getRecommendations(currentUser, jobs), [currentUser, jobs])
-  const recommended = result.recommendations
+  // Recomputed whenever the profile or the listings change.
+  const result = useMemo(() => getRecommendations(user, jobs), [user, jobs])
+  const gaps = useMemo(() => profileGaps(user), [user])
+  const saved = user.savedJobIds ?? []
 
-  const jobTypes = ['Full-time', 'Part-time', 'Contract', 'Remote'].map((t) => ({ value: t, label: t }))
+  const header = (
+    <div>
+      <h1 className="text-2xl font-bold text-gray-900">Job Recommendations</h1>
+      <p className="text-gray-600 text-sm mt-0.5">
+        Jobs matched to your skills, education, location and preferences. These are suggestions only — you can&apos;t apply here. Your disability type is never used to hide a job.
+      </p>
+    </div>
+  )
 
-  // Apply UI filters
-  let filtered = recommended.filter((rec) => {
-    const j = rec.job
-    const q = search.toLowerCase()
-    return (!search || j.title.toLowerCase().includes(q) || j.company.toLowerCase().includes(q) || j.location.toLowerCase().includes(q))
-      && (!typeFilter || j.type === typeFilter)
-  })
+  // Nothing is listed until the PWD has entered their skills and education.
+  if (result.locked) {
+    return (
+      <div className="space-y-5">
+        {header}
+        <RecommendationSetup user={user} />
+      </div>
+    )
+  }
+
+  const recFor = (job: Job): Recommendation | null =>
+    result.recommendations.find((r) => r.job.id === job.id) ?? scoreJob(user, job)
+
+  const passesFilters = (job: Job, rec: Recommendation | null) => {
+    const q = search.trim().toLowerCase()
+    return (
+      (!q || job.title.toLowerCase().includes(q) || job.company.toLowerCase().includes(q) || job.location.toLowerCase().includes(q)) &&
+      (!typeFilter || job.employmentType === typeFilter) &&
+      (!arrangementFilter || job.workArrangement === arrangementFilter) &&
+      matchesLocation(rec, locationFilter)
+    )
+  }
+
+  const recommended = result.recommendations.filter((r) => passesFilters(r.job, r))
+  const savedJobs = saved
+    .map((id) => jobs.find((j) => j.id === id))
+    .filter((j): j is Job => Boolean(j))
+    .map((job) => ({ job, rec: recFor(job) }))
+    .filter(({ job, rec }) => passesFilters(job, rec))
+
+  const filtersActive = Boolean(search || typeFilter || arrangementFilter || locationFilter)
+  const clearFilters = () => { setSearch(''); setTypeFilter(''); setArrangementFilter(''); setLocationFilter('') }
+
+  const selectedJob = selectedId ? jobs.find((j) => j.id === selectedId) : undefined
+  const tabLabels = [`Recommended (${result.recommendations.length})`, `Saved (${saved.length})`]
+  const activeLabel = tabLabels[['Recommended', 'Saved'].indexOf(tab)]
+
+  const renderCard = (job: Job, rec: Recommendation | null) => (
+    <JobCard
+      key={job.id}
+      job={job}
+      rec={rec}
+      saved={saved.includes(job.id)}
+      onView={() => setSelectedId(job.id)}
+      onToggleSave={() => toggleSavedJob(user.id, job.id)}
+    />
+  )
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Job Recommendations</h1>
-        <p className="text-gray-500 text-sm mt-0.5">Personalized job suggestions matched to your skills, goals, and accessibility needs — for reference only</p>
-      </div>
+      {header}
 
-      {/* ML info banner */}
-      <div className="bg-teal-50 border border-teal-100 rounded-xl p-4 flex gap-3">
-        <Star size={18} className="text-teal-600 shrink-0 mt-0.5" />
-        <div>
-          <p className="text-sm font-semibold text-teal-800">Personalized Matching Engine</p>
-          <p className="text-xs text-teal-600 mt-0.5">
-            Jobs are scored with a weighted, synonym-aware model (skills 40% · capabilities 25% · job family 15% · education 10% · experience 10%) plus an accessibility-fit check.
-            {filtered.length > 0 && ` Found ${filtered.length} recommendation${filtered.length !== 1 ? 's' : ''}.`}
-            {result.excludedCount > 0 && ` ${result.excludedCount} posting${result.excludedCount !== 1 ? 's' : ''} excluded because they directly conflict with your stated accessibility needs.`}
-          </p>
-        </div>
-      </div>
-
-      {/* Weak-match banner */}
-      {result.weakMatch && recommended.length > 0 && (
-        <div className="bg-rose-50 border border-rose-200 rounded-xl p-4 flex gap-3">
-          <AlertTriangle size={18} className="text-rose-600 shrink-0 mt-0.5" />
-          <div>
-            <p className="text-sm font-semibold text-rose-800">No strong matches found right now</p>
-            <p className="text-xs text-rose-700 mt-0.5">
-              The closest opportunities all score below 50%. Consider upskilling in:
-              {' '}{result.suggestedImprovements.slice(0, 5).join(', ') || 'a listed skill'} — or check back when new postings arrive.
+      {editingSetup ? (
+        <RecommendationSetup user={user} editing onCancel={() => setEditingSetup(false)} onSaved={() => setEditingSetup(false)} />
+      ) : (
+        <div className="card-glass rounded-2xl p-4 flex flex-wrap items-center gap-4" role="region" aria-label="Your skills and education">
+          <div className="flex-1 min-w-56 space-y-1">
+            <p className="text-xs font-bold text-gray-600 uppercase tracking-wide">Matched using</p>
+            <p className="text-sm text-gray-900"><span className="font-semibold">Skills:</span> {(user.skills ?? []).join(', ')}</p>
+            <p className="text-sm text-gray-900">
+              <span className="font-semibold">Education:</span> {user.educationLevel || 'Set from your course'}{user.education ? ` — ${user.education}` : ''}
             </p>
           </div>
+          <Button size="sm" variant="outline" icon={<Pencil size={13} />} onClick={() => setEditingSetup(true)}>
+            <span className="ml-1.5">Update skills &amp; education</span>
+          </Button>
         </div>
       )}
 
-      {/* Filters */}
-      <div className="flex gap-3 flex-wrap items-center">
-        <div className="flex-1 min-w-52">
-          <SearchBar value={search} onChange={setSearch} placeholder="Search jobs, companies, locations..." />
+      {gaps.length > 0 && (
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 flex flex-wrap items-center gap-4" role="region" aria-label="Improve your matches">
+          <AlertTriangle size={20} className="text-amber-700 shrink-0" aria-hidden="true" />
+          <div className="flex-1 min-w-56">
+            <p className="text-sm font-semibold text-amber-900">Add more to your profile for sharper matches</p>
+            <p className="text-xs text-amber-900 mt-0.5">Optional: {gaps.map((g) => g.label.toLowerCase()).join(', ')}.</p>
+          </div>
+          <Button size="sm" onClick={() => onNavigate('pwd-profile')}>Open my profile</Button>
         </div>
-        <div className="min-w-36">
-          <Select label="" options={jobTypes} value={typeFilter} onChange={setTypeFilter} placeholder="All Types" />
+      )}
+
+      <details className="card-glass rounded-2xl px-5 py-3 text-sm">
+        <summary className="cursor-pointer font-semibold text-gray-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-ea-teal-500 rounded">How is my match score calculated?</summary>
+        <div className="mt-3 text-gray-700 space-y-2">
+          <p>Every open listing is scored from 0 to 100. Only matches of {MIN_MATCH_SCORE}% or more are shown, and you must have at least {Math.round(MIN_SKILL_COVERAGE * 100)}% of the skills a job asks for (a closely related skill counts as part of one).</p>
+          <ul className="list-disc pl-5 space-y-1">
+            <li><strong>Skills match ({DEFAULT_WEIGHTS.skills}):</strong> how many of the required skills you have. Different wordings count as the same skill (for example &quot;MS Excel&quot; and &quot;Microsoft Office&quot;), and a closely related skill earns partial credit.</li>
+            <li><strong>Suitability &amp; accommodations ({DEFAULT_WEIGHTS.suitability}):</strong> whether the employer offers the accommodations you asked for, with a boost when they list your disability type as suitable.</li>
+            <li><strong>Education fit ({DEFAULT_WEIGHTS.education}):</strong> your highest level against the minimum.</li>
+            <li><strong>Location ({DEFAULT_WEIGHTS.location}):</strong> your barangay, Los Baños, or work from home.</li>
+            <li><strong>Work type &amp; arrangement ({DEFAULT_WEIGHTS.preference}):</strong> your preferred employment type and on-site, hybrid or remote.</li>
+          </ul>
+          <p>A job is left out only if the employer has restricted it to specific disability types that don&apos;t include yours.</p>
         </div>
+      </details>
+
+      <Tabs tabs={tabLabels} active={activeLabel} onChange={(l) => setTab((['Recommended', 'Saved'] as const)[tabLabels.indexOf(l)])} />
+
+      <div className="flex gap-3 flex-wrap items-end" role="group" aria-label="Filter jobs">
+        <div className="flex-1 min-w-52"><SearchBar value={search} onChange={setSearch} placeholder="Search jobs, employers, locations..." /></div>
+        <div className="min-w-36"><Select label="" ariaLabel="Filter by employment type" options={EMPLOYMENT_TYPES.map((t) => ({ value: t, label: t }))} value={typeFilter} onChange={setTypeFilter} placeholder="All Types" /></div>
+        <div className="min-w-36"><Select label="" ariaLabel="Filter by work arrangement" options={WORK_ARRANGEMENTS.map((t) => ({ value: t, label: t }))} value={arrangementFilter} onChange={setArrangementFilter} placeholder="All Arrangements" /></div>
+        <div className="min-w-44"><Select label="" ariaLabel="Filter by location" options={LOCATION_FILTERS} value={locationFilter} onChange={setLocationFilter} placeholder="Any Location" /></div>
+        {filtersActive && <Button variant="ghost" size="sm" onClick={clearFilters}>Clear</Button>}
       </div>
 
-      <p className="text-sm text-gray-500">{filtered.length} recommendation{filtered.length !== 1 ? 's' : ''} found</p>
-
-      {filtered.length === 0 ? (
-        <div className="text-center py-16">
-          <Briefcase size={48} className="text-gray-200 mx-auto mb-3" />
-          <p className="text-gray-400 font-medium">No job recommendations found</p>
-          <p className="text-sm text-gray-400">Try updating your profile skills or adjusting filters</p>
-        </div>
-      ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filtered.map((rec) => <JobCard key={rec.job.id} rec={rec} onView={() => setSelected(rec)} />)}
-        </div>
+      {tab === 'Recommended' && (
+        <>
+          <p className="text-sm text-gray-600" role="status">
+            {recommended.length} job{recommended.length !== 1 ? 's' : ''} found
+            {result.hidden > 0 && ` · ${result.hidden} weaker match${result.hidden === 1 ? '' : 'es'} hidden`}
+          </p>
+          {recommended.length === 0 ? (
+            <Card>
+              {filtersActive && result.recommendations.length > 0 ? (
+                <EmptyState icon={<Briefcase size={26} />} title="No jobs match these filters" message="Try removing a filter to see more of your recommendations." action={<Button variant="outline" size="sm" onClick={clearFilters}>Clear filters</Button>} />
+              ) : (
+                <EmptyState
+                  icon={<Briefcase size={26} />}
+                  title={result.considered === 0 ? 'No open jobs right now' : 'No strong matches yet'}
+                  message={result.considered === 0 ? 'There are no open listings at the moment. New jobs appear here as soon as they are posted.' : `${result.considered} listing${result.considered === 1 ? ' is' : 's are'} open, but none match your skills closely enough yet. Adding more skills usually helps.`}
+                  action={<Button size="sm" onClick={() => setEditingSetup(true)}>Update skills &amp; education</Button>}
+                />
+              )}
+            </Card>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{recommended.map((r) => renderCard(r.job, r))}</div>
+          )}
+        </>
       )}
 
-      {selected && <JobDetail rec={selected} onClose={() => setSelected(null)} />}
+      {tab === 'Saved' && (
+        <>
+          <p className="text-sm text-gray-600" role="status">{savedJobs.length} saved job{savedJobs.length !== 1 ? 's' : ''}</p>
+          {savedJobs.length === 0 ? (
+            <Card>
+              <EmptyState icon={<Bookmark size={26} />} title={saved.length === 0 ? 'Nothing saved yet' : 'No saved jobs match these filters'} message={saved.length === 0 ? 'Use the bookmark on any job to keep it here for later.' : 'Try removing a filter.'} />
+            </Card>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">{savedJobs.map(({ job, rec }) => renderCard(job, rec))}</div>
+          )}
+        </>
+      )}
+
+      {selectedJob && (
+        <JobDetail
+          job={selectedJob}
+          rec={recFor(selectedJob)}
+          saved={saved.includes(selectedJob.id)}
+          onClose={() => setSelectedId(null)}
+          onToggleSave={() => toggleSavedJob(user.id, selectedJob.id)}
+        />
+      )}
     </div>
   )
 }

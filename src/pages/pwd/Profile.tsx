@@ -1,8 +1,10 @@
 import { useState } from 'react'
 import { User, Shield, FileText, Camera, Edit2, CheckCircle, Upload } from 'lucide-react'
-import { Card, Button, Input, PasswordInput, Alert, statusBadge, Modal, FileUpload } from '../../components/ui'
+import { Card, Button, Input, PasswordInput, Select, Alert, statusBadge, Modal, FileUpload } from '../../components/ui'
 import { usePWDSession } from '../../context'
 import { useStore } from '../../store'
+import EmploymentProfile from './EmploymentProfile'
+import { BARANGAY_OPTIONS, normalizeDisability, officialBarangay } from '../../lib/catalog'
 
 export default function Profile() {
   const session = usePWDSession()
@@ -56,7 +58,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="space-y-6 max-w-3xl">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">My Profile</h1>
@@ -103,14 +105,20 @@ export default function Profile() {
           <User size={18} className="text-blue-700" />
           <h3 className="font-semibold text-gray-900">Personal Information</h3>
         </div>
-        <div className="p-5 grid sm:grid-cols-2 gap-4">
+        <div className="p-5 grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {editing ? (
             <>
               <Input label="Full Name" value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} />
               <Input label="Contact Number" value={form.contact} onChange={(e) => setForm((f) => ({ ...f, contact: e.target.value }))} />
               <Input label="Email Address" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="sm:col-span-2" />
               <Input label="Address" value={form.address} onChange={(e) => setForm((f) => ({ ...f, address: e.target.value }))} className="sm:col-span-2" />
-              <Input label="Barangay" value={form.barangay} onChange={(e) => setForm((f) => ({ ...f, barangay: e.target.value }))} />
+              <Select
+                label="Barangay"
+                options={!currentUser.barangay || officialBarangay(currentUser.barangay) ? BARANGAY_OPTIONS : [{ value: currentUser.barangay, label: `${currentUser.barangay} (not on official list)` }, ...BARANGAY_OPTIONS]}
+                value={form.barangay}
+                onChange={(v) => setForm((f) => ({ ...f, barangay: v }))}
+                placeholder="Select your barangay"
+              />
             </>
           ) : (
             <>
@@ -143,10 +151,10 @@ export default function Profile() {
           <FileText size={18} className="text-blue-700" />
           <h3 className="font-semibold text-gray-900">Disability Information</h3>
         </div>
-        <div className="p-5 grid sm:grid-cols-2 gap-4">
+        <div className="p-5 grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
           <div>
             <p className="text-xs font-medium text-gray-500 mb-0.5">Type of Disability</p>
-            <p className="text-sm text-gray-900">{currentUser.disabilityType}</p>
+            <p className="text-sm text-gray-900">{normalizeDisability(currentUser.disabilityType)}</p>
           </div>
           <div>
             <p className="text-xs font-medium text-gray-500 mb-0.5">PWD ID Number</p>
@@ -160,21 +168,13 @@ export default function Profile() {
             <p className="text-xs font-medium text-gray-500 mb-0.5">Verification Status</p>
             <div className="mt-0.5">{statusBadge(currentUser.verificationStatus)}</div>
           </div>
-          {currentUser.skills && currentUser.skills.length > 0 && (
-            <div className="sm:col-span-2">
-              <p className="text-xs font-medium text-gray-500 mb-1.5">Registered Skills</p>
-              <div className="flex flex-wrap gap-1.5">
-                {currentUser.skills.map((s: string) => (
-                  <span key={s} className="text-xs bg-teal-50 text-teal-700 border border-teal-100 px-2 py-0.5 rounded-full">{s}</span>
-                ))}
-              </div>
-            </div>
-          )}
         </div>
         <div className="px-5 pb-5">
           <Button variant="outline" size="sm" icon={<Upload size={14} />} onClick={() => setDocModal(true)}>Update PWD ID Documents</Button>
         </div>
       </Card>
+
+      <EmploymentProfile user={currentUser} />
 
       {/* Account Security */}
       <Card>

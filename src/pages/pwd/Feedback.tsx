@@ -102,7 +102,7 @@ export default function FeedbackPage() {
   }
 
   return (
-    <div className="space-y-5 max-w-3xl">
+    <div className="space-y-5">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Feedback & Support</h1>
         <p className="text-gray-500 text-sm mt-0.5">Ask questions, report concerns, or send feedback to our team</p>
@@ -121,8 +121,10 @@ export default function FeedbackPage() {
       {view === 'form' && (
         <Card className="p-6 space-y-4">
           {submitted && <Alert type="success" title="Message Sent" message="Your message has been submitted. We will respond within 2 business days." />}
-          <Select label="Message Type" options={categories} value={category} onChange={setCategory} placeholder="Select type of message" required />
-          <Input label="Subject" placeholder="Brief description of your concern" value={subject} onChange={(e) => setSubject(e.target.value)} required />
+          <div className="grid gap-4 lg:grid-cols-2">
+            <Select label="Message Type" options={categories} value={category} onChange={setCategory} placeholder="Select type of message" required />
+            <Input label="Subject" placeholder="Brief description of your concern" value={subject} onChange={(e) => setSubject(e.target.value)} required />
+          </div>
           <Textarea label="Message" placeholder="Provide details about your concern or question..." value={message} onChange={setMessage} rows={5} required />
           <FileUpload label="Attach File (Optional)" helperText="JPG, PNG, PDF · Max 5 MB" />
           <div className="flex items-start gap-3">
@@ -148,9 +150,9 @@ export default function FeedbackPage() {
       )}
 
       {view === 'list' && (
-        <div className="space-y-3">
+        <div className="grid gap-3 lg:grid-cols-2 items-start">
           {myTickets.length === 0 ? (
-            <Card className="py-12 text-center">
+            <Card className="py-12 text-center lg:col-span-2">
               <MessageSquare size={40} className="text-gray-300 mx-auto mb-3" />
               <p className="text-gray-400">No conversations yet.</p>
               <Button className="mt-3" variant="outline" onClick={() => setView('form')}>Start a Conversation</Button>

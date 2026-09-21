@@ -46,8 +46,8 @@ export default function PWDSettings() {
   const toggle = (k: string) => setPrefs((p: Record<string, boolean>) => ({ ...p, [k]: !p[k] }))
 
   return (
-    <div className="space-y-6 max-w-3xl">
-      <div>
+    <div className="grid gap-6 xl:grid-cols-2 items-start">
+      <div className="xl:col-span-2">
         <h1 className="text-2xl font-bold text-gray-900">Settings</h1>
         <p className="text-gray-500 text-sm mt-0.5">Account settings and preferences</p>
       </div>

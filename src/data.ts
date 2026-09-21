@@ -1,15 +1,6 @@
-export type DisabilityType =
-  | 'Cancer (RA 11215)'
-  | 'Deaf or Hard of Hearing'
-  | 'Intellectual Disability'
-  | 'Learning Disability'
-  | 'Mental Disability'
-  | 'Physical Disability'
-  | 'Psychosocial Disability'
-  | 'Rare Disease (RA 10747)'
-  | 'Speech and Language Impairment'
-  | 'Visual Disability'
-  | 'Other'
+import type { DisabilityType, EmploymentType, WorkArrangement, JobStatus } from './lib/catalog'
+
+export type { DisabilityType, EmploymentType, WorkArrangement, JobStatus }
 
 export type VerificationStatus = 'Verified' | 'Pending' | 'Rejected' | 'Unverified'
 export type RequestStatus = 'Pending' | 'Under Review' | 'Requirements Needed' | 'Approved' | 'Rejected' | 'Available' | 'Claimed' | 'Completed'
@@ -24,10 +15,6 @@ export type BenefitCategory =
   | 'Other Support Services'
 
 export type BenefitStatus = 'Draft' | 'Pending Approval' | 'Approved' | 'Active' | 'Closed'
-
-export type JobEmploymentType = 'Full-time' | 'Part-time' | 'Contract'
-export type WorkSetup = 'Office' | 'Remote' | 'Hybrid'
-export type JobStatus = 'Active' | 'Inactive' | 'Closed'
 
 export interface PWDUser {
   id: string
@@ -45,20 +32,27 @@ export interface PWDUser {
   pwdIdNumber: string
   avatar?: string
   active?: boolean
+  /** Soft-delete marker (ISO date). Deleted records are excluded from every count. */
+  deletedAt?: string
 
   // Employment / recommendation profile
   skills?: string[]
+  /** Highest education level - one of EDUCATION_LEVELS (src/lib/catalog.ts). */
+  educationLevel?: string
+  /** Free-text course/degree detail; used to infer a level when educationLevel is empty. */
   education?: string
   workExperience?: string
   yearsOfExperience?: number
   certifications?: string[]
   jobInterests?: string[]
-  preferredJobTypes?: JobEmploymentType[]
-  preferredWorkSetup?: WorkSetup[]
+  preferredJobTypes?: EmploymentType[]
+  preferredWorkSetup?: WorkArrangement[]
   preferredLocation?: string
   functionalCapabilities?: string[]
   accessibilityNeeds?: string[]
+  /** Optional accommodation needs (canonical ACCOMMODATIONS labels plus free text). */
   accommodationRequirements?: string[]
+  savedJobIds?: string[]
 }
 
 export interface Benefit {
@@ -106,30 +100,28 @@ export interface Notification {
 export interface Job {
   id: string
   title: string
+  /** Employer / company name. */
   company: string
+  description: string
+  /** Barangay ("Brgy. X") or municipality ("Los Baños, Laguna"). */
   location: string
-  type: JobEmploymentType | 'Remote'
-  category?: string
-  salary?: string
-  description?: string
+  employmentType: EmploymentType
+  workArrangement: WorkArrangement
+  /** Required skills. */
   skills: string[]
-  preferredSkills?: string[]
-  educationRequirement?: string
-  experienceRequirement?: string
-  workSetup?: WorkSetup
-  workplaceConditions?: string[]
-  screenOrVisualDemands?: string[]
-  accessibilityInfo: string
-  accessibilityFeatures?: string[]
-  physicalRequirements?: string[]
-  communicationRequirements?: string[]
-  functionalRequirements?: string[]
-  accommodationSupport?: string
-  postedDate: string
+  /** Minimum education level (an EDUCATION_LEVELS label) or '' for none. */
+  minEducation: string
+  /** Empty = open to all disability types. Only set when the employer explicitly restricts the listing. */
+  suitableDisabilities: string[]
+  /** Accommodations the employer offers (canonical ACCOMMODATIONS labels). */
+  accommodations: string[]
+  slots: number
   deadline: string
-  status?: JobStatus
-  matchPercent?: number
-  matchReasons?: string[]
+  status: JobStatus
+  postedDate: string
+  salary?: string
+  category?: string
+  accessibilityInfo?: string
 }
 
 export interface AdminUser {
@@ -179,16 +171,17 @@ export const currentUser: PWDUser = {
   avatar: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=80&h=80&fit=crop&auto=format',
   skills: ['Data Entry', 'Microsoft Office', 'Computer Literacy', 'Communication', 'Customer Service'],
   education: 'Bachelor of Science in Information Technology',
+    educationLevel: 'College Graduate',
   workExperience: 'Computer Technician Intern at a local IT services shop',
   yearsOfExperience: 1,
   certifications: ['TESDA Computer Systems Servicing NC II', 'Microsoft Office Specialist'],
   jobInterests: ['Data Entry', 'IT Support', 'Administrative Assistant'],
   preferredJobTypes: ['Full-time', 'Part-time'],
-  preferredWorkSetup: ['Office', 'Remote'],
+  preferredWorkSetup: ['On-site', 'Remote'],
   preferredLocation: 'Los Baños, Laguna',
   functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Verbal communication', 'Use standard computer applications', 'Read with assistive technology'],
   accessibilityNeeds: ['Accessible entrance', 'Screen reader compatible software'],
-  accommodationRequirements: ['Screen reader software', 'High contrast display settings'],
+  accommodationRequirements: ['Screen-reader-compatible tools', 'Assistive technology provided'],
 }
 
 export const pwdUsers: PWDUser[] = [
@@ -209,16 +202,17 @@ export const pwdUsers: PWDUser[] = [
     age: 34,
     skills: ['Administration', 'Typing', 'MS Office', 'Data Entry', 'Computer Literacy'],
     education: 'Bachelor of Science in Public Administration',
+    educationLevel: 'College Graduate',
     workExperience: 'Barangay secretary assistant (records and encoding)',
     yearsOfExperience: 2,
     certifications: ['TESDA Computer Hardware Servicing NC II'],
 jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
   preferredJobTypes: ['Full-time'],
-  preferredWorkSetup: ['Office'],
+  preferredWorkSetup: ['On-site'],
   preferredLocation: 'Los Baños, Laguna',
   functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Verbal communication', 'Use standard computer applications'],
     accessibilityNeeds: ['Wheelchair accessible entrance', 'Accessible restroom', 'Elevator access'],
-    accommodationRequirements: ['Accessible workstation', 'Wheelchair accessible route'],
+    accommodationRequirements: ['Wheelchair-accessible workplace'],
   },
   {
     id: 'PWD-LB-2024-0044',
@@ -236,6 +230,7 @@ jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
     age: 25,
     skills: ['Writing', 'Design', 'Social Media', 'Photography'],
     education: 'Bachelor of Fine Arts',
+    educationLevel: 'College Graduate',
     workExperience: 'Freelance graphic designer for student organizations',
     yearsOfExperience: 1,
     certifications: ['TESDA Visual Graphics Design NC III'],
@@ -244,7 +239,7 @@ jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
     preferredWorkSetup: ['Hybrid', 'Remote'],
     functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Visual communication', 'Use design software'],
     accessibilityNeeds: ['Sign language interpretation', 'Visual alert systems'],
-    accommodationRequirements: ['Written communication', 'Visual notifications'],
+    accommodationRequirements: ['Sign-language interpreter', 'Written instructions'],
   },
   {
     id: 'PWD-LB-2024-0045',
@@ -262,15 +257,16 @@ jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
     age: 31,
     skills: ['Horticulture', 'Manual Labor', 'Carpentry', 'Plant Care'],
     education: 'High School Graduate',
+    educationLevel: 'High School Graduate',
     workExperience: 'Farm helper and landscape maintenance worker',
     yearsOfExperience: 4,
     certifications: ['TESDA Organic Agriculture Production NC II'],
     jobInterests: ['Gardener', 'Grounds Maintenance', 'Farm Worker'],
     preferredJobTypes: ['Full-time'],
-    preferredWorkSetup: ['Office'],
+    preferredWorkSetup: ['On-site'],
     functionalCapabilities: ['Outdoor physical work', 'Lifting moderate loads', 'Manual tasks', 'Seated work'],
     accessibilityNeeds: [],
-    accommodationRequirements: ['Clear task instructions', 'Flexible breaks'],
+    accommodationRequirements: ['Written instructions', 'Flexible hours'],
   },
   {
     id: 'PWD-LB-2024-0046',
@@ -288,15 +284,16 @@ jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
     age: 45,
     skills: ['Cooking', 'Baking', 'Food Processing', 'Food Safety'],
     education: 'Vocational — Hotel and Restaurant Services',
+    educationLevel: 'Vocational',
     workExperience: 'Kitchen helper and food stall operator',
     yearsOfExperience: 3,
     certifications: ['TESDA Food and Beverage Services NC II'],
     jobInterests: ['Food Service Assistant', 'Bakeshop Helper', 'Kitchen Staff'],
     preferredJobTypes: ['Part-time'],
-    preferredWorkSetup: ['Office'],
+    preferredWorkSetup: ['On-site'],
     functionalCapabilities: ['Standing work for short periods', 'Manual tasks', 'Seated work'],
     accessibilityNeeds: [],
-    accommodationRequirements: ['Flexible schedule', 'Rest breaks'],
+    accommodationRequirements: ['Flexible hours'],
   },
   {
     id: 'PWD-LB-2024-0047',
@@ -314,15 +311,16 @@ jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
     age: 22,
     skills: ['Photography', 'Videography', 'Social Media', 'Video Editing'],
     education: 'Senior High School Graduate',
+    educationLevel: 'Senior High School Graduate',
     workExperience: 'Event photo and video coverage assistant',
     yearsOfExperience: 1,
     certifications: ['TESDA Visual Graphics Design NC II'],
     jobInterests: ['Photographer', 'Video Editor', 'Social Media Assistant'],
-    preferredJobTypes: ['Part-time', 'Contract'],
-    preferredWorkSetup: ['Remote', 'Office'],
+    preferredJobTypes: ['Part-time', 'Contractual'],
+    preferredWorkSetup: ['Remote', 'On-site'],
     functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Use photo and video equipment', 'Visual communication'],
     accessibilityNeeds: [],
-    accommodationRequirements: ['Step-by-step instructions', 'Written task checklists'],
+    accommodationRequirements: ['Written instructions'],
   },
   {
     id: 'PWD-LB-2024-0048',
@@ -340,15 +338,16 @@ jobInterests: ['Administrative Assistant', 'Records Clerk', 'Data Encoder'],
     age: 29,
     skills: ['Customer Service', 'English Proficiency', 'Communication', 'Typing'],
     education: 'Bachelor of Arts in Communication',
+    educationLevel: 'College Graduate',
     workExperience: 'Call center customer support trainee',
     yearsOfExperience: 1,
     certifications: [],
     jobInterests: ['Customer Service Representative', 'Call Center Agent', 'Receptionist'],
     preferredJobTypes: ['Full-time', 'Part-time'],
-    preferredWorkSetup: ['Office', 'Remote'],
+    preferredWorkSetup: ['On-site', 'Remote'],
     functionalCapabilities: ['Computer-based tasks', 'Seated work', 'Verbal communication', 'Use standard computer applications'],
     accessibilityNeeds: [],
-    accommodationRequirements: ['Quiet workspace', 'Flexible schedule', 'Supportive supervision'],
+    accommodationRequirements: ['Quiet workspace', 'Flexible hours'],
   },
 ]
 
@@ -764,202 +763,260 @@ export const jobs: Job[] = [
     title: 'Data Entry Assistant',
     company: 'Municipality of Los Baños — Records Section',
     location: 'Los Baños, Laguna',
-    type: 'Full-time',
+    employmentType: 'Full-time',
+    workArrangement: 'On-site',
     category: 'Administrative',
     salary: '₱13,000 – ₱15,000',
     description: 'Assists the Municipal Records Section with encoding, organizing, and maintaining digital and physical records for the local government.',
     skills: ['Data Entry', 'Microsoft Office', 'Computer Literacy', 'Attention to Detail'],
-    preferredSkills: ['Advanced Excel', 'Typing'],
-    educationRequirement: 'College Graduate or Vocational',
-    experienceRequirement: '0–1 year',
-    workSetup: 'Office',
-    workplaceConditions: ['Climate-controlled office', 'Seated workstation', 'Low noise level'],
-    screenOrVisualDemands: ['Continuous screen and text-based data encoding'],
-    accessibilityInfo: 'Municipal hall has a wheelchair ramp, elevators, and accessible restrooms. Priority placement for qualified PWD applicants under RA 7277.',
-    accessibilityFeatures: ['Wheelchair accessible entrance', 'Accessible restroom', 'Elevator access'],
-    physicalRequirements: ['Primarily seated work'],
-    communicationRequirements: ['Basic verbal and written communication'],
-    functionalRequirements: ['Computer-based tasks', 'Seated work', 'Data encoding'],
-    accommodationSupport: 'Available upon request',
+    minEducation: 'Vocational',
+    suitableDisabilities: [],
+    accommodations: ['Wheelchair-accessible workplace'],
+    slots: 2,
     postedDate: '2026-06-15',
     deadline: '2026-12-31',
-    status: 'Active',
+    status: 'Open',
+    accessibilityInfo: 'Municipal hall has a wheelchair ramp, elevators, and accessible restrooms. Priority placement for qualified PWD applicants under RA 7277.',
   },
   {
     id: 'JOB-002',
     title: 'IT Support Staff',
     company: 'UPLB Information Technology Center',
-    location: 'Los Baños, Laguna',
-    type: 'Full-time',
+    location: 'Brgy. Batong Malake',
+    employmentType: 'Full-time',
+    workArrangement: 'On-site',
     category: 'Technology',
     salary: '₱18,000 – ₱22,000',
     description: 'Provides technical support for computers, networks, and office software across the university campus. Troubleshoots hardware and software issues and assists staff with computer applications.',
     skills: ['Computer Literacy', 'HTML', 'CSS', 'Network Troubleshooting', 'Microsoft Office'],
-    preferredSkills: ['JavaScript', 'Customer Service'],
-    educationRequirement: 'College Graduate (IT or Computer Science related)',
-    experienceRequirement: '1–2 years',
-    workSetup: 'Office',
-    workplaceConditions: ['Campus-wide assignments', 'Computer laboratories'],
-    accessibilityInfo: 'Campus is fully PWD-accessible with ramps, elevators, accessible restrooms, and ergonomic workstations.',
-    accessibilityFeatures: ['Wheelchair accessible entrance', 'Elevator access', 'Accessible restroom', 'Ergonomic workstations'],
-    physicalRequirements: ['Can move within an office or building floor'],
-    communicationRequirements: ['Clear verbal communication', 'Technical writing'],
-    functionalRequirements: ['Computer-based tasks', 'Verbal communication', 'Seated work'],
-    accommodationSupport: 'Yes',
+    minEducation: 'College Graduate',
+    suitableDisabilities: [],
+    accommodations: ['Wheelchair-accessible workplace'],
+    slots: 1,
     postedDate: '2026-06-20',
     deadline: '2026-12-31',
-    status: 'Active',
+    status: 'Open',
+    accessibilityInfo: 'Campus is fully PWD-accessible with ramps, elevators, accessible restrooms, and ergonomic workstations.',
   },
   {
     id: 'JOB-003',
     title: 'Remote Content Writer',
     company: 'IRRI Communications Team',
     location: 'Remote / Los Baños, Laguna',
-    type: 'Full-time',
+    employmentType: 'Full-time',
+    workArrangement: 'Remote',
     category: 'Media & Communications',
     salary: '₱16,000 – ₱19,000',
     description: 'Writes web articles, newsletters, and social media content for the International Rice Research Institute. Collaborates with the team through online tools.',
     skills: ['Writing', 'English Proficiency', 'Communication', 'Research'],
-    preferredSkills: ['Social Media', 'SEO'],
-    educationRequirement: 'College Graduate or equivalent experience',
-    experienceRequirement: '1–2 years',
-    workSetup: 'Remote',
-    workplaceConditions: ['100% remote', 'Flexible schedule', 'Online collaboration tools'],
-    accessibilityInfo: 'Fully remote position with flexible hours. Screen reader-compatible software and assistive technology support provided.',
-    accessibilityFeatures: ['Fully remote option', 'Screen reader compatible software', 'Flexible schedule'],
-    physicalRequirements: ['Seated work'],
-    communicationRequirements: ['Written communication'],
-    functionalRequirements: ['Computer-based tasks', 'Independent work', 'Seated work'],
-    accommodationSupport: 'Yes',
+    minEducation: 'College Graduate',
+    suitableDisabilities: [],
+    accommodations: ['Remote work', 'Screen-reader-compatible tools', 'Flexible hours', 'Assistive technology provided'],
+    slots: 3,
     postedDate: '2026-06-25',
     deadline: '2026-11-30',
-    status: 'Active',
+    status: 'Open',
+    accessibilityInfo: 'Fully remote position with flexible hours. Screen reader-compatible software and assistive technology support provided.',
   },
   {
     id: 'JOB-004',
     title: 'Office Administrative Assistant',
     company: 'IRRI Human Resources',
     location: 'Los Baños, Laguna',
-    type: 'Full-time',
+    employmentType: 'Full-time',
+    workArrangement: 'Hybrid',
     category: 'Administrative',
     salary: '₱15,000 – ₱18,000',
     description: 'Provides administrative support including scheduling, document preparation, records management, and staff coordination for the HR office.',
     skills: ['Administration', 'Microsoft Office', 'Computer Literacy', 'Customer Service'],
-    preferredSkills: ['Data Entry', 'Communication'],
-    educationRequirement: 'College Graduate',
-    experienceRequirement: '1 year',
-    workSetup: 'Hybrid',
-    workplaceConditions: ['Office and hybrid arrangement', 'Administrative office setting'],
-    accessibilityInfo: 'IRRI campus has full PWD accessibility with designated parking, accessible workstations, and a supportive HR team.',
-    accessibilityFeatures: ['Wheelchair accessible entrance', 'Accessible restroom', 'Elevator access', 'Accessible workstations'],
-    physicalRequirements: ['Primarily seated work'],
-    communicationRequirements: ['Verbal and written communication'],
-    functionalRequirements: ['Computer-based tasks', 'Seated work', 'Verbal communication'],
-    accommodationSupport: 'Yes',
+    minEducation: 'College Graduate',
+    suitableDisabilities: [],
+    accommodations: ['Wheelchair-accessible workplace'],
+    slots: 1,
     postedDate: '2026-06-10',
     deadline: '2026-10-31',
-    status: 'Active',
+    status: 'Open',
+    accessibilityInfo: 'IRRI campus has full PWD accessibility with designated parking, accessible workstations, and a supportive HR team.',
   },
   {
     id: 'JOB-005',
     title: 'Customer Service Representative',
     company: 'LACTOSOY Corp.',
-    location: 'Bay, Laguna (near Los Baños)',
-    type: 'Full-time',
+    location: 'Bay, Laguna',
+    employmentType: 'Full-time',
+    workArrangement: 'On-site',
     category: 'Customer Service',
     salary: '₱14,000 – ₱16,000',
     description: 'Handles customer inquiries, order processing, and product information through phone, email, and chat. Supports the sales and distribution team.',
     skills: ['Communication', 'Customer Service', 'English Proficiency', 'Computer Literacy'],
-    preferredSkills: ['Typing', 'Data Entry'],
-    educationRequirement: 'College level or Vocational',
-    experienceRequirement: '0–1 year',
-    workSetup: 'Office',
-    workplaceConditions: ['Office setting', 'Phone and computer based'],
-    screenOrVisualDemands: ['Continuous use of a computer screen and phone interface'],
-    accessibilityInfo: 'Company office has ramp access, adjustable workstations, and dedicated HR support for PWD employees.',
-    accessibilityFeatures: ['Wheelchair ramp access', 'Adjustable workstations', 'Dedicated HR support for PWD employees'],
-    physicalRequirements: ['Primarily seated work'],
-    communicationRequirements: ['Clear verbal communication'],
-    functionalRequirements: ['Computer-based tasks', 'Verbal communication', 'Seated work'],
-    accommodationSupport: 'Yes',
+    minEducation: 'Vocational',
+    suitableDisabilities: [],
+    accommodations: ['Wheelchair-accessible workplace', 'Assistive technology provided'],
+    slots: 5,
     postedDate: '2026-07-01',
     deadline: '2026-12-31',
-    status: 'Active',
+    status: 'Open',
+    accessibilityInfo: 'Company office has ramp access, adjustable workstations, and dedicated HR support for PWD employees.',
   },
   {
     id: 'JOB-006',
     title: 'Call Center Agent',
     company: 'LactoSoy BPO Services',
     location: 'Bay, Laguna',
-    type: 'Full-time',
+    employmentType: 'Full-time',
+    workArrangement: 'On-site',
     category: 'Customer Service',
     salary: '₱16,000 – ₱20,000',
     description: 'Answers inbound customer calls, resolves account inquiries, and escalates issues following standard procedures in a call center environment.',
     skills: ['Communication', 'Customer Service', 'English Proficiency', 'Typing'],
-    preferredSkills: ['Computer Literacy', 'Problem Solving'],
-    educationRequirement: 'College level or High School Graduate',
-    experienceRequirement: '0–1 year',
-    workSetup: 'Office',
-    workplaceConditions: ['Call center environment', 'Headset and computer based', 'Structured shifts'],
-    accessibilityInfo: 'Facility has accessible restrooms, ergonomic chairs, and adjustable volume headsets. Accommodation requests are reviewed by HR.',
-    accessibilityFeatures: ['Adjustable volume headsets', 'Ergonomic chairs', 'Accessible restrooms'],
-    physicalRequirements: ['Seated work'],
-    communicationRequirements: ['Verbal communication'],
-    functionalRequirements: ['Computer-based tasks', 'Verbal communication', 'Seated work'],
-    accommodationSupport: 'Reviewed on request',
+    minEducation: 'High School Graduate',
+    suitableDisabilities: [],
+    accommodations: ['Wheelchair-accessible workplace', 'Assistive technology provided'],
+    slots: 10,
     postedDate: '2026-07-05',
     deadline: '2026-12-31',
-    status: 'Active',
+    status: 'Open',
+    accessibilityInfo: 'Facility has accessible restrooms, ergonomic chairs, and adjustable volume headsets. Accommodation requests are reviewed by HR.',
   },
   {
     id: 'JOB-007',
     title: 'Bookkeeping Assistant',
     company: 'Municipal Accounting Office',
     location: 'Los Baños, Laguna',
-    type: 'Full-time',
+    employmentType: 'Full-time',
+    workArrangement: 'On-site',
     category: 'Accounting & Finance',
     salary: '₱16,000 – ₱19,000',
     description: 'Assists accountants with encoding financial transactions, maintaining ledgers, organizing vouchers, and preparing simple financial reports.',
     skills: ['Accounting', 'Bookkeeping', 'Microsoft Excel', 'Data Entry', 'Attention to Detail'],
-    preferredSkills: ['Computer Literacy', 'Communication'],
-    educationRequirement: 'BS Accountancy or related business course',
-    experienceRequirement: '1–2 years',
-    workSetup: 'Office',
-    workplaceConditions: ['Office setting', 'Detailed computer-based work'],
-    accessibilityInfo: 'Municipal hall has a wheelchair ramp and accessible restrooms. Records office is on the ground floor.',
-    accessibilityFeatures: ['Wheelchair accessible entrance', 'Accessible restroom'],
-    physicalRequirements: ['Primarily seated work'],
-    communicationRequirements: ['Basic verbal and written communication'],
-    functionalRequirements: ['Computer-based tasks', 'Seated work', 'Attention to detail'],
-    accommodationSupport: 'Available upon request',
+    minEducation: 'College Graduate',
+    suitableDisabilities: [],
+    accommodations: ['Wheelchair-accessible workplace'],
+    slots: 1,
     postedDate: '2026-06-28',
     deadline: '2026-11-15',
-    status: 'Active',
+    status: 'Open',
+    accessibilityInfo: 'Municipal hall has a wheelchair ramp and accessible restrooms. Records office is on the ground floor.',
   },
   {
     id: 'JOB-008',
     title: 'Social Media Assistant',
     company: 'PDAO Communications Office',
     location: 'Los Baños, Laguna',
-    type: 'Part-time',
+    employmentType: 'Part-time',
+    workArrangement: 'Hybrid',
     category: 'Media & Communications',
     salary: '₱8,000 – ₱10,000',
     description: 'Creates and schedules social media posts for the Persons with Disability Affairs Office, takes photos at events, and monitors page engagement.',
     skills: ['Social Media', 'Writing', 'Design', 'Photography'],
-    preferredSkills: ['Videography', 'Communication'],
-    educationRequirement: 'College level or Vocational',
-    experienceRequirement: '0–1 year',
-    workSetup: 'Hybrid',
-    workplaceConditions: ['Flexible schedule', 'Event-based field work', 'Remote-capable'],
-    accessibilityInfo: 'Office work can be done remotely. Flexible schedule and screen reader compatible tools available.',
-    accessibilityFeatures: ['Flexible schedule', 'Remote-capable', 'Screen reader compatible software'],
-    physicalRequirements: ['Seated work'],
-    communicationRequirements: ['Written communication'],
-    functionalRequirements: ['Computer-based tasks', 'Creative design work', 'Seated work'],
-    accommodationSupport: 'Yes',
+    minEducation: 'Vocational',
+    suitableDisabilities: [],
+    accommodations: ['Flexible hours', 'Remote work', 'Screen-reader-compatible tools'],
+    slots: 2,
     postedDate: '2026-07-08',
     deadline: '2026-12-31',
-    status: 'Active',
+    status: 'Open',
+    accessibilityInfo: 'Office work can be done remotely. Flexible schedule and screen reader-compatible tools available.',
+  },
+  {
+    id: 'JOB-009',
+    title: 'Grounds and Garden Assistant',
+    company: 'Los Baños Parks and Grounds Office',
+    location: 'Brgy. Batong Malake',
+    employmentType: 'Full-time',
+    workArrangement: 'On-site',
+    category: 'Agriculture & Grounds',
+    salary: '₱12,000 – ₱14,000',
+    description: 'Plants, waters, and maintains the flower beds, trees, and lawns of municipal parks. Prepares soil, trims plants, and keeps the grounds clean and safe for the public.',
+    skills: ['Horticulture', 'Plant Care', 'Manual Labor'],
+    minEducation: 'High School Level',
+    suitableDisabilities: [],
+    accommodations: ['Flexible hours', 'Written instructions'],
+    slots: 3,
+    postedDate: '2026-07-12',
+    deadline: '2026-12-31',
+    status: 'Open',
+    accessibilityInfo: 'Tasks can be paced and assigned by ability. Supervisors give written, step-by-step instructions.',
+  },
+  {
+    id: 'JOB-010',
+    title: 'Bakeshop Helper',
+    company: 'Los Baños Public Market Bakeshop',
+    location: 'Brgy. Anos',
+    employmentType: 'Part-time',
+    workArrangement: 'On-site',
+    category: 'Food & Hospitality',
+    salary: '₱9,000 – ₱11,000',
+    description: 'Helps prepare dough, bakes bread and pastries, packs finished products, and keeps the baking area clean following food-safety rules.',
+    skills: ['Baking', 'Food Processing', 'Food Safety'],
+    minEducation: 'Elementary',
+    suitableDisabilities: [],
+    accommodations: ['Flexible hours', 'Written instructions'],
+    slots: 2,
+    postedDate: '2026-07-15',
+    deadline: '2026-12-15',
+    status: 'Open',
+    accessibilityInfo: 'Short shifts, seated prep stations, and a quiet back-of-house work area are available on request.',
+  },
+  {
+    id: 'JOB-011',
+    title: 'Kitchen Staff — Municipal Canteen',
+    company: 'Municipal Canteen Services',
+    location: 'Los Baños, Laguna',
+    employmentType: 'Full-time',
+    workArrangement: 'On-site',
+    category: 'Food & Hospitality',
+    salary: '₱11,000 – ₱13,000',
+    description: 'Prepares and cooks meals for the canteen, follows standard recipes and portioning, and observes food handling and sanitation procedures.',
+    skills: ['Cooking', 'Food Safety', 'Food Processing'],
+    minEducation: 'High School Graduate',
+    suitableDisabilities: [],
+    accommodations: ['Wheelchair-accessible workplace', 'Flexible hours'],
+    slots: 2,
+    postedDate: '2026-07-18',
+    deadline: '2026-11-30',
+    status: 'Open',
+    accessibilityInfo: 'Ground-floor kitchen with wide aisles and adjustable-height prep tables.',
+  },
+  {
+    id: 'JOB-012',
+    title: 'Carpentry Shop Assistant',
+    company: 'Los Baños Community Woodworks',
+    location: 'Brgy. Bayog',
+    employmentType: 'Contractual',
+    workArrangement: 'On-site',
+    category: 'Skilled Trades',
+    salary: '₱12,000 – ₱15,000',
+    description: 'Assists carpenters in measuring, cutting, sanding, and assembling furniture and repair jobs for barangay facilities.',
+    skills: ['Carpentry', 'Manual Labor'],
+    minEducation: 'High School Level',
+    suitableDisabilities: [],
+    accommodations: ['Flexible hours', 'Written instructions'],
+    slots: 2,
+    postedDate: '2026-07-20',
+    deadline: '2026-12-31',
+    status: 'Open',
+    accessibilityInfo: 'Task assignments match each worker’s ability; power tools are used only after safety orientation.',
+  },
+  {
+    id: 'JOB-013',
+    title: 'Freelance Video Editor',
+    company: 'PDAO Communications Office',
+    location: 'Remote / Los Baños, Laguna',
+    employmentType: 'Freelance',
+    workArrangement: 'Remote',
+    category: 'Media & Communications',
+    salary: '₱500 – ₱1,500 per video',
+    description: 'Edits short event and advocacy videos for the PDAO social media pages, adds captions and music, and exports files in the required formats.',
+    skills: ['Video Editing', 'Videography', 'Photography'],
+    minEducation: 'Senior High School Graduate',
+    suitableDisabilities: [],
+    accommodations: ['Remote work', 'Flexible hours', 'Written instructions'],
+    slots: 2,
+    postedDate: '2026-07-22',
+    deadline: '2026-12-31',
+    status: 'Open',
+    accessibilityInfo: 'Fully remote with flexible deadlines; instructions are given in writing.',
   },
 ]
 
@@ -1074,54 +1131,3 @@ export const activityLog = [
   { user: 'pdao.records', action: 'Added New Program', date: '2024-02-28', time: '02:30 PM', activity: 'Created Agri-Entrepreneurship Livelihood Training (BEN-005)' },
   { user: 'pdao.admin', action: 'Reset Password', date: '2024-02-27', time: '11:15 AM', activity: 'Reset password for user pdao.records' },
 ]
-
-export const chartData = {
-  byBarangay: [
-    { name: 'Anos', count: 33 },
-    { name: 'Bagong Silang', count: 15 },
-    { name: 'Bambang', count: 12 },
-    { name: 'Batong Malake', count: 45 },
-    { name: 'Baybayin', count: 8 },
-    { name: 'Bayog', count: 29 },
-    { name: 'Lalakay', count: 11 },
-    { name: 'Maahas', count: 22 },
-    { name: 'Malinta', count: 38 },
-    { name: 'Mayondon', count: 19 },
-    { name: 'Putho-Tuntungin', count: 18 },
-    { name: 'San Antonio', count: 14 },
-    { name: 'Tadlac', count: 10 },
-    { name: 'Timugan', count: 9 },
-  ],
-  byDisability: [
-    { name: 'Physical', value: 76 },
-    { name: 'Visual', value: 48 },
-    { name: 'Deaf/HoH', value: 39 },
-    { name: 'Mental', value: 28 },
-    { name: 'Psychosocial', value: 24 },
-    { name: 'Learning', value: 17 },
-    { name: 'Intellectual', value: 12 },
-    { name: 'Cancer', value: 8 },
-    { name: 'Rare Disease', value: 5 },
-    { name: 'Speech/Lang', value: 6 },
-  ],
-  requestsTrend: [
-    { month: 'Oct', requests: 24 },
-    { month: 'Nov', requests: 31 },
-    { month: 'Dec', requests: 19 },
-    { month: 'Jan', requests: 37 },
-    { month: 'Feb', requests: 48 },
-    { month: 'Mar', requests: 35 },
-  ],
-  approvalRate: [
-    { name: 'Approved', value: 71 },
-    { name: 'Rejected', value: 11 },
-    { name: 'Pending', value: 18 },
-  ],
-  byAssistanceType: [
-    { name: 'Financial', count: 65 },
-    { name: 'Medical', count: 48 },
-    { name: 'Assistive Devices', count: 37 },
-    { name: 'Educational', count: 29 },
-    { name: 'Livelihood', count: 24 },
-  ],
-}

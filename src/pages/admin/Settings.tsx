@@ -16,7 +16,6 @@ export default function AdminSettings() {
     { label: 'Assistance Requests', value: store.assistanceRequests.length },
     { label: 'Feedback Tickets', value: store.feedbackTickets.length },
     { label: 'Admin Users', value: store.adminUsers.length },
-    { label: 'Job Applications', value: store.jobApplications.length },
   ]
 
   const handleExport = () => {
@@ -45,8 +44,8 @@ export default function AdminSettings() {
   const role = session?.type === 'admin' ? session.role : 'Administrator'
 
   return (
-    <div className="space-y-6 max-w-3xl">
-      <div>
+    <div className="grid gap-6 xl:grid-cols-2 items-start">
+      <div className="xl:col-span-2">
         <h1 className="text-2xl font-bold text-gray-900">System Settings</h1>
         <p className="text-gray-500 text-sm mt-0.5">System configuration and data management</p>
       </div>
@@ -79,7 +78,7 @@ export default function AdminSettings() {
         </div>
       </Card>
 
-      {exported && <Alert type="success" title="Backup Exported" message="System data has been exported as a JSON backup file." />}
+      {exported && <div className="xl:col-span-2"><Alert type="success" title="Backup Exported" message="System data has been exported as a JSON backup file." /></div>}
 
       <Card className="p-6">
         <div className="flex items-center gap-3 mb-4">

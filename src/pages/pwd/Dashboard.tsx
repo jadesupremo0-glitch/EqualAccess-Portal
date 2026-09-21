@@ -77,7 +77,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
         <StatsCard label="Available Programs" value={benefits.filter((b) => b.status === 'Active' || b.status === 'Approved').length} icon={<Gift size={20} className="text-teal-600" />} color="bg-teal-50" />
         <StatsCard label="Pending Requests" value={userRequests.filter((r) => r.status === 'Pending' || r.status === 'Under Review').length} icon={<Clock size={20} className="text-amber-600" />} color="bg-amber-50" />
         <StatsCard label="Approved Requests" value={userRequests.filter((r) => r.status === 'Approved' || r.status === 'Completed').length} icon={<CheckCircle size={20} className="text-green-600" />} color="bg-green-50" />
-        <StatsCard label="Job Matches" value={matchResult.recommendations.filter((r) => r.score >= 70).length} icon={<Briefcase size={20} className="text-blue-600" />} color="bg-blue-50" />
+        <StatsCard label="Job Matches" value={matchResult.locked ? '—' : matchResult.recommendations.filter((r) => r.score >= 70).length} note={matchResult.locked ? 'Add your skills first' : undefined} icon={<Briefcase size={20} className="text-blue-600" />} color="bg-blue-50" />
       </div>
 
       <div className="grid lg:grid-cols-5 gap-5">
@@ -110,6 +110,19 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
             ))}
           </div>
 
+          {matchResult.locked && (
+            <Card className="p-4 border-teal-100">
+              <div className="flex items-start gap-3">
+                <Sparkles size={16} className="text-teal-600 mt-0.5 shrink-0" aria-hidden="true" />
+                <div className="flex-1 min-w-0">
+                  <p className="font-semibold text-gray-900 text-sm">Get job recommendations</p>
+                  <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">Tell us your skills and highest education, then we&apos;ll show jobs that fit you.</p>
+                </div>
+                <Button size="sm" onClick={() => onNavigate('pwd-jobs')}>Start</Button>
+              </div>
+            </Card>
+          )}
+
           {topJobRec && (
             <Card className="p-4 border-teal-100">
               <div className="flex items-center gap-2 mb-3">
@@ -130,7 +143,7 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-900 text-sm">{topJobRec.job.title}</p>
                   <p className="text-xs text-teal-700 font-medium">{topJobRec.job.company}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">📍 {topJobRec.job.location} · {topJobRec.job.type}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">📍 {topJobRec.job.location} · {topJobRec.job.employmentType}</p>
                 </div>
                 <Button size="sm" variant="outline" onClick={() => onNavigate('pwd-jobs')}>View</Button>
               </div>

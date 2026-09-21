@@ -159,7 +159,7 @@ export default function RequestTracking() {
   const filtered = filter === 'All' ? userRequests : userRequests.filter((r) => r.status === filter)
 
   return (
-    <div className="space-y-5 max-w-3xl">
+    <div className="space-y-5">
       <div>
         <h1 className="text-2xl font-bold text-gray-900">Request Tracking</h1>
         <p className="text-gray-500 text-sm mt-0.5">Monitor the status and progress of your assistance requests</p>
@@ -188,7 +188,7 @@ export default function RequestTracking() {
           <p className="text-gray-400 font-medium">No requests in this category</p>
         </Card>
       ) : (
-        <div className="space-y-4">
+        <div className="grid gap-4 lg:grid-cols-2 items-start">
           {filtered.map((r) => (
             <TrackingCard key={r.id} req={r} onSelect={() => setSelected(r)} />
           ))}

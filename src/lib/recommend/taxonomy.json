@@ -8,173 +8,477 @@
       "excel",
       "advanced excel",
       "microsoft word",
+      "ms word",
       "word",
       "powerpoint",
-      "ms word"
+      "ms powerpoint",
+      "microsoft powerpoint",
+      "google docs",
+      "google sheets",
+      "google workspace",
+      "spreadsheet",
+      "spreadsheets",
+      "office software",
+      "office applications"
     ],
     "computer literacy": [
       "computer skills",
       "basic computer skills",
+      "basic computer",
       "computer literate",
       "computer proficiency",
+      "computer operation",
       "it literacy",
-      "computer literacy"
+      "computer literacy",
+      "computer knowledge",
+      "pagkamaalam sa computer"
     ],
     "customer service": [
       "customer support",
       "customer care",
-      "customer service"
+      "customer service",
+      "client service",
+      "client servicing",
+      "front desk",
+      "frontline service",
+      "receptionist",
+      "reception"
     ],
     "communication": [
       "verbal communication",
       "written communication",
       "communication skills",
       "clear communication",
-      "interpersonal communication"
+      "interpersonal communication",
+      "interpersonal skills",
+      "communicating",
+      "pakikipagkomunikasyon"
     ],
     "data entry": [
       "data encoding",
       "data encoder",
+      "encoder",
       "encoding",
-      "data entry"
+      "data entry",
+      "data processing",
+      "transcription",
+      "transcribing"
     ],
     "typing": [
       "keyboarding",
       "fast keyboarding",
+      "touch typing",
+      "fast typing",
+      "typing speed",
+      "typist",
       "typing"
     ],
     "attention to detail": [
       "attention to details",
       "detail oriented",
       "detail-oriented",
-      "meticulous"
+      "meticulous",
+      "accuracy",
+      "accurate",
+      "thoroughness",
+      "careful work"
     ],
     "organizing files": [
       "filing",
       "file organization",
       "file management",
-      "records management"
+      "records management",
+      "record keeping",
+      "records keeping",
+      "document management",
+      "document handling"
+    ],
+    "administration": [
+      "administrative support",
+      "administrative",
+      "administrative assistant",
+      "admin assistant",
+      "office administration",
+      "office assistant",
+      "office work",
+      "clerical",
+      "clerical work",
+      "secretarial",
+      "secretary",
+      "scheduling",
+      "administration"
     ],
     "social media": [
       "social media management",
       "social media content",
-      "social media"
+      "social media marketing",
+      "social media",
+      "facebook",
+      "content posting",
+      "community management"
     ],
     "design": [
       "graphic design",
       "visual design",
-      "creative design"
+      "creative design",
+      "layout design",
+      "logo design",
+      "graphic designer",
+      "canva",
+      "photoshop",
+      "adobe photoshop",
+      "illustrator",
+      "adobe illustrator",
+      "design"
     ],
     "writing": [
       "content writing",
       "copywriting",
-      "article writing"
+      "article writing",
+      "creative writing",
+      "technical writing",
+      "blogging",
+      "blog writing",
+      "journalism",
+      "proofreading",
+      "writing"
     ],
     "photography": [
       "photo editing",
-      "photography skills"
+      "photography skills",
+      "photography",
+      "photo shooting",
+      "event photography",
+      "camera operation",
+      "photographer"
     ],
     "video editing": [
       "videography",
       "video post-production",
-      "video editing"
+      "video editing",
+      "video production",
+      "premiere pro",
+      "adobe premiere",
+      "capcut",
+      "filming"
     ],
     "english proficiency": [
       "english",
       "english language",
-      "english proficiency"
+      "english proficiency",
+      "english communication",
+      "english speaking",
+      "fluent in english",
+      "fluent english"
     ],
     "accounting": [
       "bookkeeping",
-      "financial accounting"
+      "financial accounting",
+      "accounting",
+      "financial reporting",
+      "accounts payable",
+      "accounts receivable",
+      "payroll",
+      "ledger",
+      "budgeting"
     ],
     "research": [
       "research skills",
-      "internet research"
+      "internet research",
+      "online research",
+      "market research",
+      "data gathering",
+      "information gathering",
+      "research"
+    ],
+    "web development": [
+      "html",
+      "css",
+      "javascript",
+      "web development",
+      "website development",
+      "web programming",
+      "programming",
+      "coding",
+      "front-end",
+      "frontend"
+    ],
+    "it support": [
+      "network troubleshooting",
+      "technical support",
+      "tech support",
+      "hardware troubleshooting",
+      "computer repair",
+      "help desk",
+      "helpdesk",
+      "networking",
+      "it support",
+      "troubleshooting",
+      "computer maintenance"
+    ],
+    "horticulture": [
+      "plant care",
+      "gardening",
+      "gardener",
+      "landscaping",
+      "farming",
+      "farm work",
+      "planting",
+      "agriculture",
+      "urban farming",
+      "paghahalaman",
+      "pagtatanim",
+      "horticulture"
+    ],
+    "manual labor": [
+      "physical labor",
+      "heavy lifting",
+      "general labor",
+      "laborer",
+      "utility work",
+      "maintenance work",
+      "grounds maintenance",
+      "construction helper",
+      "manual labor",
+      "manual work"
+    ],
+    "carpentry": [
+      "woodworking",
+      "wood work",
+      "furniture making",
+      "cabinet making",
+      "cabinetry",
+      "pagkakarpintero",
+      "carpentry"
+    ],
+    "cooking": [
+      "culinary",
+      "food preparation",
+      "kitchen work",
+      "meal preparation",
+      "cook",
+      "chef",
+      "cooking",
+      "pagluluto"
+    ],
+    "baking": [
+      "pastry",
+      "pastries",
+      "bread making",
+      "bakery",
+      "bakeshop",
+      "cake decorating",
+      "baking",
+      "pagbe-bake"
+    ],
+    "food safety": [
+      "food handling",
+      "food hygiene",
+      "food sanitation",
+      "sanitation",
+      "haccp",
+      "food safety"
+    ],
+    "food processing": [
+      "food production",
+      "food manufacturing",
+      "food packaging",
+      "food processing"
+    ],
+    "sales": [
+      "selling",
+      "retail",
+      "salesmanship",
+      "sales",
+      "product knowledge",
+      "store attendant"
+    ],
+    "cashiering": [
+      "cashier",
+      "cash handling",
+      "point of sale",
+      "pos",
+      "cashiering"
+    ],
+    "tailoring": [
+      "sewing",
+      "dressmaking",
+      "garment making",
+      "tailoring",
+      "pananahi"
+    ],
+    "teaching": [
+      "tutoring",
+      "tutor",
+      "teacher",
+      "instruction",
+      "teaching",
+      "pagtuturo"
+    ],
+    "sign language": [
+      "filipino sign language",
+      "fsl",
+      "sign language interpreting",
+      "sign language"
     ]
   },
-  "families": [
-    {
-      "family": "Office/Admin",
-      "categories": ["Administrative"],
-      "keywords": ["data entry", "administrative assistant", "office clerk", "records clerk", "secretary", "encoder", "records section"]
-    },
-    {
-      "family": "Customer-facing",
-      "categories": ["Customer Service"],
-      "keywords": ["customer service", "call center", "receptionist", "support specialist", "sales", "front desk"]
-    },
-    {
-      "family": "Creative/Digital",
-      "categories": ["Media & Communications"],
-      "keywords": ["social media", "graphic designer", "photographer", "video editor", "content", "designer"]
-    },
-    {
-      "family": "Tech",
-      "categories": ["Technology"],
-      "keywords": ["it support", "software", "developer", "network", "web", "programmer", "systems", "data analyst"]
-    },
-    {
-      "family": "Finance",
-      "categories": ["Accounting & Finance"],
-      "keywords": ["accounting", "bookkeeping", "finance", "audit", "payroll"]
-    },
-    {
-      "family": "Inventory",
-      "categories": [],
-      "keywords": ["inventory", "warehouse", "stock clerk", "logistics", "store keeper"]
-    },
-    {
-      "family": "Writing/Education",
-      "categories": [],
-      "keywords": ["writer", "writing", "teacher", "tutor", "education", "instruction"]
-    },
-    {
-      "family": "Food",
-      "categories": [],
-      "keywords": ["food service", "kitchen", "bakeshop", "cook", "food processing", "restaurant", "food handler", "chef"]
-    }
-  ],
   "educationLevels": [
-    { "level": "Post Graduate", "rank": 8, "keywords": ["master", "post graduate", "doctorate", "phd"] },
-    { "level": "College Graduate", "rank": 7, "keywords": ["bachelor", "college graduate", "college degree", "degree", "bs in", "ba in"] },
-    { "level": "College Level", "rank": 6, "keywords": ["college level", "some college", "undergraduate"] },
-    { "level": "Vocational", "rank": 5, "keywords": ["vocational", "technical", "tesda", "nc ii", "nc iii", "nc iv"] },
-    { "level": "Senior High School Graduate", "rank": 4, "keywords": ["senior high"] },
-    { "level": "High School Graduate", "rank": 3, "keywords": ["high school graduate", "hs graduate"] },
-    { "level": "High School Level", "rank": 2, "keywords": ["high school"] },
-    { "level": "Elementary", "rank": 1, "keywords": ["elementary"] }
-  ],
-  "stopwords": [
-    "the", "and", "for", "with", "from", "that", "this", "are", "was", "will", "can", "has", "have",
-    "into", "across", "their", "them", "your", "our", "its", "also", "such", "would", "should", "who",
-    "whom", "when", "where", "all", "any", "between", "both", "each", "few", "more", "most", "other",
-    "some", "which", "while", "via", "per", "or", "as", "at", "by", "in", "of", "on", "to",
-    "office", "staff", "team", "work", "works", "support", "provide", "provides", "assist", "assists",
-    "assisting", "ensure", "ensures", "maintain", "maintaining", "including", "required", "various",
-    "related", "local", "government", "municipal", "municipality", "company", "department", "across",
-    "within", "assistance", "help", "helps", "based", "use", "using", "may", "within", "role", "position"
-  ],
-  "accessibilityDomains": {
-    "visual": {
-      "need": ["screen reader", "braille", "visual", "vision", "magnification", "high contrast", "larger print"],
-      "demand": ["visual inspection", "driving", "color coding", "color vision", "sight", "visual acuity"],
-      "support": ["screen reader", "braille", "assistive technology", "magnifier", "high contrast", "text-to-speech"]
+    {
+      "level": "Post Graduate",
+      "rank": 8,
+      "keywords": [
+        "master",
+        "post graduate",
+        "doctorate",
+        "phd"
+      ]
     },
-    "hearing": {
-      "need": ["sign language", "hearing", "deaf", "hard of hearing", "sound alert", "visual alert", "captions", "spoken"],
-      "demand": ["phone calls", "phone call", "inbound calls", "answering calls", "call center", "voice calls", "verbal communication required"],
-      "support": ["sign language", "written communication", "visual notification", "visual alert", "captions", "chat support", "text-based"]
+    {
+      "level": "College Graduate",
+      "rank": 7,
+      "keywords": [
+        "bachelor",
+        "college graduate",
+        "college degree",
+        "degree",
+        "bs in",
+        "ba in"
+      ]
     },
-    "mobility": {
-      "need": ["wheelchair", "mobility", "walking", "standing", "climbing", "ramp", "elevator", "accessible entrance", "accessible restroom"],
-      "demand": ["heavy lifting", "standing for long", "standing for extended", "climbing", "physical labor", "outdoor physical", "lifting heavy", "stair"],
-      "support": ["elevator", "ramp", "wheelchair", "accessible entrance", "accessible restroom", "accessible workstation", "seated", "ergonomic"]
+    {
+      "level": "College Level",
+      "rank": 6,
+      "keywords": [
+        "college level",
+        "some college",
+        "undergraduate"
+      ]
     },
-    "sensory": {
-      "need": ["quiet", "noise", "sensory", "bright light", "lighting", "rest breaks", "flexible schedule", "supportive supervision"],
-      "demand": ["noisy environment", "loud", "open office noise"],
-      "support": ["quiet workspace", "flexible schedule", "rest breaks", "private workspace"]
+    {
+      "level": "Vocational",
+      "rank": 5,
+      "keywords": [
+        "vocational",
+        "technical",
+        "tesda",
+        "nc ii",
+        "nc iii",
+        "nc iv"
+      ]
+    },
+    {
+      "level": "Senior High School Graduate",
+      "rank": 4,
+      "keywords": [
+        "senior high"
+      ]
+    },
+    {
+      "level": "High School Graduate",
+      "rank": 3,
+      "keywords": [
+        "high school graduate",
+        "hs graduate"
+      ]
+    },
+    {
+      "level": "High School Level",
+      "rank": 2,
+      "keywords": [
+        "high school"
+      ]
+    },
+    {
+      "level": "Elementary",
+      "rank": 1,
+      "keywords": [
+        "elementary"
+      ]
     }
-  }
+  ],
+  "related": [
+    [
+      "data entry",
+      "typing",
+      "organizing files"
+    ],
+    [
+      "administration",
+      "organizing files",
+      "data entry"
+    ],
+    [
+      "administration",
+      "microsoft office"
+    ],
+    [
+      "computer literacy",
+      "microsoft office"
+    ],
+    [
+      "computer literacy",
+      "it support"
+    ],
+    [
+      "it support",
+      "web development"
+    ],
+    [
+      "customer service",
+      "sales",
+      "cashiering"
+    ],
+    [
+      "communication",
+      "english proficiency"
+    ],
+    [
+      "customer service",
+      "communication"
+    ],
+    [
+      "writing",
+      "english proficiency"
+    ],
+    [
+      "writing",
+      "research"
+    ],
+    [
+      "writing",
+      "social media"
+    ],
+    [
+      "social media",
+      "design",
+      "photography",
+      "video editing"
+    ],
+    [
+      "photography",
+      "video editing"
+    ],
+    [
+      "design",
+      "photography"
+    ],
+    [
+      "accounting",
+      "data entry"
+    ],
+    [
+      "horticulture",
+      "manual labor"
+    ],
+    [
+      "carpentry",
+      "manual labor"
+    ],
+    [
+      "cooking",
+      "baking",
+      "food processing",
+      "food safety"
+    ]
+  ]
 }

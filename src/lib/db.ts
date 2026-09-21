@@ -1,4 +1,6 @@
 import { supabase } from './supabase'
+import { normalizeJob, normalizeUser } from './normalize'
+import type { RawStats } from './stats'
 import type {
   PWDUser,
   Benefit,
@@ -15,15 +17,6 @@ export interface DataActivityEntry {
   date: string
   time: string
   activity: string
-}
-
-export interface JobApplicationState {
-  id: string
-  userId: string
-  jobId: string
-  jobTitle: string
-  company: string
-  appliedDate: string
 }
 
 // ── Field maps (entity key → database column) ─────────────────────
@@ -44,7 +37,9 @@ const PWD_USER_MAP: Record<string, string> = {
   pwdIdNumber: 'pwd_id_number',
   avatar: 'avatar',
   active: 'active',
+  deletedAt: 'deleted_at',
   skills: 'skills',
+  educationLevel: 'education_level',
   education: 'education',
   workExperience: 'work_experience',
   yearsOfExperience: 'years_of_experience',
@@ -56,6 +51,7 @@ const PWD_USER_MAP: Record<string, string> = {
   functionalCapabilities: 'functional_capabilities',
   accessibilityNeeds: 'accessibility_needs',
   accommodationRequirements: 'accommodation_requirements',
+  savedJobIds: 'saved_job_ids',
 }
 
 const BENEFIT_MAP: Record<string, string> = {
@@ -104,29 +100,32 @@ const JOB_MAP: Record<string, string> = {
   id: 'id',
   title: 'title',
   company: 'company',
-  location: 'location',
-  type: 'type',
-  category: 'category',
-  salary: 'salary',
   description: 'description',
+  location: 'location',
+  employmentType: 'employment_type',
+  workArrangement: 'work_arrangement',
   skills: 'skills',
-  preferredSkills: 'preferred_skills',
-  educationRequirement: 'education_requirement',
-  experienceRequirement: 'experience_requirement',
-  workSetup: 'work_setup',
-  workplaceConditions: 'workplace_conditions',
-  screenOrVisualDemands: 'screen_or_visual_demands',
-  accessibilityInfo: 'accessibility_info',
-  accessibilityFeatures: 'accessibility_features',
-  physicalRequirements: 'physical_requirements',
-  communicationRequirements: 'communication_requirements',
-  functionalRequirements: 'functional_requirements',
-  accommodationSupport: 'accommodation_support',
-  postedDate: 'posted_date',
+  minEducation: 'min_education',
+  suitableDisabilities: 'suitable_disabilities',
+  accommodations: 'accommodations',
+  slots: 'slots',
   deadline: 'deadline',
   status: 'status',
-  matchPercent: 'match_percent',
-  matchReasons: 'match_reasons',
+  postedDate: 'posted_date',
+  salary: 'salary',
+  category: 'category',
+  accessibilityInfo: 'accessibility_info',
+}
+
+// Columns from the pre-v3 job schema. Read-only: they let an un-migrated row be understood,
+// but they are never written back.
+const JOB_LEGACY_READ_MAP: Record<string, string> = {
+  type: 'type',
+  workSetup: 'work_setup',
+  educationRequirement: 'education_requirement',
+  accessibilityFeatures: 'accessibility_features',
+  workplaceConditions: 'workplace_conditions',
+  accommodationSupport: 'accommodation_support',
 }
 
 const ADMIN_USER_MAP: Record<string, string> = {
@@ -157,15 +156,6 @@ const FEEDBACK_MAP: Record<string, string> = {
   userId: 'user_id',
 }
 
-const JOB_APPLICATION_MAP: Record<string, string> = {
-  id: 'id',
-  userId: 'user_id',
-  jobId: 'job_id',
-  jobTitle: 'job_title',
-  company: 'company',
-  appliedDate: 'applied_date',
-}
-
 // ── Generic converters ─────────────────────────────────────────────
 
 function toRow(obj: Record<string, unknown>, map: Record<string, string>): Record<string, unknown> {
@@ -177,12 +167,14 @@ function toRow(obj: Record<string, unknown>, map: Record<string, string>): Recor
   return row
 }
 
+/** SQL NULLs are read as "absent" so a round trip matches what the app holds in memory. */
 function fromRow(row: Record<string, unknown>, map: Record<string, string>): Record<string, unknown> {
   const obj: Record<string, unknown> = {}
   for (const [key, column] of Object.entries(map)) {
-    obj[key] = row[column]
+    const value = row[column]
+    if (value !== null && value !== undefined) obj[key] = value
   }
-  return obj as Record<string, unknown>
+  return obj
 }
 
 export interface LoadedState {
@@ -194,7 +186,17 @@ export interface LoadedState {
   adminUsers: AdminUser[]
   feedbackTickets: FeedbackTicket[]
   activityLog: DataActivityEntry[]
-  jobApplications: JobApplicationState[]
+}
+
+export const EMPTY_STATE: LoadedState = {
+  pwdUsers: [],
+  benefits: [],
+  assistanceRequests: [],
+  notifications: [],
+  jobs: [],
+  adminUsers: [],
+  feedbackTickets: [],
+  activityLog: [],
 }
 
 const activityToRow = (a: DataActivityEntry): Record<string, unknown> => ({
@@ -218,7 +220,7 @@ const activityFromRow = (r: Record<string, unknown>): DataActivityEntry => ({
 export async function loadStateFromSupabase(): Promise<{ state: LoadedState; seeded: boolean } | null> {
   if (!supabase) return null
 
-  const [pwds, benefits, requests, notifications, jobs, admins, feedback, activity, applications] =
+  const [pwds, benefits, requests, notifications, jobs, admins, feedback, activity] =
     await Promise.all([
       supabase.from('pwd_users').select('*'),
       supabase.from('benefits').select('*'),
@@ -228,69 +230,124 @@ export async function loadStateFromSupabase(): Promise<{ state: LoadedState; see
       supabase.from('admin_users').select('*'),
       supabase.from('feedback_tickets').select('*'),
       supabase.from('activity_log').select('*').order('id', { ascending: false }),
-      supabase.from('job_applications').select('*'),
     ])
+
+  // A failed read must never look like "the database is empty" — that would trigger a re-seed.
+  const failed = [pwds, benefits, requests, notifications, jobs, admins, feedback, activity].find((r) => r.error)
+  if (failed?.error) throw new Error(failed.error.message)
 
   const seeded =
     (pwds.data?.length ?? 0) > 0 && (benefits.data?.length ?? 0) > 0 && (jobs.data?.length ?? 0) > 0
 
   return {
     state: {
-      pwdUsers: (pwds.data ?? []).map((r) => fromRow(r, PWD_USER_MAP) as unknown as PWDUser),
+      pwdUsers: (pwds.data ?? []).map((r) => normalizeUser(fromRow(r, PWD_USER_MAP) as unknown as PWDUser)),
       benefits: (benefits.data ?? []).map((r) => fromRow(r, BENEFIT_MAP) as unknown as Benefit),
       assistanceRequests: (requests.data ?? []).map((r) => fromRow(r, REQUEST_MAP) as unknown as AssistanceRequest),
       notifications: (notifications.data ?? []).map((r) => fromRow(r, NOTIFICATION_MAP) as unknown as Notification),
-      jobs: (jobs.data ?? []).map((r) => fromRow(r, JOB_MAP) as unknown as Job),
+      jobs: (jobs.data ?? []).map((r) => normalizeJob({ ...fromRow(r, JOB_LEGACY_READ_MAP), ...fromRow(r, JOB_MAP) })),
       adminUsers: (admins.data ?? []).map((r) => fromRow(r, ADMIN_USER_MAP) as unknown as AdminUser),
       feedbackTickets: (feedback.data ?? []).map((r) => fromRow(r, FEEDBACK_MAP) as unknown as FeedbackTicket),
       activityLog: (activity.data ?? []).map(activityFromRow),
-      jobApplications: (applications.data ?? []).map((r) => fromRow(r, JOB_APPLICATION_MAP) as unknown as JobApplicationState),
     },
     seeded,
   }
 }
 
+// ── Aggregates (server-side) ───────────────────────────────────────
+
+/** Runs the `dashboard_stats()` Postgres function: every dashboard number, computed in the database. */
+export async function fetchDashboardStats(): Promise<RawStats> {
+  if (!supabase) throw new Error('Supabase is not configured.')
+  const { data, error } = await supabase.rpc('dashboard_stats')
+  if (error) throw new Error(error.message)
+  const raw = data as Partial<RawStats> | null
+  if (!raw || typeof raw.totalPwds !== 'number' || typeof raw.totalRequests !== 'number') {
+    throw new Error('dashboard_stats() returned an unexpected payload.')
+  }
+  return {
+    totalPwds: raw.totalPwds,
+    verifiedPwds: Number(raw.verifiedPwds ?? 0),
+    pendingPwds: Number(raw.pendingPwds ?? 0),
+    rejectedPwds: Number(raw.rejectedPwds ?? 0),
+    newThisMonth: Number(raw.newThisMonth ?? 0),
+    totalRequests: raw.totalRequests,
+    approvedRequests: Number(raw.approvedRequests ?? 0),
+    pendingRequests: Number(raw.pendingRequests ?? 0),
+    rejectedRequests: Number(raw.rejectedRequests ?? 0),
+    requestsByMonth: raw.requestsByMonth ?? [],
+    pwdsByBarangay: raw.pwdsByBarangay ?? [],
+    pwdsByDisability: raw.pwdsByDisability ?? [],
+    requestsByType: raw.requestsByType ?? [],
+  }
+}
+
 // ── Sync ───────────────────────────────────────────────────────────
 
-export async function syncStateToSupabase(state: LoadedState): Promise<void> {
-  if (!supabase) return
+interface TableSpec {
+  table: string
+  key: Exclude<keyof LoadedState, 'activityLog'>
+  map: Record<string, string>
+}
 
-  const tasks = [
-    supabase.from('pwd_users').upsert(state.pwdUsers.map((u) => toRow(u as unknown as Record<string, unknown>, PWD_USER_MAP)), { onConflict: 'id' }),
-    supabase.from('benefits').upsert(state.benefits.map((b) => toRow(b as unknown as Record<string, unknown>, BENEFIT_MAP)), { onConflict: 'id' }),
-    supabase.from('assistance_requests').upsert(state.assistanceRequests.map((r) => toRow(r as unknown as Record<string, unknown>, REQUEST_MAP)), { onConflict: 'id' }),
-    supabase.from('notifications').upsert(state.notifications.map((n) => toRow(n as unknown as Record<string, unknown>, NOTIFICATION_MAP)), { onConflict: 'id' }),
-    supabase.from('jobs').upsert(state.jobs.map((j) => toRow(j as unknown as Record<string, unknown>, JOB_MAP)), { onConflict: 'id' }),
-    supabase.from('admin_users').upsert(state.adminUsers.map((a) => toRow(a as unknown as Record<string, unknown>, ADMIN_USER_MAP)), { onConflict: 'id' }),
-    supabase.from('feedback_tickets').upsert(state.feedbackTickets.map((t) => toRow(t as unknown as Record<string, unknown>, FEEDBACK_MAP)), { onConflict: 'id' }),
-    supabase.from('job_applications').upsert(state.jobApplications.map((a) => toRow(a as unknown as Record<string, unknown>, JOB_APPLICATION_MAP)), { onConflict: 'id' }),
-    // Activity log has an auto-generated id, so replace wholesale.
-    supabase.from('activity_log').delete().neq('id', 0),
-  ]
+const TABLES: TableSpec[] = [
+  { table: 'pwd_users', key: 'pwdUsers', map: PWD_USER_MAP },
+  { table: 'benefits', key: 'benefits', map: BENEFIT_MAP },
+  { table: 'assistance_requests', key: 'assistanceRequests', map: REQUEST_MAP },
+  { table: 'notifications', key: 'notifications', map: NOTIFICATION_MAP },
+  { table: 'jobs', key: 'jobs', map: JOB_MAP },
+  { table: 'admin_users', key: 'adminUsers', map: ADMIN_USER_MAP },
+  { table: 'feedback_tickets', key: 'feedbackTickets', map: FEEDBACK_MAP },
+]
+
+/**
+ * Push only what changed between two states: rows whose object identity changed are
+ * upserted, rows that disappeared are deleted. Unchanged rows are never rewritten, so a
+ * stale browser can no longer overwrite other people's edits to rows it didn't touch.
+ * Throws if any table failed, leaving the caller free to retry the same diff.
+ */
+export async function syncStateToSupabase(prev: LoadedState, next: LoadedState): Promise<void> {
+  if (!supabase) return
+  const client = supabase
+
+  const tasks: PromiseLike<{ error: { message: string } | null }>[] = []
+  for (const { table, key, map } of TABLES) {
+    const before = new Map((prev[key] as { id: string }[]).map((r) => [r.id, r]))
+    const after = next[key] as { id: string }[]
+    const changed = after.filter((r) => before.get(r.id) !== r)
+    const nextIds = new Set(after.map((r) => r.id))
+    const removed = [...before.keys()].filter((id) => !nextIds.has(id))
+
+    if (changed.length > 0) {
+      tasks.push(client.from(table).upsert(changed.map((r) => toRow(r as unknown as Record<string, unknown>, map)), { onConflict: 'id' }))
+    }
+    if (removed.length > 0) tasks.push(client.from(table).delete().in('id', removed))
+  }
 
   const results = await Promise.all(tasks)
-  for (const r of results) {
-    if (r.error) console.error('[syncStateToSupabase] table sync failed:', r.error.message)
+  const errors = results.map((r) => r.error?.message).filter((m): m is string => Boolean(m))
+
+  // The activity log has an auto-generated id, so it is replaced wholesale when it changed.
+  if (prev.activityLog !== next.activityLog) {
+    const cleared = await client.from('activity_log').delete().neq('id', 0)
+    if (cleared.error) errors.push(cleared.error.message)
+    else if (next.activityLog.length > 0) {
+      const inserted = await client.from('activity_log').insert(next.activityLog.map(activityToRow))
+      if (inserted.error) errors.push(inserted.error.message)
+    }
   }
-  const { error: activityErr } = await supabase.from('activity_log').insert(state.activityLog.map(activityToRow))
-  if (activityErr) console.error('[syncStateToSupabase] activity_log sync failed:', activityErr.message)
+
+  if (errors.length > 0) throw new Error([...new Set(errors)].join('; '))
 }
 
 export async function resetSupabaseData(seed: LoadedState): Promise<void> {
   if (!supabase) return
   const results = await Promise.all([
-    supabase.from('pwd_users').delete().neq('id', ''),
-    supabase.from('benefits').delete().neq('id', ''),
-    supabase.from('assistance_requests').delete().neq('id', ''),
-    supabase.from('notifications').delete().neq('id', ''),
-    supabase.from('jobs').delete().neq('id', ''),
-    supabase.from('admin_users').delete().neq('id', ''),
-    supabase.from('feedback_tickets').delete().neq('id', ''),
-    supabase.from('job_applications').delete().neq('id', ''),
+    ...TABLES.map(({ table }) => supabase!.from(table).delete().neq('id', '')),
     supabase.from('activity_log').delete().neq('id', 0),
   ])
   for (const r of results) {
     if (r.error) console.error('[resetSupabaseData] table reset failed:', r.error.message)
   }
-  await syncStateToSupabase(seed)
+  await syncStateToSupabase(EMPTY_STATE, seed)
 }

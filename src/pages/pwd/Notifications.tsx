@@ -25,7 +25,7 @@ export default function Notifications() {
   const unread = items.filter((n) => !n.read).length
 
   return (
-    <div className="space-y-5 max-w-2xl">
+    <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
@@ -46,7 +46,7 @@ export default function Notifications() {
           <p className="text-gray-400">No notifications yet</p>
         </div>
       ) : (
-        <div className="space-y-3">
+        <div className="grid gap-3 lg:grid-cols-2 items-start">
           {items.map((n) => (
             <div
               key={n.id}

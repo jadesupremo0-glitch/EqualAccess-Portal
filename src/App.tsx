@@ -28,13 +28,14 @@ import Reports from './pages/admin/Reports'
 import UserManagement from './pages/admin/UserManagement'
 import FeedbackAdmin from './pages/admin/FeedbackAdmin'
 import AdminSettings from './pages/admin/Settings'
+import Recapitulation from './pages/admin/Recapitulation'
 
 type Page =
   | 'landing' | 'login' | 'register'
   | 'pwd-dashboard' | 'pwd-profile' | 'pwd-benefits' | 'pwd-requests'
   | 'pwd-tracking' | 'pwd-feedback' | 'pwd-notifications' | 'pwd-jobs' | 'pwd-settings'
   | 'admin-dashboard' | 'admin-pwd' | 'admin-benefits' | 'admin-requests'
-  | 'admin-reports' | 'admin-users' | 'admin-feedback' | 'admin-settings'
+  | 'admin-reports' | 'admin-recapitulation' | 'admin-users' | 'admin-feedback' | 'admin-settings'
 
 const PWD_PAGES: Page[] = [
   'pwd-dashboard', 'pwd-profile', 'pwd-benefits', 'pwd-requests',
@@ -43,7 +44,7 @@ const PWD_PAGES: Page[] = [
 
 const ADMIN_PAGES: Page[] = [
   'admin-dashboard', 'admin-pwd', 'admin-benefits', 'admin-requests',
-  'admin-reports', 'admin-users', 'admin-feedback', 'admin-settings',
+  'admin-reports', 'admin-recapitulation', 'admin-users', 'admin-feedback', 'admin-settings',
 ]
 
 function AppInner() {
@@ -56,7 +57,7 @@ function AppInner() {
   const validateCredentials = (tab: 'user' | 'admin', username: string, password: string): AppSession => {
     if (tab === 'user') {
       const user = pwdUsers.find(
-        (u) => (u.pwdIdNumber === username || u.username === username || u.id === username) && u.password === password && u.active !== false
+        (u) => (u.pwdIdNumber === username || u.username === username || u.id === username) && u.password === password && u.active !== false && !u.deletedAt
       )
       if (user) return { type: 'pwd', userId: user.id }
     } else {
@@ -108,7 +109,7 @@ function AppInner() {
         case 'pwd-tracking': return <RequestTracking />
         case 'pwd-feedback': return <FeedbackPage />
         case 'pwd-notifications': return <Notifications />
-        case 'pwd-jobs': return <Jobs />
+        case 'pwd-jobs': return <Jobs onNavigate={navigate} />
         default: return <PWDSettings />
       }
     }
@@ -127,6 +128,7 @@ function AppInner() {
         case 'admin-benefits': return <BenefitsManagement />
         case 'admin-requests': return <RequestManagement />
         case 'admin-reports': return <Reports />
+        case 'admin-recapitulation': return <Recapitulation onNavigate={navigate} />
         case 'admin-users': return <UserManagement />
         case 'admin-feedback': return <FeedbackAdmin />
         default: return <AdminSettings />

@@ -1,78 +1,79 @@
 import type { Job } from '../../data'
 
-export type ScoreBand = 'Excellent' | 'Good' | 'Fair' | 'Weak'
+export type ComponentKey = 'skills' | 'suitability' | 'education' | 'location' | 'preference'
 
-export type QualificationStatus = 'Met' | 'Partly met' | 'Not met'
-
-export type AccessibilityFit =
-  | 'Not assessed'
-  | 'Compatible'
-  | 'Compatible with accommodation'
-  | 'Needs confirmation'
-  | 'Not compatible'
-
-export interface ScoreBreakdown {
-  skills: number
-  capabilities: number
-  family: number
-  qualifications: number
-  experience: number
-  accessibilityAdjustment: number
-}
+/** Points available per component. They add up to 100 by default; override to reweight. */
+export type MatchWeights = Record<ComponentKey, number>
 
 export interface SkillFit {
+  /** Required skills the PWD has (same skill, any spelling). */
   matched: string[]
+  /** Required skills the PWD does not have but has a close relative of (partial credit). */
+  related: string[]
   missing: string[]
+  /** 0–1 share of required skills the PWD has; a related skill counts as a fraction of one. */
   coverage: number
 }
 
-export interface FamilyFit {
-  jobFamily: string | null
-  preferredFamilies: string[]
-  matchLevel: 'exact' | 'family' | 'none'
-}
-
-export interface QualificationFit {
-  status: QualificationStatus
+export interface EducationFit {
+  fraction: number
+  status: 'No requirement' | 'Met' | 'Nearly met' | 'Not met' | 'Unknown'
   note: string
 }
 
-export interface AccessibilityFitResult {
-  fit: AccessibilityFit
-  adjustment: number
-  note: string
-  questionsToConfirm: string[]
-  needsAssessed: boolean
+export interface AccommodationFit {
+  /** False when the PWD stated no accommodation needs. */
+  applicable: boolean
+  needs: string[]
+  met: string[]
+  unmet: string[]
+  fraction: number
 }
 
-/** Public record produced for each recommended job. */
-export interface JobRecommendation {
+export interface LocationFit {
+  fraction: number
+  level: 'remote' | 'barangay' | 'municipality' | 'province' | 'far'
+  note: string
+}
+
+export interface MatchReason {
+  label: string
+  /** positive = a reason it matches; caution = something to check before pursuing it. */
+  tone: 'positive' | 'caution'
+}
+
+export type MatchBand = 'Excellent' | 'Good' | 'Fair'
+
+export interface Recommendation {
   job: Job
-  /** Other postings merged into this one (duplicate title + content). */
-  duplicateJobIds: string[]
+  /** Whole-number match percentage, 0–100. */
   score: number
-  band: ScoreBand
-  components: ScoreBreakdown
+  band: MatchBand
+  /** Points earned per component (may be fractional). */
+  components: Record<ComponentKey, number>
   skills: SkillFit
-  family: FamilyFit
-  qualification: QualificationFit
-  accessibility: AccessibilityFitResult
+  education: EducationFit
+  accommodation: AccommodationFit
+  location: LocationFit
+  /** True when the employer lists this PWD's disability type as suitable. */
+  disabilityListed: boolean
+  reasons: MatchReason[]
 }
 
 export interface RecommendationResult {
-  recommendations: JobRecommendation[]
-  /** True when the best available score is below 50 — no strong match exists. */
-  weakMatch: boolean
-  /** Skills missing across the top recommendations (only populated when weakMatch). */
-  suggestedImprovements: string[]
-  /** Count of postings excluded because they directly conflict with stated needs. */
-  excludedCount: number
+  /** True while the PWD has not yet entered their skills and education; nothing is recommended until they do. */
+  locked: boolean
+  recommendations: Recommendation[]
+  /** Open, non-expired listings considered. */
+  considered: number
+  /** Listings hidden as weak matches: under the minimum score, or sharing none of the required skills. */
+  hidden: number
+  /** Listings the employer explicitly restricted to other disability types. */
+  restricted: number
 }
 
-export function bandForScore(score: number): ScoreBand {
-  if (score >= 85) return 'Excellent'
-  if (score >= 70) return 'Good'
-  if (score >= 50) return 'Fair'
-  return 'Weak'
+export function bandForScore(score: number): MatchBand {
+  if (score >= 75) return 'Excellent'
+  if (score >= 60) return 'Good'
+  return 'Fair'
 }
-

@@ -9,10 +9,12 @@
     "preview": "vite preview",
     "format": "oxfmt",
     "seed": "tsx scripts/seed.ts",
+    "seed:recap": "tsx scripts/seed-recapitulation.ts",
     "test": "vitest run"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.116.0",
+    "exceljs": "^4.4.0",
     "lucide-react": "^1.26.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

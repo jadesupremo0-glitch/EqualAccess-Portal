@@ -2,10 +2,12 @@ import { useState } from 'react'
 import {
   ArrowRight, ChevronDown, Phone, Mail, MapPin,
   Shield, Clock, Globe, Award, CheckCircle,
-  Accessibility, BookOpen, HeartHandshake, Sparkles,
+  Accessibility, ClipboardList, FolderKanban, CalendarDays, HandHeart, Sparkles,
 } from 'lucide-react'
 import { Button } from '../components/ui'
+import PublicRecap from '../components/recapitulation/PublicRecap'
 import logoUrl from '../assets/logo.png'
+import heroIllustrationUrl from '../assets/hero-pwd-illustration.png'
 
 function EALogo() {
   return (
@@ -15,7 +17,7 @@ function EALogo() {
       </div>
       <div>
         <p className="font-display font-extrabold text-slate-900 text-sm leading-tight tracking-tight">EqualAccess Portal</p>
-        <p className="text-[11px] text-slate-400">PDAO — Los Baños, Laguna</p>
+        <p className="text-[11px] text-slate-600">PDAO — Los Baños, Laguna</p>
       </div>
     </div>
   )
@@ -45,11 +47,11 @@ const faqs = [
 ]
 
 const benefitCategories = [
-  { icon: <HeartHandshake size={22} className="text-ea-teal-600" />, title: 'Financial Assistance', desc: 'Monthly cash support and emergency financial aid for qualified PWDs', tint: 'from-ea-teal-50 to-emerald-50 border-ea-teal-100' },
-  { icon: <Shield size={22} className="text-ea-blue-600" />, title: 'Medical Assistance', desc: 'Hospital bills, medicines, and referrals to partner hospitals', tint: 'from-ea-blue-50 to-sky-50 border-ea-blue-100' },
-  { icon: <Accessibility size={22} className="text-ea-teal-600" />, title: 'Assistive Devices', desc: 'Wheelchairs, hearing aids, crutches, and mobility equipment', tint: 'from-ea-teal-50 to-emerald-50 border-ea-teal-100' },
-  { icon: <BookOpen size={22} className="text-ea-blue-600" />, title: 'Educational Assistance', desc: 'PDAO scholarship grants and monthly stipends for PWD students', tint: 'from-ea-blue-50 to-sky-50 border-ea-blue-100' },
-  { icon: <Award size={22} className="text-ea-teal-600" />, title: 'Livelihood Programs', desc: 'Skills training in agri-entrepreneurship, crafts, and technology', tint: 'from-ea-teal-50 to-emerald-50 border-ea-teal-100' },
+  { icon: <ClipboardList size={22} className="text-ea-teal-600" />, title: 'Programs', desc: 'Information about programs offered by PDAO for persons with disabilities.', tint: 'from-ea-teal-50 to-emerald-50 border-ea-teal-100' },
+  { icon: <FolderKanban size={22} className="text-ea-blue-600" />, title: 'Projects', desc: 'Ongoing and completed projects that support the PWD community.', tint: 'from-ea-blue-50 to-sky-50 border-ea-blue-100' },
+  { icon: <CalendarDays size={22} className="text-ea-teal-600" />, title: 'Activities', desc: 'Events, community activities, and initiatives organized by PDAO.', tint: 'from-ea-teal-50 to-emerald-50 border-ea-teal-100' },
+  { icon: <HandHeart size={22} className="text-ea-blue-600" />, title: 'Assistance', desc: 'Information about available assistance and support that may be provided to qualified PWDs.', tint: 'from-ea-blue-50 to-sky-50 border-ea-blue-100' },
+  { icon: <Accessibility size={22} className="text-ea-teal-600" />, title: 'Assistive Devices', desc: 'Information about available assistive devices and related support for PWDs.', tint: 'from-ea-teal-50 to-emerald-50 border-ea-teal-100' },
 ]
 
 const steps = [
@@ -141,45 +143,25 @@ export default function Landing({ onNavigate }: { onNavigate: (p: string) => voi
               </div>
             </div>
 
-            {/* Right — glass stat cluster */}
+            {/* Right — illustration card */}
             <div className="relative hidden lg:block animate-fade-up" style={{ animationDelay: '120ms' }}>
-              <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/20 glass-dark">
+              <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/20 bg-white">
                 <img
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=600&h=420&fit=crop&auto=format"
-                  alt="Diverse group of persons with disabilities using digital services"
-                  className="w-full h-[340px] object-cover opacity-90"
+                  src={heroIllustrationUrl}
+                  width={599}
+                  height={258}
+                  alt="Illustration of a diverse group of persons with disabilities standing together"
+                  className="w-full aspect-[599/258] object-cover object-center"
                 />
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-ea-teal-950/70 via-transparent to-transparent" />
-              </div>
-              <div className="absolute -bottom-6 -left-6 glass-strong rounded-2xl p-4 shadow-xl animate-blob">
-                <p className="font-display text-2xl font-extrabold text-gradient">212</p>
-                <p className="text-xs text-slate-500 font-semibold">Registered PWDs</p>
               </div>
               <div className="absolute -top-6 -right-6 glass-strong rounded-2xl p-4 shadow-xl animate-blob-delayed">
                 <p className="font-display text-2xl font-extrabold text-gradient">71%</p>
                 <p className="text-xs text-slate-500 font-semibold">Approval Rate</p>
               </div>
-              <div className="absolute bottom-10 right-6 bg-gradient-to-r from-ea-teal-500 to-ea-blue-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg shadow-black/20">
+              <div className="absolute -bottom-3 right-6 bg-gradient-to-r from-ea-teal-500 to-ea-blue-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg shadow-black/20">
                 ✓ PDAO Official
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Stats ticker */}
-        <section className="relative bg-white/60 backdrop-blur-xl border-y border-white/60 py-6" aria-label="System statistics">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-            {[
-              { v: '212', l: 'Registered PWDs' },
-              { v: '6', l: 'Active Programs' },
-              { v: '₱1.4M+', l: 'Benefits Distributed' },
-              { v: '7', l: 'Barangays Served' },
-            ].map((s) => (
-              <div key={s.l} className="py-1">
-                <p className="font-display text-2xl font-extrabold text-gradient">{s.v}</p>
-                <p className="text-slate-500 text-xs font-semibold mt-0.5">{s.l}</p>
-              </div>
-            ))}
           </div>
         </section>
 
@@ -267,12 +249,15 @@ export default function Landing({ onNavigate }: { onNavigate: (p: string) => voi
               ))}
             </div>
             <div className="text-center mt-10">
-              <Button variant="outline" size="lg" onClick={() => onNavigate('login')}>View All Programs <ArrowRight size={16} /></Button>
+              <Button variant="outline" size="lg" onClick={() => onNavigate('login')}>VIEW ALL <ArrowRight size={16} /></Button>
             </div>
           </div>
         </section>
 
         {/* FAQ */}
+        {/* Only appears once an admin publishes a recapitulation and ticks "Show on the public landing page". */}
+        <PublicRecap />
+
         <section className="py-20 px-4" aria-labelledby="faq-heading">
           <div className="max-w-3xl mx-auto">
             <div className="text-center mb-12 animate-fade-up">
@@ -337,7 +322,7 @@ export default function Landing({ onNavigate }: { onNavigate: (p: string) => voi
             <div className="relative">
               <h2 id="cta-heading" className="font-display text-3xl lg:text-4xl font-extrabold text-white mb-4 tracking-tight">Ready to Access Your Benefits?</h2>
               <p className="text-teal-100/90 text-lg mb-9 max-w-2xl mx-auto">
-                Join 212+ PWDs in Los Baños who are already using the EqualAccess Portal to access government assistance. Registration is free and takes less than 10 minutes.
+                Join the PWDs in Los Baños who are already using the EqualAccess Portal to access government assistance. Registration is free and takes less than 10 minutes.
               </p>
               <div className="flex flex-wrap justify-center gap-4">
                 <button

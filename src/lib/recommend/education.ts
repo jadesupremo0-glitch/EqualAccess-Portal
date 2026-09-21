@@ -1,16 +1,15 @@
+import { EDUCATION_LEVELS } from '../catalog'
 import { taxonomy, normalizePhrase } from './taxonomy'
 import type { PWDUser, Job } from '../../data'
-import type { QualificationFit, QualificationStatus } from './types'
+import type { EducationFit } from './types'
 
-/** Component 4 — Qualifications (10%). Soft, level-based; higher always satisfies lower. */
-
-interface RequirementInfo {
-  floor: number
-  equivalency: boolean
-  hasRequirement: boolean
+/** Rank of a level label from the catalog ("College Graduate" → 7); 0 when unknown. */
+export function rankOfLevel(label: string | undefined): number {
+  if (!label) return 0
+  return EDUCATION_LEVELS.find((l) => l.label.toLowerCase() === label.trim().toLowerCase())?.rank ?? 0
 }
 
-/** Highest rank matched in a text (perfect for applicant education). */
+/** Highest rank matched in free text such as "Bachelor of Science in IT" (0 = none). */
 export function educationRankOf(text: string): number {
   const t = normalizePhrase(text)
   let rank = 0
@@ -22,63 +21,38 @@ export function educationRankOf(text: string): number {
   return rank
 }
 
-/** Requirement floor = LOWEST acceptable level explicitly listed (e.g. "College level or Vocational" → 5). */
-function requirementInfo(requirement: string | undefined): RequirementInfo {
-  if (!requirement || !requirement.trim()) return { floor: 0, equivalency: false, hasRequirement: false }
-  const t = normalizePhrase(requirement)
+/** Label of the LOWEST level named in a free-text requirement ("College Graduate or Vocational" → Vocational). */
+export function lowestEducationLabel(text: string): string {
+  if (!text.trim()) return ''
+  const t = normalizePhrase(text)
   let floor = Infinity
-  let matched = false
   for (const def of taxonomy.educationLevels) {
-    for (const kw of def.keywords) {
-      if (t.includes(normalizePhrase(kw))) {
-        floor = Math.min(floor, def.rank)
-        matched = true
-      }
-    }
+    if (def.keywords.some((kw) => t.includes(normalizePhrase(kw)))) floor = Math.min(floor, def.rank)
   }
-  if (!matched) return { floor: 0, equivalency: false, hasRequirement: false }
-  return { floor, equivalency: t.includes('equivalent') || t.includes('or equivalent'), hasRequirement: true }
+  return EDUCATION_LEVELS.find((l) => l.rank === floor)?.label ?? ''
 }
 
-function noteFor(status: QualificationStatus, requirement: string | undefined, level: number, floor: number): string {
-  if (!requirement) return 'No formal education requirement.'
-  if (status === 'Met') return `Your education (level ${level}) satisfies the requirement (level ${floor}).`
-  if (status === 'Partly met') return `Close to the requirement (level ${floor}); field of study or an equivalent may still apply — confirm with the employer.`
-  return `Requirement is level ${floor}; your listed education reaches level ${level}.`
+/** Applicant's education rank: the explicit level if set, otherwise inferred from free text. */
+export function applicantEducationRank(user: PWDUser): number {
+  return rankOfLevel(user.educationLevel) || educationRankOf(user.education ?? '')
 }
 
-export interface QualificationScore {
-  component: number
-  fit: QualificationFit
-}
-
-export function computeQualificationFit(user: PWDUser, job: Job): QualificationScore {
-  const requirement = job.educationRequirement
-  const info = requirementInfo(requirement)
-  if (!info.hasRequirement) {
-    return { component: 10, fit: { status: 'Met', note: 'No formal education requirement.' } }
+/** Education fit: meeting the minimum is full marks; each level below costs points but never disqualifies. */
+export function computeEducationFit(user: PWDUser, job: Job): EducationFit {
+  const required = rankOfLevel(job.minEducation)
+  if (!job.minEducation || required === 0) {
+    return { fraction: 1, status: 'No requirement', note: 'No minimum education required.' }
   }
 
-  const applicantLevel = educationRankOf(user.education ?? '')
-  let status: QualificationStatus
-  let component: number
-
-  if (applicantLevel >= info.floor) {
-    status = 'Met'
-    component = 10
-  } else if (info.equivalency && (user.workExperience ?? '').length > 0) {
-    status = 'Partly met'
-    component = 6
-  } else if (applicantLevel >= info.floor - 1) {
-    status = 'Partly met'
-    component = 6
-  } else {
-    status = 'Not met'
-    component = 3
+  const has = applicantEducationRank(user)
+  if (has === 0) {
+    return { fraction: 0.5, status: 'Unknown', note: `Minimum: ${job.minEducation}. Add your highest education level to your profile.` }
   }
-
+  if (has >= required) return { fraction: 1, status: 'Met', note: `Meets the minimum: ${job.minEducation}.` }
+  const gap = required - has
   return {
-    component,
-    fit: { status, note: noteFor(status, requirement, applicantLevel, info.floor) },
+    fraction: gap === 1 ? 0.6 : gap === 2 ? 0.3 : 0.1,
+    status: gap === 1 ? 'Nearly met' : 'Not met',
+    note: `Minimum: ${job.minEducation}.`,
   }
 }
