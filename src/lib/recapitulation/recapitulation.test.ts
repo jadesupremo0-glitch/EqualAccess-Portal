@@ -2,11 +2,11 @@ import { describe, it, expect } from 'vitest'
 import { readFileSync } from 'node:fs'
 import ExcelJS from 'exceljs'
 import {
-  OFFICIAL_BARANGAYS, blankInput, describeChanges, extremes, formatAsOf, inputFromReport, prpwdPercent, rowTotal,
-  sharePercent, sumRows, validateInput, withDerived,
+  OFFICIAL_BARANGAYS, OFFICIAL_DISABILITY_TYPES, blankInput, describeChanges, disabilityExtremes, extremes,
+  formatAsOf, inputFromReport, prpwdPercent, rowTotal, sharePercent, sumDisabilityRows, sumRows, validateInput, withDerived,
 } from './compute'
 import { SEED_AS_OF, SEED_REPORT } from './seedData'
-import { buildCsv, buildWorkbook, recapFileName, prpwdLabel } from './export'
+import { buildCsv, buildDisabilityCsv, buildDisabilityWorkbook, buildWorkbook, disabilityFileName, recapFileName, prpwdLabel } from './export'
 import type { RecapReport } from './types'
 
 const report: RecapReport = {
@@ -53,6 +53,47 @@ describe('seeded snapshot (as of April 30, 2026)', () => {
     expect(tuples).toEqual(SEED_REPORT.rows)
     expect(sql).toContain("(v_id, 'DOH PRPWD ENCODED', date '2026-04-30', 7934, 6869, 1)")
     expect(sql).toContain("(v_id, 'Request Overtime', date '2024-02-14', 6110, 1787, 2)")
+  })
+})
+
+describe('Disability Data (age × sex, by disability type)', () => {
+  it('has all 10 official disability types with the printed row totals, adding up to 7,934', () => {
+    const printed: Record<string, number> = {
+      'Cancer (RA 11215)': 315, 'Deaf or Hard of Hearing': 310, 'Intellectual Disability': 398,
+      'Learning Disability': 66, 'Mental Disability': 169, 'Physical Disability': 2318,
+      'Psychosocial Disability': 3224, 'Rare Disease (RA 10747)': 127, 'Speech & Language Impairment': 319,
+      'Visual Disability': 688,
+    }
+    expect(report.disabilityRows).toHaveLength(10)
+    expect(report.disabilityRows.map((r) => r.disabilityType)).toEqual([...OFFICIAL_DISABILITY_TYPES])
+    for (const r of report.disabilityRows) expect(r.total, r.disabilityType).toBe(printed[r.disabilityType])
+    expect(report.disabilityRows.reduce((a, r) => a + r.total, 0)).toBe(7934)
+  })
+
+  it('column totals per age group and sex match the printed sheet', () => {
+    const totals = sumDisabilityRows(report.disabilityRows)
+    expect(totals).toEqual({
+      grandTotal: 7934,
+      female: 391 + 661 + 2341 + 633,
+      male: 593 + 597 + 2134 + 584,
+      byAgeGroup: { '0-17': 984, '18-30': 1258, '31-59': 4475, '60+': 1217 },
+    })
+  })
+
+  it('the most and least common disability types are Psychosocial (3,224) and Learning (66)', () => {
+    expect(disabilityExtremes(report.disabilityRows)).toEqual({ highest: ['Psychosocial Disability'], lowest: ['Learning Disability'] })
+  })
+
+  it('matches the numbers written into the migration seeder', () => {
+    const sql = readFileSync('supabase/migrations/20260924000000_recapitulation_disability.sql', 'utf8')
+    const tuples = [...sql.matchAll(/\('([^']+)',\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*(\d+),\s*\d+\)/g)].map((m) => ({
+      disabilityType: m[1],
+      female0to17: Number(m[2]), male0to17: Number(m[3]),
+      female18to30: Number(m[4]), male18to30: Number(m[5]),
+      female31to59: Number(m[6]), male31to59: Number(m[7]),
+      female60above: Number(m[8]), male60above: Number(m[9]),
+    }))
+    expect(tuples).toEqual(report.disabilityRows.map(({ total: _total, ...r }) => r))
   })
 })
 
@@ -111,6 +152,13 @@ describe('validation', () => {
 
   it('needs all 14 barangays', () => {
     expect(validateInput({ ...ok, rows: ok.rows.slice(0, 13) })).toContain('A report needs all 14 barangays.')
+  })
+
+  it('needs all 10 disability types, with whole non-negative counts', () => {
+    expect(validateInput({ ...ok, disabilityRows: ok.disabilityRows.slice(0, 9) }))
+      .toContain('Disability Data needs all 10 disability types.')
+    const bad = ok.disabilityRows.map((r, i) => (i === 0 ? { ...r, female0to17: -1 } : r))
+    expect(validateInput({ ...ok, disabilityRows: bad }).join(' ')).toContain('Cancer (RA 11215): female0to17')
   })
 })
 
@@ -225,5 +273,59 @@ describe('Excel export', () => {
     expect(as.getCell('C5').value).toMatchObject({ formula: 'Recapitulation!E5', result: 738 })
     expect(as.getCell('D5').value).toMatchObject({ formula: 'IF(Recapitulation!$E$19=0,0,C5/Recapitulation!$E$19)' })
     expect(as.getCell('F14').value).toMatchObject({ result: 1 }) // Mayondon (row 14) is the largest barangay
+  })
+})
+
+describe('Disability Data export', () => {
+  const csv = buildDisabilityCsv(report)
+  const lines = csv.replace(/^﻿/, '').split('\r\n')
+
+  it('is UTF-8 with a BOM, titled, and dated', () => {
+    expect(csv.charCodeAt(0)).toBe(0xfeff)
+    expect(lines[0]).toBe('Disability Data of Los Baños')
+    expect(lines[1]).toBe('"As of April 30, 2026"')
+  })
+
+  it('has a two-line header: age group once, then Female/Male under each', () => {
+    expect(lines[3]).toBe('No.,Type of Disability,0 mo.–17 yrs,,18–30 yrs,,31–59 yrs,,60 yrs and above,,TOTAL')
+    expect(lines[4]).toBe(',,Female,Male,Female,Male,Female,Male,Female,Male,')
+  })
+
+  it('lists all 10 rows in official order with the row total last, then the TOTAL row', () => {
+    expect(lines[5]).toBe('1,Cancer (RA 11215),4,2,12,6,204,30,46,11,315')
+    expect(lines[14]).toBe('10,Visual Disability,32,34,66,62,179,192,76,47,688')
+    expect(lines[15]).toBe(',TOTAL,391,593,661,597,2341,2134,633,584,7934')
+  })
+
+  it('names the file by date', () => {
+    expect(disabilityFileName(report, 'csv')).toBe('Disability_Data_LosBanos_2026-04-30.csv')
+    expect(disabilityFileName(report, 'xlsx')).toBe('Disability_Data_LosBanos_2026-04-30.xlsx')
+  })
+
+  it('the workbook has one sheet with a merged two-level header and live SUM formulas', async () => {
+    const wb = await buildDisabilityWorkbook(report)
+    const buffer = await wb.xlsx.writeBuffer()
+    const back = new ExcelJS.Workbook()
+    await back.xlsx.load(buffer as ArrayBuffer)
+    expect(back.worksheets.map((w) => w.name)).toEqual(['Disability Data'])
+
+    const ws = back.getWorksheet('Disability Data')!
+    expect(ws.getCell('A1').value).toBe('Disability Data of Los Baños')
+    expect(ws.getCell('A1').isMerged).toBe(true)
+    expect(ws.getCell('C4').value).toBe('0 mo.–17 yrs') // merged over C4:D4
+    expect(ws.getCell('C5').value).toBe('Female')
+    expect(ws.getCell('D5').value).toBe('Male')
+    expect(ws.getCell('K4').value).toBe('TOTAL')
+
+    // Row 1 (Cancer): C6=female0-17 … K6 = SUM(C6:J6) = 315
+    expect(ws.getCell('C6').value).toBe(4)
+    expect(ws.getCell('D6').value).toBe(2)
+    expect(ws.getCell('K6').value).toMatchObject({ formula: 'SUM(C6:J6)', result: 315 })
+
+    // TOTAL row (row 16): C16 = SUM(C6:C15) = 391, K16 = SUM(K6:K15) = 7934
+    expect(ws.getCell('B16').value).toBe('TOTAL')
+    expect(ws.getCell('C16').value).toMatchObject({ formula: 'SUM(C6:C15)', result: 391 })
+    expect(ws.getCell('K16').value).toMatchObject({ formula: 'SUM(K6:K15)', result: 7934 })
+    expect(ws.pageSetup).toMatchObject({ orientation: 'landscape' })
   })
 })

@@ -133,6 +133,7 @@ export async function saveRecapReport(auth: RecapAuth, input: RecapInput): Promi
       totalPwds: p.totalPwds,
       totalEncoded: p.totalEncoded,
     })),
+    p_disability_rows: input.disabilityRows,
   })
   if (error) throw toError(error)
   return data as string
@@ -194,6 +195,8 @@ export async function fetchLandingReport(): Promise<RecapReport | null> {
       prpwd: [...r.prpwd]
         .sort((a, b) => a.sort_order - b.sort_order)
         .map((p) => ({ label: p.label, referenceDate: p.reference_date, totalPwds: p.total_pwds, totalEncoded: p.total_encoded, percentage: p.percentage })),
+      // The Disability Data matrix is admin-only; the public landing section never shows it.
+      disabilityRows: [],
     }
   } catch {
     return null

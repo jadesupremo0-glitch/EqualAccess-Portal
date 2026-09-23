@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react'
 import { Copy, Plus, Save, Send, Trash2 } from 'lucide-react'
 import { Alert, Button, Modal, Select } from '../ui'
-import { formatAsOf, inputFromReport, prpwdPercent, validateInput } from '../../lib/recapitulation/compute'
-import type { RecapInput, RecapReport, RecapStatus } from '../../lib/recapitulation/types'
+import { AGE_GROUPS, DISABILITY_FIELDS, formatAsOf, inputFromReport, prpwdPercent, validateInput } from '../../lib/recapitulation/compute'
+import { AGE_GROUP_LABEL, type RecapInput, type RecapReport, type RecapStatus } from '../../lib/recapitulation/types'
 
 /** A count typed into a box: whole numbers only. Anything else becomes NaN, which validation rejects. */
 const toCount = (s: string): number => (/^\d+$/.test(s.trim()) ? Number(s.trim()) : NaN)
@@ -20,14 +20,33 @@ interface FormPrpwd {
   total: string
   encoded: string
 }
+/** One Disability Data row: 8 age/sex counts, keyed the same as RecapDisabilityRow minus `total`. */
+interface FormDisabilityRow {
+  disabilityType: string
+  female0to17: string
+  male0to17: string
+  female18to30: string
+  male18to30: string
+  female31to59: string
+  male31to59: string
+  female60above: string
+  male60above: string
+}
 
 const cell = 'w-full text-right border rounded-lg text-sm px-2.5 py-1.5 bg-white/80 focus:outline-none focus:ring-4 focus:ring-ea-teal-500/20 focus:border-ea-teal-400'
 const field = 'w-full border rounded-lg text-sm px-2.5 py-1.5 bg-white/80 border-slate-200 focus:outline-none focus:ring-4 focus:ring-ea-teal-500/20 focus:border-ea-teal-400'
 
-function toForm(input: RecapInput): { rows: FormRow[]; prpwd: FormPrpwd[] } {
+function toForm(input: RecapInput): { rows: FormRow[]; prpwd: FormPrpwd[]; disabilityRows: FormDisabilityRow[] } {
   return {
     rows: input.rows.map((r) => ({ code: r.code, name: r.name, a: String(r.age0to59), b: String(r.age60above) })),
     prpwd: input.prpwd.map((p) => ({ label: p.label, referenceDate: p.referenceDate ?? '', total: String(p.totalPwds), encoded: String(p.totalEncoded) })),
+    disabilityRows: input.disabilityRows.map((r) => ({
+      disabilityType: r.disabilityType,
+      female0to17: String(r.female0to17), male0to17: String(r.male0to17),
+      female18to30: String(r.female18to30), male18to30: String(r.male18to30),
+      female31to59: String(r.female31to59), male31to59: String(r.male31to59),
+      female60above: String(r.female60above), male60above: String(r.male60above),
+    })),
   }
 }
 
@@ -55,6 +74,7 @@ export default function RecapEditor({ initial, reports, busy, serverError, dupli
   const [showOnLanding, setShowOnLanding] = useState(initial.showOnLanding)
   const [rows, setRows] = useState<FormRow[]>(start.rows)
   const [prpwd, setPrpwd] = useState<FormPrpwd[]>(start.prpwd)
+  const [disabilityRows, setDisabilityRows] = useState<FormDisabilityRow[]>(start.disabilityRows)
   const [errors, setErrors] = useState<string[]>([])
   const [submitted, setSubmitted] = useState(false)
 
@@ -65,6 +85,23 @@ export default function RecapEditor({ initial, reports, busy, serverError, dupli
     return { a, b, total: a + b }
   }, [rows])
 
+  const disabilityFields: (keyof FormDisabilityRow)[] = [
+    'female0to17', 'male0to17', 'female18to30', 'male18to30', 'female31to59', 'male31to59', 'female60above', 'male60above',
+  ]
+  const disabilityGrand = useMemo(() => {
+    const perField = Object.fromEntries(disabilityFields.map((f) => [f, 0])) as Record<keyof FormDisabilityRow, number>
+    let total = 0
+    for (const r of disabilityRows) {
+      for (const f of disabilityFields) {
+        const v = Number.isFinite(toCount(r[f])) ? toCount(r[f]) : 0
+        perField[f] += v
+        total += v
+      }
+    }
+    return { perField, total }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [disabilityRows])
+
   const build = (status: RecapStatus): RecapInput => ({
     ...(id ? { id } : {}),
     title,
@@ -73,6 +110,13 @@ export default function RecapEditor({ initial, reports, busy, serverError, dupli
     showOnLanding: status === 'published' && showOnLanding,
     rows: rows.map((r) => ({ code: r.code, name: r.name, age0to59: toCount(r.a), age60above: toCount(r.b) })),
     prpwd: prpwd.map((p) => ({ label: p.label, referenceDate: p.referenceDate || null, totalPwds: toCount(p.total), totalEncoded: toCount(p.encoded) })),
+    disabilityRows: disabilityRows.map((r) => ({
+      disabilityType: r.disabilityType,
+      female0to17: toCount(r.female0to17), male0to17: toCount(r.male0to17),
+      female18to30: toCount(r.female18to30), male18to30: toCount(r.male18to30),
+      female31to59: toCount(r.female31to59), male31to59: toCount(r.male31to59),
+      female60above: toCount(r.female60above), male60above: toCount(r.male60above),
+    })),
   })
 
   const submit = (status: RecapStatus) => {
@@ -89,6 +133,7 @@ export default function RecapEditor({ initial, reports, busy, serverError, dupli
     const f = toForm(inputFromReport(source, false))
     setRows(f.rows)
     setPrpwd(f.prpwd)
+    setDisabilityRows(f.disabilityRows)
     setErrors([])
   }
 
@@ -102,6 +147,7 @@ export default function RecapEditor({ initial, reports, busy, serverError, dupli
   const bad = (s: string) => submitted && !Number.isFinite(toCount(s))
   const patchRow = (i: number, k: 'a' | 'b', v: string) => setRows((rs) => rs.map((r, j) => (j === i ? { ...r, [k]: v } : r)))
   const patchPrpwd = (i: number, patch: Partial<FormPrpwd>) => setPrpwd((ps) => ps.map((p, j) => (j === i ? { ...p, ...patch } : p)))
+  const patchDisability = (i: number, k: keyof FormDisabilityRow, v: string) => setDisabilityRows((rs) => rs.map((r, j) => (j === i ? { ...r, [k]: v } : r)))
   const dateBad = submitted && !asOfDate
 
   return (
@@ -228,6 +274,79 @@ export default function RecapEditor({ initial, reports, busy, serverError, dupli
             <Button variant="outline" size="sm" icon={<Plus size={14} />} onClick={() => setPrpwd((ps) => [...ps, { label: '', referenceDate: asOfDate, total: '0', encoded: '0' }])}>
               <span className="ml-1.5">Add PRPWD row</span>
             </Button>
+          </div>
+        </fieldset>
+
+        <fieldset>
+          <legend className="text-sm font-semibold text-slate-800 mb-2">Disability Data — by age group and sex</legend>
+          <div className="overflow-x-auto rounded-xl border border-slate-200">
+            <table className="w-full text-sm min-w-[900px]">
+              <caption className="sr-only">Number of persons with disabilities per type, by age group and sex</caption>
+              <thead className="bg-slate-50 text-xs uppercase tracking-wide text-slate-600">
+                <tr>
+                  <th scope="col" rowSpan={2} className="px-3 py-2 text-left w-8 align-bottom">No.</th>
+                  <th scope="col" rowSpan={2} className="px-3 py-2 text-left align-bottom">Type of Disability</th>
+                  {AGE_GROUPS.map((g) => (
+                    <th key={g} scope="colgroup" colSpan={2} className="px-2 py-1.5 text-center border-l border-slate-200">{AGE_GROUP_LABEL[g]}</th>
+                  ))}
+                  <th scope="col" rowSpan={2} className="px-3 py-2 text-right w-24 align-bottom border-l border-slate-200">Total</th>
+                </tr>
+                <tr>
+                  {AGE_GROUPS.flatMap((g) => [
+                    <th key={`${g}-f`} scope="col" className="px-2 py-1.5 text-right w-20 border-l border-slate-200">F</th>,
+                    <th key={`${g}-m`} scope="col" className="px-2 py-1.5 text-right w-20">M</th>,
+                  ])}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100">
+                {disabilityRows.map((r, i) => {
+                  const rowTotal = disabilityFields.reduce((t, f) => t + (Number.isFinite(toCount(r[f])) ? toCount(r[f]) : 0), 0)
+                  return (
+                    <tr key={r.disabilityType}>
+                      <td className="px-3 py-1.5 text-slate-500">{i + 1}</td>
+                      <th scope="row" className="px-3 py-1.5 text-left font-medium text-slate-900">{r.disabilityType}</th>
+                      {AGE_GROUPS.flatMap((g) => {
+                        const fKey = DISABILITY_FIELDS[g].female
+                        const mKey = DISABILITY_FIELDS[g].male
+                        return [
+                          <td key={`${g}-f`} className="px-1.5 py-1.5 border-l border-slate-100">
+                            <input
+                              inputMode="numeric"
+                              aria-label={`${r.disabilityType}, ${AGE_GROUP_LABEL[g]}, female`}
+                              aria-invalid={bad(r[fKey]) || undefined}
+                              className={`${cell} ${bad(r[fKey]) ? 'border-red-400' : 'border-slate-200'}`}
+                              value={r[fKey]}
+                              onChange={(e) => patchDisability(i, fKey, e.target.value)}
+                            />
+                          </td>,
+                          <td key={`${g}-m`} className="px-1.5 py-1.5">
+                            <input
+                              inputMode="numeric"
+                              aria-label={`${r.disabilityType}, ${AGE_GROUP_LABEL[g]}, male`}
+                              aria-invalid={bad(r[mKey]) || undefined}
+                              className={`${cell} ${bad(r[mKey]) ? 'border-red-400' : 'border-slate-200'}`}
+                              value={r[mKey]}
+                              onChange={(e) => patchDisability(i, mKey, e.target.value)}
+                            />
+                          </td>,
+                        ]
+                      })}
+                      <td className="px-3 py-1.5 text-right font-semibold tabular-nums border-l border-slate-100" aria-live="polite">{fmt(rowTotal)}</td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+              <tfoot className="bg-slate-50 font-bold">
+                <tr>
+                  <td className="px-3 py-2" colSpan={2}>TOTAL</td>
+                  {AGE_GROUPS.flatMap((g) => [
+                    <td key={`${g}-f`} className="px-2 py-2 text-right tabular-nums border-l border-slate-200">{fmt(disabilityGrand.perField[DISABILITY_FIELDS[g].female])}</td>,
+                    <td key={`${g}-m`} className="px-2 py-2 text-right tabular-nums">{fmt(disabilityGrand.perField[DISABILITY_FIELDS[g].male])}</td>,
+                  ])}
+                  <td className="px-3 py-2 text-right tabular-nums border-l border-slate-200" aria-live="polite">{fmt(disabilityGrand.total)}</td>
+                </tr>
+              </tfoot>
+            </table>
           </div>
         </fieldset>
 

@@ -1,5 +1,5 @@
-import { formatAsOf, rowTotal, sharePercent, sumRows } from './compute'
-import type { RecapReport } from './types'
+import { DISABILITY_FIELDS, DISABILITY_REPORT_TITLE, disabilityRowTotal, formatAsOf, rowTotal, sharePercent, sumDisabilityRows, sumRows } from './compute'
+import { AGE_GROUPS, AGE_GROUP_LABEL, type RecapReport } from './types'
 
 /**
  * CSV and Excel export of one recapitulation snapshot. Both are built from the saved report the admin is
@@ -244,6 +244,163 @@ export async function buildXlsx(report: RecapReport, options: ExportOptions = {}
   return new Blob([buffer], { type: XLSX_MIME })
 }
 
+// ── Disability Data (age × sex, by disability type) ─────────────────
+// A separate export pipeline from the barangay recap above: its own file, its own sheet, its own
+// two-level (age group → Female/Male) header. Kept apart so the barangay CSV/Excel layout never
+// shifts when this section changes.
+
+/** Disability_Data_LosBanos_2026-04-30.csv */
+export const disabilityFileName = (report: Pick<RecapReport, 'asOfDate'>, ext: 'csv' | 'xlsx'): string =>
+  `Disability_Data_LosBanos_${report.asOfDate}.${ext}`
+
+const AGE_SEX_PAIRS = AGE_GROUPS.flatMap((g) => [
+  { group: g, sex: 'Female' as const, key: DISABILITY_FIELDS[g].female },
+  { group: g, sex: 'Male' as const, key: DISABILITY_FIELDS[g].male },
+])
+
+export function buildDisabilityCsv(report: RecapReport): string {
+  const totals = sumDisabilityRows(report.disabilityRows)
+  const lines: string[] = []
+
+  lines.push(csvLine([DISABILITY_REPORT_TITLE]))
+  lines.push(csvLine([`As of ${formatAsOf(report.asOfDate)}`]))
+  lines.push('')
+
+  // Two header lines emulate the merged age-group header: the group name once, then Female/Male.
+  lines.push(csvLine(['No.', 'Type of Disability', ...AGE_GROUPS.flatMap((g) => [AGE_GROUP_LABEL[g], '']), 'TOTAL']))
+  lines.push(csvLine(['', '', ...AGE_SEX_PAIRS.map((p) => p.sex), '']))
+  report.disabilityRows.forEach((r, i) => {
+    lines.push(csvLine([i + 1, r.disabilityType, ...AGE_SEX_PAIRS.map((p) => r[p.key]), disabilityRowTotal(r)]))
+  })
+  lines.push(csvLine(['', 'TOTAL', ...AGE_SEX_PAIRS.map((p) => report.disabilityRows.reduce((a, r) => a + r[p.key], 0)), totals.grandTotal]))
+
+  return '﻿' + lines.join('\r\n') + '\r\n'
+}
+
+/** Workbook with one sheet, "Disability Data", A4 landscape (the official sheet is wide: 11 columns). */
+export async function buildDisabilityWorkbook(report: RecapReport): Promise<import('exceljs').Workbook> {
+  const ExcelJS = (await import('exceljs')).default
+  const wb = new ExcelJS.Workbook()
+  wb.creator = 'EqualAccess Portal — PDAO Los Baños'
+  wb.created = new Date()
+
+  const thin = { style: 'thin' as const, color: { argb: 'FF475569' } }
+  const border = { top: thin, left: thin, bottom: thin, right: thin }
+  const headerFill = { type: 'pattern' as const, pattern: 'solid' as const, fgColor: { argb: 'FFE2E8F0' } }
+  const totalFill = { type: 'pattern' as const, pattern: 'solid' as const, fgColor: { argb: 'FFF1F5F9' } }
+  const NUMBER = '#,##0'
+  const lastCol = 'K' // No. | Type | 4 age groups × 2 sexes (8 cols) | TOTAL = 11 columns
+
+  const ws = wb.addWorksheet('Disability Data', {
+    pageSetup: {
+      paperSize: 9,
+      orientation: 'landscape',
+      fitToPage: true,
+      fitToWidth: 1,
+      fitToHeight: 0,
+      horizontalCentered: true,
+      margins: { left: 0.5, right: 0.5, top: 0.6, bottom: 0.6, header: 0.3, footer: 0.3 },
+    },
+    views: [{ state: 'frozen', ySplit: 5 }],
+  })
+
+  ws.mergeCells(`A1:${lastCol}1`)
+  ws.getCell('A1').value = DISABILITY_REPORT_TITLE
+  ws.getCell('A1').font = { bold: true, size: 14 }
+  ws.getCell('A1').alignment = { horizontal: 'center', vertical: 'middle' }
+  ws.getRow(1).height = 30
+  ws.mergeCells(`A2:${lastCol}2`)
+  ws.getCell('A2').value = `As of ${formatAsOf(report.asOfDate)}`
+  ws.getCell('A2').font = { italic: true, size: 11 }
+  ws.getCell('A2').alignment = { horizontal: 'center' }
+  ws.mergeCells(`A3:${lastCol}3`)
+  ws.getCell('A3').value = 'Based on the Encoded Data from LGU Masterlist'
+  ws.getCell('A3').font = { size: 10, color: { argb: 'FF1E40AF' } }
+  ws.getCell('A3').alignment = { horizontal: 'center' }
+
+  // Two-level header: row 4 has "No.", "Type of Disability" and each age group merged over 2 columns;
+  // row 5 spells out Female / Male under every age group.
+  ws.mergeCells('A4:A5')
+  ws.mergeCells('B4:B5')
+  ws.getCell('A4').value = 'No.'
+  ws.getCell('B4').value = 'Type of Disability'
+  AGE_GROUPS.forEach((g, i) => {
+    const start = 3 + i * 2
+    const startCol = ws.getColumn(start).letter
+    const endCol = ws.getColumn(start + 1).letter
+    ws.mergeCells(`${startCol}4:${endCol}4`)
+    ws.getCell(`${startCol}4`).value = AGE_GROUP_LABEL[g]
+    ws.getCell(`${startCol}5`).value = 'Female'
+    ws.getCell(`${endCol}5`).value = 'Male'
+  })
+  ws.mergeCells('K4:K5')
+  ws.getCell('K4').value = 'TOTAL'
+  for (const addr of ['A4', 'B4', 'C4', 'E4', 'G4', 'I4', 'K4', 'C5', 'D5', 'E5', 'F5', 'G5', 'H5', 'I5', 'J5']) {
+    const cell = ws.getCell(addr)
+    cell.font = { bold: true }
+    cell.fill = headerFill
+    cell.alignment = { horizontal: 'center', vertical: 'middle', wrapText: true }
+  }
+  for (let r = 4; r <= 5; r++) for (let c = 1; c <= 11; c++) ws.getRow(r).getCell(c).border = border
+  ws.getRow(4).height = 22
+  ws.getRow(5).height = 18
+
+  const first = 6
+  report.disabilityRows.forEach((row, i) => {
+    const n = first + i
+    const wsRow = ws.getRow(n)
+    wsRow.getCell(1).value = i + 1
+    wsRow.getCell(2).value = row.disabilityType
+    AGE_SEX_PAIRS.forEach((p, j) => {
+      wsRow.getCell(3 + j).value = row[p.key]
+    })
+    wsRow.getCell(11).value = { formula: `SUM(C${n}:J${n})`, result: disabilityRowTotal(row) }
+    for (let c = 1; c <= 11; c++) {
+      const cell = wsRow.getCell(c)
+      cell.border = border
+      if (c === 1) cell.alignment = { horizontal: 'center' }
+      if (c >= 3) {
+        cell.numFmt = NUMBER
+        cell.alignment = { horizontal: 'right' }
+      }
+    }
+  })
+
+  const last = first + report.disabilityRows.length - 1
+  const totalRowNumber = last + 1
+  const totalRow = ws.getRow(totalRowNumber)
+  ws.mergeCells(`A${totalRowNumber}:B${totalRowNumber}`)
+  totalRow.getCell(1).value = 'TOTAL'
+  totalRow.getCell(1).alignment = { horizontal: 'center' }
+  AGE_SEX_PAIRS.forEach((p, j) => {
+    const c = 3 + j
+    const letter = ws.getColumn(c).letter
+    totalRow.getCell(c).value = { formula: `SUM(${letter}${first}:${letter}${last})`, result: report.disabilityRows.reduce((a, r) => a + r[p.key], 0) }
+  })
+  totalRow.getCell(11).value = { formula: `SUM(K${first}:K${last})`, result: sumDisabilityRows(report.disabilityRows).grandTotal }
+  for (let c = 1; c <= 11; c++) {
+    const cell = totalRow.getCell(c)
+    cell.font = { bold: true }
+    cell.fill = totalFill
+    cell.border = border
+    if (c >= 3) {
+      cell.numFmt = NUMBER
+      cell.alignment = { horizontal: 'right' }
+    }
+  }
+  fitColumns(ws, 6, [])
+  ws.getColumn(1).width = 6
+  ws.getColumn(2).width = 26
+
+  return wb
+}
+
+export async function buildDisabilityXlsx(report: RecapReport): Promise<Blob> {
+  const wb = await buildDisabilityWorkbook(report)
+  const buffer = await wb.xlsx.writeBuffer()
+  return new Blob([buffer], { type: XLSX_MIME })
+}
+
 // ── Download ───────────────────────────────────────────────────────
 
 /** Hand a file to the browser's download flow. */
@@ -264,4 +421,12 @@ export function downloadCsv(report: RecapReport, options: ExportOptions = {}): v
 
 export async function downloadXlsx(report: RecapReport, options: ExportOptions = {}): Promise<void> {
   downloadBlob(await buildXlsx(report, options), recapFileName(report, 'xlsx'))
+}
+
+export function downloadDisabilityCsv(report: RecapReport): void {
+  downloadBlob(new Blob([buildDisabilityCsv(report)], { type: CSV_MIME }), disabilityFileName(report, 'csv'))
+}
+
+export async function downloadDisabilityXlsx(report: RecapReport): Promise<void> {
+  downloadBlob(await buildDisabilityXlsx(report), disabilityFileName(report, 'xlsx'))
 }

@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
-  ArrowDown, ArrowUp, ArrowUpDown, CheckCircle, FileSpreadsheet, FileText, Percent, Plus, Printer,
+  ArrowDown, ArrowUp, ArrowUpDown, CheckCircle, FileSpreadsheet, FileText, Filter, Percent, Plus, Printer,
   ShieldAlert, Table2, Trash2, TrendingDown, TrendingUp, Users, XCircle, Hourglass, UserRound,
 } from 'lucide-react'
-import { Alert, Badge, Button, Card, EmptyState, Modal, PageHeader, SearchBar, Select, StatsCard } from '../../components/ui'
+import { Alert, Badge, Button, Card, EmptyState, Modal, PageHeader, SearchBar, Select, StatsCard, Tabs } from '../../components/ui'
 import RecapEditor from '../../components/recapitulation/RecapEditor'
 import RecapCharts from '../../components/recapitulation/RecapCharts'
 import RecapPrintView from '../../components/recapitulation/RecapPrintView'
+import DisabilityRecapCharts from '../../components/recapitulation/DisabilityRecapCharts'
+import DisabilityPrintView from '../../components/recapitulation/DisabilityPrintView'
 import { useAdminSession } from '../../context'
 import { useStore } from '../../store'
 import { manilaDate } from '../../lib/catalog'
@@ -14,15 +16,18 @@ import {
   RecapDuplicateError, deleteRecapReport, fetchRecapReports, saveRecapReport, type RecapAuth,
 } from '../../lib/recapitulation/api'
 import {
-  blankInput, describeChanges, extremes, formatAsOf, inputFromReport, sharePercent, sumRows,
+  AGE_GROUPS, AGE_GROUP_LABEL, DISABILITY_FIELDS, DISABILITY_REPORT_TITLE,
+  blankInput, describeChanges, disabilityExtremes, extremes, formatAsOf, inputFromReport, sharePercent, sumDisabilityRows, sumRows,
 } from '../../lib/recapitulation/compute'
-import { downloadCsv, downloadXlsx, prpwdLabel } from '../../lib/recapitulation/export'
-import type { RecapInput, RecapReport, RecapStatus } from '../../lib/recapitulation/types'
+import { downloadCsv, downloadDisabilityCsv, downloadDisabilityXlsx, downloadXlsx, prpwdLabel } from '../../lib/recapitulation/export'
+import type { AgeGroup, RecapDisabilityRow, RecapInput, RecapReport, RecapStatus } from '../../lib/recapitulation/types'
 
 const n = (v: number) => v.toLocaleString('en-US')
 
 type SortKey = 'order' | 'name' | 'age0to59' | 'age60above' | 'total' | 'share'
 type Toast = { type: 'success' | 'error'; message: string } | null
+type RecapTab = 'By Barangay' | 'By Disability Type'
+type SexFilter = 'both' | 'female' | 'male'
 
 const messageOf = (e: unknown) => (e instanceof Error ? e.message : 'Something went wrong. Please try again.')
 
@@ -63,6 +68,12 @@ function RecapitulationPage({ adminId, secret, username }: { adminId: string; se
   const [includeAnalytics, setIncludeAnalytics] = useState(false)
   const [exporting, setExporting] = useState(false)
 
+  const [tab, setTab] = useState<RecapTab>('By Barangay')
+  const [dSearch, setDSearch] = useState('')
+  const [ageGroupFilter, setAgeGroupFilter] = useState<Set<AgeGroup>>(new Set(AGE_GROUPS))
+  const [sexFilter, setSexFilter] = useState<SexFilter>('both')
+  const [dExporting, setDExporting] = useState(false)
+
   const [editor, setEditor] = useState<{ key: number; input: RecapInput } | null>(null)
   const [busy, setBusy] = useState(false)
   const [serverError, setServerError] = useState<string | null>(null)
@@ -102,6 +113,9 @@ function RecapitulationPage({ adminId, secret, username }: { adminId: string; se
   const selected = reports.find((r) => r.id === selectedId) ?? null
   const totals = useMemo(() => (selected ? sumRows(selected.rows) : null), [selected])
   const ext = useMemo(() => (selected ? extremes(selected.rows) : { highest: [], lowest: [] }), [selected])
+  // Falls back to [] for a report saved before the Disability Data migration/seed ran, so an older
+  // snapshot never crashes this tab.
+  const selectedDisabilityRows = selected?.disabilityRows ?? []
 
   const tableRows = useMemo(() => {
     if (!selected || !totals) return []
@@ -119,6 +133,52 @@ function RecapitulationPage({ adminId, secret, username }: { adminId: string; se
 
   const toggleSort = (key: SortKey) =>
     setSort((s) => (s.key === key ? { key, dir: s.dir === 'asc' ? 'desc' : 'asc' } : { key, dir: key === 'name' || key === 'order' ? 'asc' : 'desc' }))
+
+  // ── Disability Data (By Disability Type tab) ──
+  // Age-group and sex filters are view-only: they zero out the columns the admin hid, so the on-screen
+  // table, its totals and the charts all agree, without touching the saved report. Print and Export
+  // always use the full, unfiltered report — the official record should never depend on a forgotten filter.
+  const visibleAgeGroups = AGE_GROUPS.filter((g) => ageGroupFilter.has(g))
+  const filteredDisabilityRows: RecapDisabilityRow[] = useMemo(() => {
+    return selectedDisabilityRows.map((r) => {
+      const row = { ...r }
+      for (const g of AGE_GROUPS) {
+        const { female, male } = DISABILITY_FIELDS[g]
+        if (!ageGroupFilter.has(g)) {
+          row[female] = 0
+          row[male] = 0
+        } else {
+          if (sexFilter === 'male') row[female] = 0
+          if (sexFilter === 'female') row[male] = 0
+        }
+      }
+      row.total = AGE_GROUPS.reduce((t, g) => t + row[DISABILITY_FIELDS[g].female] + row[DISABILITY_FIELDS[g].male], 0)
+      return row
+    })
+  }, [selectedDisabilityRows, ageGroupFilter, sexFilter])
+
+  const dTotals = useMemo(() => sumDisabilityRows(filteredDisabilityRows), [filteredDisabilityRows])
+  const dExt = useMemo(() => disabilityExtremes(filteredDisabilityRows), [filteredDisabilityRows])
+  const dTableRows = useMemo(() => {
+    const q = dSearch.trim().toLowerCase()
+    return filteredDisabilityRows
+      .map((r, i) => ({ ...r, order: i + 1 }))
+      .filter((r) => !q || r.disabilityType.toLowerCase().includes(q))
+  }, [filteredDisabilityRows, dSearch])
+
+  const toggleAgeGroup = (g: AgeGroup) =>
+    setAgeGroupFilter((set) => {
+      const next = new Set(set)
+      if (next.has(g)) next.delete(g)
+      else next.add(g)
+      return next.size === 0 ? new Set(AGE_GROUPS) : next
+    })
+
+  const mostCommonDisability = [...selectedDisabilityRows].sort((a, b) => b.total - a.total)[0]
+  const disabilityGrandForShare = sumDisabilityRows(selectedDisabilityRows).grandTotal
+  const largestAgeGroup = selected
+    ? AGE_GROUPS.map((g) => ({ g, total: sumDisabilityRows(selectedDisabilityRows).byAgeGroup[g] })).sort((a, b) => b.total - a.total)[0]
+    : null
 
   // ── Actions ──
 
@@ -190,6 +250,25 @@ function RecapitulationPage({ adminId, secret, username }: { adminId: string; se
     }
   }
 
+  const exportDisabilityCsv = () => {
+    if (!selected) return
+    downloadDisabilityCsv(selected)
+    notify('success', 'CSV downloaded.')
+  }
+
+  const exportDisabilityXlsx = async () => {
+    if (!selected) return
+    setDExporting(true)
+    try {
+      await downloadDisabilityXlsx(selected)
+      notify('success', 'Excel file downloaded.')
+    } catch (e) {
+      notify('error', `Excel export failed: ${messageOf(e)}`)
+    } finally {
+      setDExporting(false)
+    }
+  }
+
   const onDateProbe = (value: string) => {
     if (!value) return
     const match = reports.find((r) => r.asOfDate === value)
@@ -232,14 +311,20 @@ function RecapitulationPage({ adminId, secret, username }: { adminId: string; se
   return (
     <div className="space-y-6">
       <PageHeader
-        title="PWD Recapitulation"
-        subtitle="Total number strength of persons with disabilities in Los Baños, by barangay and age bracket"
+        title={tab === 'By Barangay' ? 'PWD Recapitulation' : 'DISABILITY DATA OF LOS BAÑOS'}
+        subtitle={
+          tab === 'By Barangay'
+            ? 'Total number strength of persons with disabilities in Los Baños, by barangay and age bracket'
+            : 'Based on the Encoded Data from LGU Masterlist'
+        }
         actions={
           <Button icon={<Plus size={16} />} onClick={() => openEditor(selected ? inputFromReport(selected) : blankInput(manilaDate()))}>
-            <span className="ml-1.5">Add / Update Report</span>
+            <span className="ml-1.5">Edit Data</span>
           </Button>
         }
       />
+
+      <Tabs tabs={['By Barangay', 'By Disability Type']} active={tab} onChange={(t) => setTab(t as RecapTab)} />
 
       {loadError && (
         <Alert type="error" title="Could not load the recapitulation" message={`${loadError} If this is the first time, make sure the latest migration was applied (supabase db push).`} />
@@ -262,7 +347,7 @@ function RecapitulationPage({ adminId, secret, username }: { adminId: string; se
         </Card>
       )}
 
-      {selected && totals && (
+      {selected && totals && tab === 'By Barangay' && (
         <>
           {/* Selector, date and export toolbar */}
           <Card className="p-4">
@@ -443,6 +528,183 @@ function RecapitulationPage({ adminId, secret, username }: { adminId: string; se
 
           <RecapCharts report={selected} reports={reports} />
           <RecapPrintView report={selected} />
+        </>
+      )}
+
+      {selected && tab === 'By Disability Type' && (
+        <>
+          {/* Report selector + export toolbar */}
+          <Card className="p-4">
+            <div className="flex flex-wrap items-end gap-4">
+              <div className="min-w-56 flex-1">
+                <Select
+                  label="Report"
+                  options={reports.map((r) => ({ value: r.id, label: `${formatAsOf(r.asOfDate)} — ${r.status === 'published' ? 'Published' : 'Draft'}` }))}
+                  value={selected.id}
+                  onChange={setSelectedId}
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-slate-700">As of</span>
+                <span className="py-2 text-sm font-semibold text-slate-900">{formatAsOf(selected.asOfDate)}</span>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <span className="text-sm font-medium text-slate-700">Status</span>
+                <span className="py-2"><Badge variant={selected.status === 'published' ? 'success' : 'warning'}>{selected.status === 'published' ? 'Published' : 'Draft'}</Badge></span>
+              </div>
+            </div>
+            <div className="mt-4 pt-4 border-t border-slate-100 flex flex-wrap items-center gap-3">
+              <Button variant="outline" size="sm" icon={<FileText size={15} />} onClick={exportDisabilityCsv}>
+                <span className="ml-1.5">Export CSV</span>
+              </Button>
+              <Button variant="outline" size="sm" icon={<FileSpreadsheet size={15} />} onClick={exportDisabilityXlsx} disabled={dExporting}>
+                <span className="ml-1.5">{dExporting ? 'Preparing…' : 'Export Excel'}</span>
+              </Button>
+              <Button variant="outline" size="sm" icon={<Printer size={15} />} onClick={() => window.print()}>
+                <span className="ml-1.5">Print</span>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                icon={<FileText size={15} />}
+                onClick={() => window.print()}
+                title="Opens the print dialog — choose “Save as PDF” as the destination"
+              >
+                <span className="ml-1.5">Export PDF</span>
+              </Button>
+              <span className="ml-auto text-xs text-slate-500">Last updated {new Date(selected.updatedAt).toLocaleString('en-PH')}{selected.updatedBy ? ` by ${selected.updatedBy}` : ''}</span>
+            </div>
+          </Card>
+
+          {/* Summary cards */}
+          <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+            <StatsCard label="Total Registered PWDs" value={n(disabilityGrandForShare)} icon={<Users size={20} className="text-blue-600" />} color="bg-blue-50" />
+            <StatsCard label="Total Female" value={n(sumDisabilityRows(selectedDisabilityRows).female)} icon={<UserRound size={20} className="text-rose-600" />} color="bg-rose-50" />
+            <StatsCard label="Total Male" value={n(sumDisabilityRows(selectedDisabilityRows).male)} icon={<UserRound size={20} className="text-sky-600" />} color="bg-sky-50" />
+            {mostCommonDisability && (
+              <StatsCard
+                label="Most Common Disability Type"
+                value={mostCommonDisability.disabilityType}
+                icon={<TrendingUp size={20} className="text-emerald-600" />}
+                color="bg-emerald-50"
+                note={`${n(mostCommonDisability.total)} (${sharePercent(mostCommonDisability.total, disabilityGrandForShare)}%)`}
+              />
+            )}
+            {largestAgeGroup && (
+              <StatsCard
+                label="Largest Age Group"
+                value={AGE_GROUP_LABEL[largestAgeGroup.g]}
+                icon={<Percent size={20} className="text-purple-600" />}
+                color="bg-purple-50"
+                note={`${n(largestAgeGroup.total)} (${sharePercent(largestAgeGroup.total, disabilityGrandForShare)}%)`}
+              />
+            )}
+          </div>
+
+          {/* Filters */}
+          <Card className="p-4">
+            <div className="flex flex-wrap items-center gap-2 mb-3">
+              <Filter size={14} className="text-slate-500" aria-hidden="true" />
+              <span className="text-sm font-semibold text-slate-700">Filters</span>
+              <span className="text-xs text-slate-500">— view only; exports always use the full official data</span>
+            </div>
+            <div className="flex flex-wrap items-start gap-6">
+              <fieldset>
+                <legend className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1.5">Age group</legend>
+                <div className="flex flex-wrap gap-3">
+                  {AGE_GROUPS.map((g) => (
+                    <label key={g} className="flex items-center gap-1.5 text-sm text-slate-700">
+                      <input type="checkbox" className="h-4 w-4 rounded border-slate-300 text-ea-teal-600" checked={ageGroupFilter.has(g)} onChange={() => toggleAgeGroup(g)} />
+                      {AGE_GROUP_LABEL[g]}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              <fieldset>
+                <legend className="text-xs font-semibold text-slate-600 uppercase tracking-wide mb-1.5">Sex</legend>
+                <div className="flex gap-3">
+                  {(['both', 'female', 'male'] as SexFilter[]).map((s) => (
+                    <label key={s} className="flex items-center gap-1.5 text-sm text-slate-700">
+                      <input type="radio" name="sex-filter" className="h-4 w-4 border-slate-300 text-ea-teal-600" checked={sexFilter === s} onChange={() => setSexFilter(s)} />
+                      {s === 'both' ? 'Both' : s === 'female' ? 'Female' : 'Male'}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+              <div className="flex-1 min-w-56">
+                <SearchBar value={dSearch} onChange={setDSearch} placeholder="Search disability type..." />
+              </div>
+            </div>
+          </Card>
+
+          {/* Disability Data matrix */}
+          <Card>
+            <div className="p-5 pb-3">
+              <h2 className="font-display font-bold text-gray-900">{DISABILITY_REPORT_TITLE}</h2>
+              <p className="text-sm text-slate-500">As of {formatAsOf(selected.asOfDate)}</p>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm min-w-[900px]">
+                <caption className="sr-only">Persons with disabilities per type, by age group and sex, as of {formatAsOf(selected.asOfDate)}</caption>
+                <thead className="bg-slate-50/80 border-y border-slate-100 text-xs uppercase tracking-wide text-slate-600">
+                  <tr>
+                    <th scope="col" rowSpan={2} className="px-3 py-2 text-left align-bottom">No.</th>
+                    <th scope="col" rowSpan={2} className="px-3 py-2 text-left align-bottom">Type of Disability</th>
+                    {visibleAgeGroups.map((g) => (
+                      <th key={g} scope="colgroup" colSpan={sexFilter === 'both' ? 2 : 1} className="px-2 py-2 text-center border-l border-slate-200">{AGE_GROUP_LABEL[g]}</th>
+                    ))}
+                    <th scope="col" rowSpan={2} className="px-3 py-2 text-right align-bottom border-l border-slate-200">TOTAL</th>
+                  </tr>
+                  <tr>
+                    {visibleAgeGroups.flatMap((g) => [
+                      sexFilter !== 'male' && <th key={`${g}-f`} scope="col" className="px-2 py-1.5 text-right border-l border-slate-200">Female</th>,
+                      sexFilter !== 'female' && <th key={`${g}-m`} scope="col" className={`px-2 py-1.5 text-right ${sexFilter === 'both' ? '' : 'border-l border-slate-200'}`}>Male</th>,
+                    ])}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {dTableRows.map((r) => {
+                    const high = dExt.highest.includes(r.disabilityType)
+                    const low = dExt.lowest.includes(r.disabilityType)
+                    return (
+                      <tr key={r.disabilityType} className={high ? 'bg-emerald-50/70' : low ? 'bg-amber-50/70' : ''}>
+                        <td className="px-3 py-2.5 text-slate-500">{r.order}</td>
+                        <th scope="row" className="px-3 py-2.5 text-left font-medium text-slate-900">
+                          {r.disabilityType}
+                          {high && <span className="ml-2 inline-flex items-center gap-1 text-xs font-semibold text-emerald-800"><TrendingUp size={12} aria-hidden="true" />Highest</span>}
+                          {low && <span className="ml-2 inline-flex items-center gap-1 text-xs font-semibold text-amber-800"><TrendingDown size={12} aria-hidden="true" />Lowest</span>}
+                        </th>
+                        {visibleAgeGroups.flatMap((g) => [
+                          sexFilter !== 'male' && <td key={`${g}-f`} className="px-2 py-2.5 text-right tabular-nums border-l border-slate-100">{n(r[DISABILITY_FIELDS[g].female])}</td>,
+                          sexFilter !== 'female' && <td key={`${g}-m`} className="px-2 py-2.5 text-right tabular-nums">{n(r[DISABILITY_FIELDS[g].male])}</td>,
+                        ])}
+                        <td className="px-3 py-2.5 text-right tabular-nums font-semibold border-l border-slate-100">{n(r.total)}</td>
+                      </tr>
+                    )
+                  })}
+                  {dTableRows.length === 0 && (
+                    <tr><td colSpan={3 + visibleAgeGroups.length * (sexFilter === 'both' ? 2 : 1)} className="px-4 py-8 text-center text-slate-500">No disability type matches “{dSearch}”.</td></tr>
+                  )}
+                </tbody>
+                <tfoot className="bg-slate-50 font-bold border-t-2 border-slate-200">
+                  <tr>
+                    <td className="px-3 py-3" colSpan={2}>TOTAL{dSearch.trim() ? ' (all types)' : ''}</td>
+                    {visibleAgeGroups.flatMap((g) => [
+                      sexFilter !== 'male' && <td key={`${g}-f`} className="px-2 py-3 text-right tabular-nums border-l border-slate-200">{n(filteredDisabilityRows.reduce((a, r) => a + r[DISABILITY_FIELDS[g].female], 0))}</td>,
+                      sexFilter !== 'female' && <td key={`${g}-m`} className="px-2 py-3 text-right tabular-nums">{n(filteredDisabilityRows.reduce((a, r) => a + r[DISABILITY_FIELDS[g].male], 0))}</td>,
+                    ])}
+                    <td className="px-3 py-3 text-right tabular-nums border-l border-slate-200">{n(dTotals.grandTotal)}</td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+            <p className="px-5 py-3 text-xs text-slate-500 border-t border-slate-100">
+              Age group, sex and search are view filters only — they narrow the table and charts below but never change the saved data or the exported/printed files.
+            </p>
+          </Card>
+
+          <DisabilityRecapCharts rows={filteredDisabilityRows} asOfDate={selected.asOfDate} />
+          <DisabilityPrintView rows={selectedDisabilityRows} asOfDate={selected.asOfDate} />
         </>
       )}
 
