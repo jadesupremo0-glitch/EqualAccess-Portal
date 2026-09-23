@@ -1,0 +1,19 @@
+|--- Disability/accommodation suitability <= 0.33
+|   |--- Job-type & work-setup preference <= 0.75
+|   |   |--- Education fit <= 0.80
+|   |   |   |--- class: 0
+|   |   |--- Education fit >  0.80
+|   |   |   |--- Location proximity <= 0.52
+|   |   |   |   |--- class: 0
+|   |   |   |--- Location proximity >  0.52
+|   |   |   |   |--- class: 0
+|   |--- Job-type & work-setup preference >  0.75
+|   |   |--- Skill coverage <= 0.04
+|   |   |   |--- class: 1
+|   |   |--- Skill coverage >  0.04
+|   |   |   |--- class: 1
+|--- Disability/accommodation suitability >  0.33
+|   |--- Education fit <= 0.45
+|   |   |--- class: 0
+|   |--- Education fit >  0.45
+|   |   |--- class: 1
