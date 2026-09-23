@@ -170,7 +170,6 @@ describe('location proximity (15)', () => {
     const far = scoreJob(u, job({ location: 'Quezon City' }))!
     const remote = scoreJob(u, job({ location: 'Quezon City', workArrangement: 'Remote' }))!
     expect(same.components.location).toBe(15)
-    expect(same.reasons.map((r) => r.label)).toContain('In your barangay')
     expect(same.components.location).toBeGreaterThan(town.components.location)
     expect(town.components.location).toBe(otherBrgy.components.location)
     expect(town.components.location).toBeGreaterThan(province.components.location)

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
-  Briefcase, MapPin, Clock, CheckCircle, Bookmark, BookmarkCheck, AlertTriangle, Info, Users, Wallet, Pencil,
+  Briefcase, Clock, CheckCircle, Bookmark, BookmarkCheck, AlertTriangle, Info, Pencil,
 } from 'lucide-react'
 import { Card, Button, SearchBar, Select, Modal, Tabs, EmptyState } from '../../components/ui'
 import { usePWDSession } from '../../context'
@@ -33,6 +33,10 @@ const COMPONENT_LABEL: Record<ComponentKey, string> = {
   location: 'Location',
   preference: 'Work type & arrangement',
 }
+
+// Shown in the "How the score is built" breakdown. Location and work-type/arrangement still
+// count toward the match score behind the scenes — they're just not surfaced in this list.
+const VISIBLE_COMPONENTS: ComponentKey[] = ['skills', 'suitability', 'education']
 
 const formatDate = (iso: string) =>
   iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No end date'
@@ -111,7 +115,7 @@ function JobCard({ job, rec, saved, onView, onToggleSave }: {
         )}
         <div className="flex-1 min-w-0">
           <h3 className="font-semibold text-gray-900 text-sm leading-snug">{job.title}</h3>
-          <p className="text-sm text-teal-800 font-medium">{job.company}</p>
+          <p className="text-xs text-gray-600 mt-0.5 line-clamp-2">{job.description}</p>
           <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
             {rec && <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${BAND_STYLE[rec.band]}`}>{rec.band} match</span>}
             {!open && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full border bg-slate-100 text-slate-700 border-slate-200">No longer open</span>}
@@ -128,7 +132,6 @@ function JobCard({ job, rec, saved, onView, onToggleSave }: {
       </div>
 
       <ul className="space-y-1 mb-3 text-xs text-gray-600">
-        <li className="flex items-center gap-1.5"><MapPin size={12} className="shrink-0 text-gray-600" aria-hidden="true" />{job.location}</li>
         <li className="flex items-center gap-1.5"><Briefcase size={12} className="shrink-0 text-gray-600" aria-hidden="true" />{job.employmentType} · {job.workArrangement}</li>
         <li className="flex items-center gap-1.5"><Clock size={12} className="shrink-0 text-gray-600" aria-hidden="true" />Open until {formatDate(job.deadline)}</li>
       </ul>
@@ -168,13 +171,8 @@ function JobDetail({ job, rec, saved, onClose, onToggleSave }: {
         )}
 
         <div>
-          <p className="text-base font-bold text-teal-800">{job.company}</p>
-          <ul className="flex flex-wrap gap-x-5 gap-y-1.5 mt-2 text-sm text-gray-700">
-            <li className="flex items-center gap-1.5"><MapPin size={14} aria-hidden="true" />{job.location}</li>
+          <ul className="flex flex-wrap gap-x-5 gap-y-1.5 text-sm text-gray-700">
             <li className="flex items-center gap-1.5"><Briefcase size={14} aria-hidden="true" />{job.employmentType} · {job.workArrangement}</li>
-            <li className="flex items-center gap-1.5"><Clock size={14} aria-hidden="true" />Open until {formatDate(job.deadline)}</li>
-            <li className="flex items-center gap-1.5"><Users size={14} aria-hidden="true" />{job.slots} slot{job.slots === 1 ? '' : 's'}</li>
-            {job.salary && <li className="flex items-center gap-1.5"><Wallet size={14} aria-hidden="true" />{job.salary}</li>}
           </ul>
         </div>
 
@@ -187,7 +185,7 @@ function JobDetail({ job, rec, saved, onClose, onToggleSave }: {
             <div>
               <h3 className="text-xs uppercase tracking-wide font-bold text-gray-600 mb-2">How the score is built</h3>
               <ul className="space-y-2">
-                {(Object.keys(COMPONENT_LABEL) as ComponentKey[]).map((k) => {
+                {VISIBLE_COMPONENTS.map((k) => {
                   const max = DEFAULT_WEIGHTS[k]
                   const pts = Math.round(rec.components[k] * 10) / 10
                   return (
@@ -400,8 +398,6 @@ export default function Jobs({ onNavigate }: { onNavigate: (p: string) => void }
             <li><strong>Skills match ({DEFAULT_WEIGHTS.skills}):</strong> how many of the required skills you have. Different wordings count as the same skill (for example &quot;MS Excel&quot; and &quot;Microsoft Office&quot;), and a closely related skill earns partial credit.</li>
             <li><strong>Suitability &amp; accommodations ({DEFAULT_WEIGHTS.suitability}):</strong> whether the employer offers the accommodations you asked for, with a boost when they list your disability type as suitable.</li>
             <li><strong>Education fit ({DEFAULT_WEIGHTS.education}):</strong> your highest level against the minimum.</li>
-            <li><strong>Location ({DEFAULT_WEIGHTS.location}):</strong> your barangay, Los Baños, or work from home.</li>
-            <li><strong>Work type &amp; arrangement ({DEFAULT_WEIGHTS.preference}):</strong> your preferred employment type and on-site, hybrid or remote.</li>
           </ul>
           <p>A job is left out only if the employer has restricted it to specific disability types that don&apos;t include yours.</p>
         </div>

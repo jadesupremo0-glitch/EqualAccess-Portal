@@ -142,8 +142,8 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-gray-900 text-sm">{topJobRec.job.title}</p>
-                  <p className="text-xs text-teal-700 font-medium">{topJobRec.job.company}</p>
-                  <p className="text-xs text-gray-400 mt-0.5">📍 {topJobRec.job.location} · {topJobRec.job.employmentType}</p>
+                  <p className="text-xs text-gray-500 mt-0.5 line-clamp-2">{topJobRec.job.description}</p>
+                  <p className="text-xs text-gray-400 mt-0.5">{topJobRec.job.employmentType} · {topJobRec.job.workArrangement}</p>
                 </div>
                 <Button size="sm" variant="outline" onClick={() => onNavigate('pwd-jobs')}>View</Button>
               </div>

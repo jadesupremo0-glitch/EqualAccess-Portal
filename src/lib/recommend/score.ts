@@ -110,9 +110,6 @@ export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAUL
     reasons.push({ label: shortAccommodation[m] ?? m, tone: 'positive' })
   }
   if (disabilityListed) reasons.push({ label: 'Employer welcomes your disability type', tone: 'positive' })
-  if (location.level === 'barangay') reasons.push({ label: 'In your barangay', tone: 'positive' })
-  else if (location.level === 'municipality') reasons.push({ label: 'Near you, in Los Baños', tone: 'positive' })
-  else if (location.level === 'remote') reasons.push({ label: 'Work from home', tone: 'positive' })
   if (education.status === 'Met') reasons.push({ label: 'Education requirement met', tone: 'positive' })
   if (typeFraction === 1 && (user.preferredJobTypes?.length ?? 0) > 0) reasons.push({ label: `${job.employmentType}, as you prefer`, tone: 'positive' })
   if (arrangementFraction === 1 && (user.preferredWorkSetup?.length ?? 0) > 0) reasons.push({ label: `${job.workArrangement}, as you prefer`, tone: 'positive' })
