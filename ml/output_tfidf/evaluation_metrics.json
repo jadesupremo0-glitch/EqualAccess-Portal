@@ -1,0 +1,10 @@
+{
+  "applicants": 500,
+  "jobs": 100,
+  "vocabulary_size": 163,
+  "top1_accuracy": 1.0,
+  "top3_accuracy": 1.0,
+  "top5_accuracy": 1.0,
+  "mean_top1_similarity": 0.7093,
+  "median_top1_similarity": 0.6993
+}

@@ -1,0 +1,2501 @@
+Applicant_ID,Preferred_Job,Rank,Job_ID,Job_Title,Similarity
+PWD0001,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0001,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0001,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0001,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0001,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0002,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0002,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0002,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0002,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0002,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0003,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0003,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0003,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0003,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0003,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0004,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0004,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0004,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0004,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0004,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0005,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0005,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0005,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0005,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0005,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0006,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0006,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0006,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0006,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0006,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0007,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0007,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0007,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0007,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0007,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0008,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0008,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0008,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0008,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0008,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0009,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0009,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0009,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0009,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0009,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0010,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0010,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0010,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0010,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0010,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0011,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0011,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0011,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0011,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0011,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0012,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0012,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0012,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0012,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0012,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0013,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0013,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0013,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0013,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0013,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0014,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0014,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0014,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0014,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0014,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0015,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0015,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0015,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0015,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0015,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0016,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0016,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0016,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0016,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0016,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0017,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0017,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0017,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0017,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0017,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0018,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0018,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0018,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0018,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0018,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0019,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0019,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0019,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0019,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0019,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0020,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0020,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0020,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0020,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0020,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094
+PWD0021,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.7012
+PWD0021,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.7012
+PWD0021,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.7012
+PWD0021,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.7012
+PWD0021,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.7012
+PWD0022,Customer Service Representative,1,JOB002,Customer Service Representative,0.7791
+PWD0022,Customer Service Representative,2,JOB022,Customer Service Representative,0.7791
+PWD0022,Customer Service Representative,3,JOB062,Customer Service Representative,0.7791
+PWD0022,Customer Service Representative,4,JOB042,Customer Service Representative,0.7791
+PWD0022,Customer Service Representative,5,JOB082,Customer Service Representative,0.7791
+PWD0023,Graphic Designer,1,JOB003,Graphic Designer,0.706
+PWD0023,Graphic Designer,2,JOB023,Graphic Designer,0.706
+PWD0023,Graphic Designer,3,JOB063,Graphic Designer,0.706
+PWD0023,Graphic Designer,4,JOB043,Graphic Designer,0.706
+PWD0023,Graphic Designer,5,JOB083,Graphic Designer,0.706
+PWD0024,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8087
+PWD0024,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8087
+PWD0024,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8087
+PWD0024,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8087
+PWD0024,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8087
+PWD0025,Junior Web Developer,1,JOB005,Junior Web Developer,0.7103
+PWD0025,Junior Web Developer,2,JOB025,Junior Web Developer,0.7103
+PWD0025,Junior Web Developer,3,JOB045,Junior Web Developer,0.7103
+PWD0025,Junior Web Developer,4,JOB065,Junior Web Developer,0.7103
+PWD0025,Junior Web Developer,5,JOB085,Junior Web Developer,0.7103
+PWD0026,Accounting Assistant,1,JOB006,Accounting Assistant,0.6183
+PWD0026,Accounting Assistant,2,JOB026,Accounting Assistant,0.6183
+PWD0026,Accounting Assistant,3,JOB046,Accounting Assistant,0.6183
+PWD0026,Accounting Assistant,4,JOB066,Accounting Assistant,0.6183
+PWD0026,Accounting Assistant,5,JOB086,Accounting Assistant,0.6183
+PWD0027,Content Writer,1,JOB007,Content Writer,0.6688
+PWD0027,Content Writer,2,JOB027,Content Writer,0.6688
+PWD0027,Content Writer,3,JOB047,Content Writer,0.6688
+PWD0027,Content Writer,4,JOB067,Content Writer,0.6688
+PWD0027,Content Writer,5,JOB087,Content Writer,0.6688
+PWD0028,Social Media Assistant,1,JOB008,Social Media Assistant,0.6822
+PWD0028,Social Media Assistant,2,JOB028,Social Media Assistant,0.6822
+PWD0028,Social Media Assistant,3,JOB048,Social Media Assistant,0.6822
+PWD0028,Social Media Assistant,4,JOB068,Social Media Assistant,0.6822
+PWD0028,Social Media Assistant,5,JOB088,Social Media Assistant,0.6822
+PWD0029,Inventory Assistant,1,JOB009,Inventory Assistant,0.75
+PWD0029,Inventory Assistant,2,JOB029,Inventory Assistant,0.75
+PWD0029,Inventory Assistant,3,JOB049,Inventory Assistant,0.75
+PWD0029,Inventory Assistant,4,JOB069,Inventory Assistant,0.75
+PWD0029,Inventory Assistant,5,JOB089,Inventory Assistant,0.75
+PWD0030,Online Tutor,1,JOB010,Online Tutor,0.6922
+PWD0030,Online Tutor,2,JOB030,Online Tutor,0.6922
+PWD0030,Online Tutor,3,JOB050,Online Tutor,0.6922
+PWD0030,Online Tutor,4,JOB070,Online Tutor,0.6922
+PWD0030,Online Tutor,5,JOB090,Online Tutor,0.6922
+PWD0031,Administrative Assistant,1,JOB011,Administrative Assistant,0.642
+PWD0031,Administrative Assistant,2,JOB031,Administrative Assistant,0.642
+PWD0031,Administrative Assistant,3,JOB051,Administrative Assistant,0.642
+PWD0031,Administrative Assistant,4,JOB071,Administrative Assistant,0.642
+PWD0031,Administrative Assistant,5,JOB091,Administrative Assistant,0.642
+PWD0032,Sales Assistant,1,JOB012,Sales Assistant,0.7618
+PWD0032,Sales Assistant,2,JOB032,Sales Assistant,0.7618
+PWD0032,Sales Assistant,3,JOB052,Sales Assistant,0.7618
+PWD0032,Sales Assistant,4,JOB072,Sales Assistant,0.7618
+PWD0032,Sales Assistant,5,JOB092,Sales Assistant,0.7618
+PWD0033,Photo Editor,1,JOB013,Photo Editor,0.6993
+PWD0033,Photo Editor,2,JOB033,Photo Editor,0.6993
+PWD0033,Photo Editor,3,JOB053,Photo Editor,0.6993
+PWD0033,Photo Editor,4,JOB073,Photo Editor,0.6993
+PWD0033,Photo Editor,5,JOB093,Photo Editor,0.6993
+PWD0034,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6412
+PWD0034,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6412
+PWD0034,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6412
+PWD0034,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6412
+PWD0034,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6412
+PWD0035,Office Assistant,1,JOB015,Office Assistant,0.701
+PWD0035,Office Assistant,2,JOB035,Office Assistant,0.701
+PWD0035,Office Assistant,3,JOB055,Office Assistant,0.701
+PWD0035,Office Assistant,4,JOB075,Office Assistant,0.701
+PWD0035,Office Assistant,5,JOB095,Office Assistant,0.701
+PWD0036,Junior Programmer,1,JOB016,Junior Programmer,0.699
+PWD0036,Junior Programmer,2,JOB036,Junior Programmer,0.699
+PWD0036,Junior Programmer,3,JOB056,Junior Programmer,0.699
+PWD0036,Junior Programmer,4,JOB076,Junior Programmer,0.699
+PWD0036,Junior Programmer,5,JOB096,Junior Programmer,0.699
+PWD0037,Customer Support Agent,1,JOB017,Customer Support Agent,0.6784
+PWD0037,Customer Support Agent,2,JOB037,Customer Support Agent,0.6784
+PWD0037,Customer Support Agent,3,JOB057,Customer Support Agent,0.6784
+PWD0037,Customer Support Agent,4,JOB077,Customer Support Agent,0.6784
+PWD0037,Customer Support Agent,5,JOB097,Customer Support Agent,0.6784
+PWD0038,Bakery Assistant,1,JOB018,Bakery Assistant,0.8019
+PWD0038,Bakery Assistant,2,JOB038,Bakery Assistant,0.8019
+PWD0038,Bakery Assistant,3,JOB058,Bakery Assistant,0.8019
+PWD0038,Bakery Assistant,4,JOB078,Bakery Assistant,0.8019
+PWD0038,Bakery Assistant,5,JOB098,Bakery Assistant,0.8019
+PWD0039,Research Assistant,1,JOB019,Research Assistant,0.7397
+PWD0039,Research Assistant,2,JOB039,Research Assistant,0.7397
+PWD0039,Research Assistant,3,JOB059,Research Assistant,0.7397
+PWD0039,Research Assistant,4,JOB079,Research Assistant,0.7397
+PWD0039,Research Assistant,5,JOB099,Research Assistant,0.7397
+PWD0040,Inventory Clerk,1,JOB020,Inventory Clerk,0.7316
+PWD0040,Inventory Clerk,2,JOB040,Inventory Clerk,0.7316
+PWD0040,Inventory Clerk,3,JOB060,Inventory Clerk,0.7316
+PWD0040,Inventory Clerk,4,JOB080,Inventory Clerk,0.7316
+PWD0040,Inventory Clerk,5,JOB100,Inventory Clerk,0.7316
+PWD0041,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.704
+PWD0041,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.704
+PWD0041,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.704
+PWD0041,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.704
+PWD0041,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.704
+PWD0042,Customer Service Representative,1,JOB002,Customer Service Representative,0.7454
+PWD0042,Customer Service Representative,2,JOB022,Customer Service Representative,0.7454
+PWD0042,Customer Service Representative,3,JOB062,Customer Service Representative,0.7454
+PWD0042,Customer Service Representative,4,JOB042,Customer Service Representative,0.7454
+PWD0042,Customer Service Representative,5,JOB082,Customer Service Representative,0.7454
+PWD0043,Graphic Designer,1,JOB003,Graphic Designer,0.6899
+PWD0043,Graphic Designer,2,JOB023,Graphic Designer,0.6899
+PWD0043,Graphic Designer,3,JOB063,Graphic Designer,0.6899
+PWD0043,Graphic Designer,4,JOB043,Graphic Designer,0.6899
+PWD0043,Graphic Designer,5,JOB083,Graphic Designer,0.6899
+PWD0044,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8293
+PWD0044,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8293
+PWD0044,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8293
+PWD0044,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8293
+PWD0044,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8293
+PWD0045,Junior Web Developer,1,JOB005,Junior Web Developer,0.714
+PWD0045,Junior Web Developer,2,JOB025,Junior Web Developer,0.714
+PWD0045,Junior Web Developer,3,JOB045,Junior Web Developer,0.714
+PWD0045,Junior Web Developer,4,JOB065,Junior Web Developer,0.714
+PWD0045,Junior Web Developer,5,JOB085,Junior Web Developer,0.714
+PWD0046,Accounting Assistant,1,JOB006,Accounting Assistant,0.5973
+PWD0046,Accounting Assistant,2,JOB026,Accounting Assistant,0.5973
+PWD0046,Accounting Assistant,3,JOB046,Accounting Assistant,0.5973
+PWD0046,Accounting Assistant,4,JOB066,Accounting Assistant,0.5973
+PWD0046,Accounting Assistant,5,JOB086,Accounting Assistant,0.5973
+PWD0047,Content Writer,1,JOB007,Content Writer,0.6793
+PWD0047,Content Writer,2,JOB027,Content Writer,0.6793
+PWD0047,Content Writer,3,JOB047,Content Writer,0.6793
+PWD0047,Content Writer,4,JOB067,Content Writer,0.6793
+PWD0047,Content Writer,5,JOB087,Content Writer,0.6793
+PWD0048,Social Media Assistant,1,JOB008,Social Media Assistant,0.6804
+PWD0048,Social Media Assistant,2,JOB028,Social Media Assistant,0.6804
+PWD0048,Social Media Assistant,3,JOB048,Social Media Assistant,0.6804
+PWD0048,Social Media Assistant,4,JOB068,Social Media Assistant,0.6804
+PWD0048,Social Media Assistant,5,JOB088,Social Media Assistant,0.6804
+PWD0049,Inventory Assistant,1,JOB009,Inventory Assistant,0.7613
+PWD0049,Inventory Assistant,2,JOB029,Inventory Assistant,0.7613
+PWD0049,Inventory Assistant,3,JOB049,Inventory Assistant,0.7613
+PWD0049,Inventory Assistant,4,JOB069,Inventory Assistant,0.7613
+PWD0049,Inventory Assistant,5,JOB089,Inventory Assistant,0.7613
+PWD0050,Online Tutor,1,JOB010,Online Tutor,0.6881
+PWD0050,Online Tutor,2,JOB030,Online Tutor,0.6881
+PWD0050,Online Tutor,3,JOB050,Online Tutor,0.6881
+PWD0050,Online Tutor,4,JOB070,Online Tutor,0.6881
+PWD0050,Online Tutor,5,JOB090,Online Tutor,0.6881
+PWD0051,Administrative Assistant,1,JOB011,Administrative Assistant,0.6421
+PWD0051,Administrative Assistant,2,JOB031,Administrative Assistant,0.6421
+PWD0051,Administrative Assistant,3,JOB051,Administrative Assistant,0.6421
+PWD0051,Administrative Assistant,4,JOB071,Administrative Assistant,0.6421
+PWD0051,Administrative Assistant,5,JOB091,Administrative Assistant,0.6421
+PWD0052,Sales Assistant,1,JOB012,Sales Assistant,0.7908
+PWD0052,Sales Assistant,2,JOB032,Sales Assistant,0.7908
+PWD0052,Sales Assistant,3,JOB052,Sales Assistant,0.7908
+PWD0052,Sales Assistant,4,JOB072,Sales Assistant,0.7908
+PWD0052,Sales Assistant,5,JOB092,Sales Assistant,0.7908
+PWD0053,Photo Editor,1,JOB013,Photo Editor,0.6846
+PWD0053,Photo Editor,2,JOB033,Photo Editor,0.6846
+PWD0053,Photo Editor,3,JOB053,Photo Editor,0.6846
+PWD0053,Photo Editor,4,JOB073,Photo Editor,0.6846
+PWD0053,Photo Editor,5,JOB093,Photo Editor,0.6846
+PWD0054,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6149
+PWD0054,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6149
+PWD0054,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6149
+PWD0054,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6149
+PWD0054,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6149
+PWD0055,Office Assistant,1,JOB015,Office Assistant,0.6983
+PWD0055,Office Assistant,2,JOB035,Office Assistant,0.6983
+PWD0055,Office Assistant,3,JOB055,Office Assistant,0.6983
+PWD0055,Office Assistant,4,JOB075,Office Assistant,0.6983
+PWD0055,Office Assistant,5,JOB095,Office Assistant,0.6983
+PWD0056,Junior Programmer,1,JOB016,Junior Programmer,0.7235
+PWD0056,Junior Programmer,2,JOB036,Junior Programmer,0.7235
+PWD0056,Junior Programmer,3,JOB056,Junior Programmer,0.7235
+PWD0056,Junior Programmer,4,JOB076,Junior Programmer,0.7235
+PWD0056,Junior Programmer,5,JOB096,Junior Programmer,0.7235
+PWD0057,Customer Support Agent,1,JOB017,Customer Support Agent,0.6672
+PWD0057,Customer Support Agent,2,JOB037,Customer Support Agent,0.6672
+PWD0057,Customer Support Agent,3,JOB057,Customer Support Agent,0.6672
+PWD0057,Customer Support Agent,4,JOB077,Customer Support Agent,0.6672
+PWD0057,Customer Support Agent,5,JOB097,Customer Support Agent,0.6672
+PWD0058,Bakery Assistant,1,JOB018,Bakery Assistant,0.8023
+PWD0058,Bakery Assistant,2,JOB038,Bakery Assistant,0.8023
+PWD0058,Bakery Assistant,3,JOB058,Bakery Assistant,0.8023
+PWD0058,Bakery Assistant,4,JOB078,Bakery Assistant,0.8023
+PWD0058,Bakery Assistant,5,JOB098,Bakery Assistant,0.8023
+PWD0059,Research Assistant,1,JOB019,Research Assistant,0.7247
+PWD0059,Research Assistant,2,JOB039,Research Assistant,0.7247
+PWD0059,Research Assistant,3,JOB059,Research Assistant,0.7247
+PWD0059,Research Assistant,4,JOB079,Research Assistant,0.7247
+PWD0059,Research Assistant,5,JOB099,Research Assistant,0.7247
+PWD0060,Inventory Clerk,1,JOB020,Inventory Clerk,0.7392
+PWD0060,Inventory Clerk,2,JOB040,Inventory Clerk,0.7392
+PWD0060,Inventory Clerk,3,JOB060,Inventory Clerk,0.7392
+PWD0060,Inventory Clerk,4,JOB080,Inventory Clerk,0.7392
+PWD0060,Inventory Clerk,5,JOB100,Inventory Clerk,0.7392
+PWD0061,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0061,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0061,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0061,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0061,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0062,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0062,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0062,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0062,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0062,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0063,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0063,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0063,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0063,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0063,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0064,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0064,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0064,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0064,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0064,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0065,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0065,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0065,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0065,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0065,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0066,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0066,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0066,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0066,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0066,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0067,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0067,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0067,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0067,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0067,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0068,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0068,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0068,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0068,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0068,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0069,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0069,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0069,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0069,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0069,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0070,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0070,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0070,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0070,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0070,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0071,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0071,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0071,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0071,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0071,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0072,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0072,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0072,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0072,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0072,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0073,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0073,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0073,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0073,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0073,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0074,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0074,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0074,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0074,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0074,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0075,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0075,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0075,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0075,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0075,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0076,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0076,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0076,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0076,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0076,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0077,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0077,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0077,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0077,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0077,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0078,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0078,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0078,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0078,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0078,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0079,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0079,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0079,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0079,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0079,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0080,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0080,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0080,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0080,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0080,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094
+PWD0081,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.7012
+PWD0081,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.7012
+PWD0081,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.7012
+PWD0081,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.7012
+PWD0081,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.7012
+PWD0082,Customer Service Representative,1,JOB002,Customer Service Representative,0.7791
+PWD0082,Customer Service Representative,2,JOB022,Customer Service Representative,0.7791
+PWD0082,Customer Service Representative,3,JOB062,Customer Service Representative,0.7791
+PWD0082,Customer Service Representative,4,JOB042,Customer Service Representative,0.7791
+PWD0082,Customer Service Representative,5,JOB082,Customer Service Representative,0.7791
+PWD0083,Graphic Designer,1,JOB003,Graphic Designer,0.706
+PWD0083,Graphic Designer,2,JOB023,Graphic Designer,0.706
+PWD0083,Graphic Designer,3,JOB063,Graphic Designer,0.706
+PWD0083,Graphic Designer,4,JOB043,Graphic Designer,0.706
+PWD0083,Graphic Designer,5,JOB083,Graphic Designer,0.706
+PWD0084,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8087
+PWD0084,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8087
+PWD0084,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8087
+PWD0084,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8087
+PWD0084,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8087
+PWD0085,Junior Web Developer,1,JOB005,Junior Web Developer,0.7103
+PWD0085,Junior Web Developer,2,JOB025,Junior Web Developer,0.7103
+PWD0085,Junior Web Developer,3,JOB045,Junior Web Developer,0.7103
+PWD0085,Junior Web Developer,4,JOB065,Junior Web Developer,0.7103
+PWD0085,Junior Web Developer,5,JOB085,Junior Web Developer,0.7103
+PWD0086,Accounting Assistant,1,JOB006,Accounting Assistant,0.6183
+PWD0086,Accounting Assistant,2,JOB026,Accounting Assistant,0.6183
+PWD0086,Accounting Assistant,3,JOB046,Accounting Assistant,0.6183
+PWD0086,Accounting Assistant,4,JOB066,Accounting Assistant,0.6183
+PWD0086,Accounting Assistant,5,JOB086,Accounting Assistant,0.6183
+PWD0087,Content Writer,1,JOB007,Content Writer,0.6688
+PWD0087,Content Writer,2,JOB027,Content Writer,0.6688
+PWD0087,Content Writer,3,JOB047,Content Writer,0.6688
+PWD0087,Content Writer,4,JOB067,Content Writer,0.6688
+PWD0087,Content Writer,5,JOB087,Content Writer,0.6688
+PWD0088,Social Media Assistant,1,JOB008,Social Media Assistant,0.6822
+PWD0088,Social Media Assistant,2,JOB028,Social Media Assistant,0.6822
+PWD0088,Social Media Assistant,3,JOB048,Social Media Assistant,0.6822
+PWD0088,Social Media Assistant,4,JOB068,Social Media Assistant,0.6822
+PWD0088,Social Media Assistant,5,JOB088,Social Media Assistant,0.6822
+PWD0089,Inventory Assistant,1,JOB009,Inventory Assistant,0.75
+PWD0089,Inventory Assistant,2,JOB029,Inventory Assistant,0.75
+PWD0089,Inventory Assistant,3,JOB049,Inventory Assistant,0.75
+PWD0089,Inventory Assistant,4,JOB069,Inventory Assistant,0.75
+PWD0089,Inventory Assistant,5,JOB089,Inventory Assistant,0.75
+PWD0090,Online Tutor,1,JOB010,Online Tutor,0.6922
+PWD0090,Online Tutor,2,JOB030,Online Tutor,0.6922
+PWD0090,Online Tutor,3,JOB050,Online Tutor,0.6922
+PWD0090,Online Tutor,4,JOB070,Online Tutor,0.6922
+PWD0090,Online Tutor,5,JOB090,Online Tutor,0.6922
+PWD0091,Administrative Assistant,1,JOB011,Administrative Assistant,0.642
+PWD0091,Administrative Assistant,2,JOB031,Administrative Assistant,0.642
+PWD0091,Administrative Assistant,3,JOB051,Administrative Assistant,0.642
+PWD0091,Administrative Assistant,4,JOB071,Administrative Assistant,0.642
+PWD0091,Administrative Assistant,5,JOB091,Administrative Assistant,0.642
+PWD0092,Sales Assistant,1,JOB012,Sales Assistant,0.7618
+PWD0092,Sales Assistant,2,JOB032,Sales Assistant,0.7618
+PWD0092,Sales Assistant,3,JOB052,Sales Assistant,0.7618
+PWD0092,Sales Assistant,4,JOB072,Sales Assistant,0.7618
+PWD0092,Sales Assistant,5,JOB092,Sales Assistant,0.7618
+PWD0093,Photo Editor,1,JOB013,Photo Editor,0.6993
+PWD0093,Photo Editor,2,JOB033,Photo Editor,0.6993
+PWD0093,Photo Editor,3,JOB053,Photo Editor,0.6993
+PWD0093,Photo Editor,4,JOB073,Photo Editor,0.6993
+PWD0093,Photo Editor,5,JOB093,Photo Editor,0.6993
+PWD0094,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6412
+PWD0094,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6412
+PWD0094,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6412
+PWD0094,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6412
+PWD0094,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6412
+PWD0095,Office Assistant,1,JOB015,Office Assistant,0.701
+PWD0095,Office Assistant,2,JOB035,Office Assistant,0.701
+PWD0095,Office Assistant,3,JOB055,Office Assistant,0.701
+PWD0095,Office Assistant,4,JOB075,Office Assistant,0.701
+PWD0095,Office Assistant,5,JOB095,Office Assistant,0.701
+PWD0096,Junior Programmer,1,JOB016,Junior Programmer,0.699
+PWD0096,Junior Programmer,2,JOB036,Junior Programmer,0.699
+PWD0096,Junior Programmer,3,JOB056,Junior Programmer,0.699
+PWD0096,Junior Programmer,4,JOB076,Junior Programmer,0.699
+PWD0096,Junior Programmer,5,JOB096,Junior Programmer,0.699
+PWD0097,Customer Support Agent,1,JOB017,Customer Support Agent,0.6784
+PWD0097,Customer Support Agent,2,JOB037,Customer Support Agent,0.6784
+PWD0097,Customer Support Agent,3,JOB057,Customer Support Agent,0.6784
+PWD0097,Customer Support Agent,4,JOB077,Customer Support Agent,0.6784
+PWD0097,Customer Support Agent,5,JOB097,Customer Support Agent,0.6784
+PWD0098,Bakery Assistant,1,JOB018,Bakery Assistant,0.8019
+PWD0098,Bakery Assistant,2,JOB038,Bakery Assistant,0.8019
+PWD0098,Bakery Assistant,3,JOB058,Bakery Assistant,0.8019
+PWD0098,Bakery Assistant,4,JOB078,Bakery Assistant,0.8019
+PWD0098,Bakery Assistant,5,JOB098,Bakery Assistant,0.8019
+PWD0099,Research Assistant,1,JOB019,Research Assistant,0.7397
+PWD0099,Research Assistant,2,JOB039,Research Assistant,0.7397
+PWD0099,Research Assistant,3,JOB059,Research Assistant,0.7397
+PWD0099,Research Assistant,4,JOB079,Research Assistant,0.7397
+PWD0099,Research Assistant,5,JOB099,Research Assistant,0.7397
+PWD0100,Inventory Clerk,1,JOB020,Inventory Clerk,0.7316
+PWD0100,Inventory Clerk,2,JOB040,Inventory Clerk,0.7316
+PWD0100,Inventory Clerk,3,JOB060,Inventory Clerk,0.7316
+PWD0100,Inventory Clerk,4,JOB080,Inventory Clerk,0.7316
+PWD0100,Inventory Clerk,5,JOB100,Inventory Clerk,0.7316
+PWD0101,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.704
+PWD0101,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.704
+PWD0101,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.704
+PWD0101,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.704
+PWD0101,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.704
+PWD0102,Customer Service Representative,1,JOB002,Customer Service Representative,0.7454
+PWD0102,Customer Service Representative,2,JOB022,Customer Service Representative,0.7454
+PWD0102,Customer Service Representative,3,JOB062,Customer Service Representative,0.7454
+PWD0102,Customer Service Representative,4,JOB042,Customer Service Representative,0.7454
+PWD0102,Customer Service Representative,5,JOB082,Customer Service Representative,0.7454
+PWD0103,Graphic Designer,1,JOB003,Graphic Designer,0.6899
+PWD0103,Graphic Designer,2,JOB023,Graphic Designer,0.6899
+PWD0103,Graphic Designer,3,JOB063,Graphic Designer,0.6899
+PWD0103,Graphic Designer,4,JOB043,Graphic Designer,0.6899
+PWD0103,Graphic Designer,5,JOB083,Graphic Designer,0.6899
+PWD0104,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8293
+PWD0104,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8293
+PWD0104,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8293
+PWD0104,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8293
+PWD0104,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8293
+PWD0105,Junior Web Developer,1,JOB005,Junior Web Developer,0.714
+PWD0105,Junior Web Developer,2,JOB025,Junior Web Developer,0.714
+PWD0105,Junior Web Developer,3,JOB045,Junior Web Developer,0.714
+PWD0105,Junior Web Developer,4,JOB065,Junior Web Developer,0.714
+PWD0105,Junior Web Developer,5,JOB085,Junior Web Developer,0.714
+PWD0106,Accounting Assistant,1,JOB006,Accounting Assistant,0.5973
+PWD0106,Accounting Assistant,2,JOB026,Accounting Assistant,0.5973
+PWD0106,Accounting Assistant,3,JOB046,Accounting Assistant,0.5973
+PWD0106,Accounting Assistant,4,JOB066,Accounting Assistant,0.5973
+PWD0106,Accounting Assistant,5,JOB086,Accounting Assistant,0.5973
+PWD0107,Content Writer,1,JOB007,Content Writer,0.6793
+PWD0107,Content Writer,2,JOB027,Content Writer,0.6793
+PWD0107,Content Writer,3,JOB047,Content Writer,0.6793
+PWD0107,Content Writer,4,JOB067,Content Writer,0.6793
+PWD0107,Content Writer,5,JOB087,Content Writer,0.6793
+PWD0108,Social Media Assistant,1,JOB008,Social Media Assistant,0.6804
+PWD0108,Social Media Assistant,2,JOB028,Social Media Assistant,0.6804
+PWD0108,Social Media Assistant,3,JOB048,Social Media Assistant,0.6804
+PWD0108,Social Media Assistant,4,JOB068,Social Media Assistant,0.6804
+PWD0108,Social Media Assistant,5,JOB088,Social Media Assistant,0.6804
+PWD0109,Inventory Assistant,1,JOB009,Inventory Assistant,0.7613
+PWD0109,Inventory Assistant,2,JOB029,Inventory Assistant,0.7613
+PWD0109,Inventory Assistant,3,JOB049,Inventory Assistant,0.7613
+PWD0109,Inventory Assistant,4,JOB069,Inventory Assistant,0.7613
+PWD0109,Inventory Assistant,5,JOB089,Inventory Assistant,0.7613
+PWD0110,Online Tutor,1,JOB010,Online Tutor,0.6881
+PWD0110,Online Tutor,2,JOB030,Online Tutor,0.6881
+PWD0110,Online Tutor,3,JOB050,Online Tutor,0.6881
+PWD0110,Online Tutor,4,JOB070,Online Tutor,0.6881
+PWD0110,Online Tutor,5,JOB090,Online Tutor,0.6881
+PWD0111,Administrative Assistant,1,JOB011,Administrative Assistant,0.6421
+PWD0111,Administrative Assistant,2,JOB031,Administrative Assistant,0.6421
+PWD0111,Administrative Assistant,3,JOB051,Administrative Assistant,0.6421
+PWD0111,Administrative Assistant,4,JOB071,Administrative Assistant,0.6421
+PWD0111,Administrative Assistant,5,JOB091,Administrative Assistant,0.6421
+PWD0112,Sales Assistant,1,JOB012,Sales Assistant,0.7908
+PWD0112,Sales Assistant,2,JOB032,Sales Assistant,0.7908
+PWD0112,Sales Assistant,3,JOB052,Sales Assistant,0.7908
+PWD0112,Sales Assistant,4,JOB072,Sales Assistant,0.7908
+PWD0112,Sales Assistant,5,JOB092,Sales Assistant,0.7908
+PWD0113,Photo Editor,1,JOB013,Photo Editor,0.6846
+PWD0113,Photo Editor,2,JOB033,Photo Editor,0.6846
+PWD0113,Photo Editor,3,JOB053,Photo Editor,0.6846
+PWD0113,Photo Editor,4,JOB073,Photo Editor,0.6846
+PWD0113,Photo Editor,5,JOB093,Photo Editor,0.6846
+PWD0114,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6149
+PWD0114,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6149
+PWD0114,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6149
+PWD0114,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6149
+PWD0114,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6149
+PWD0115,Office Assistant,1,JOB015,Office Assistant,0.6983
+PWD0115,Office Assistant,2,JOB035,Office Assistant,0.6983
+PWD0115,Office Assistant,3,JOB055,Office Assistant,0.6983
+PWD0115,Office Assistant,4,JOB075,Office Assistant,0.6983
+PWD0115,Office Assistant,5,JOB095,Office Assistant,0.6983
+PWD0116,Junior Programmer,1,JOB016,Junior Programmer,0.7235
+PWD0116,Junior Programmer,2,JOB036,Junior Programmer,0.7235
+PWD0116,Junior Programmer,3,JOB056,Junior Programmer,0.7235
+PWD0116,Junior Programmer,4,JOB076,Junior Programmer,0.7235
+PWD0116,Junior Programmer,5,JOB096,Junior Programmer,0.7235
+PWD0117,Customer Support Agent,1,JOB017,Customer Support Agent,0.6672
+PWD0117,Customer Support Agent,2,JOB037,Customer Support Agent,0.6672
+PWD0117,Customer Support Agent,3,JOB057,Customer Support Agent,0.6672
+PWD0117,Customer Support Agent,4,JOB077,Customer Support Agent,0.6672
+PWD0117,Customer Support Agent,5,JOB097,Customer Support Agent,0.6672
+PWD0118,Bakery Assistant,1,JOB018,Bakery Assistant,0.8023
+PWD0118,Bakery Assistant,2,JOB038,Bakery Assistant,0.8023
+PWD0118,Bakery Assistant,3,JOB058,Bakery Assistant,0.8023
+PWD0118,Bakery Assistant,4,JOB078,Bakery Assistant,0.8023
+PWD0118,Bakery Assistant,5,JOB098,Bakery Assistant,0.8023
+PWD0119,Research Assistant,1,JOB019,Research Assistant,0.7247
+PWD0119,Research Assistant,2,JOB039,Research Assistant,0.7247
+PWD0119,Research Assistant,3,JOB059,Research Assistant,0.7247
+PWD0119,Research Assistant,4,JOB079,Research Assistant,0.7247
+PWD0119,Research Assistant,5,JOB099,Research Assistant,0.7247
+PWD0120,Inventory Clerk,1,JOB020,Inventory Clerk,0.7392
+PWD0120,Inventory Clerk,2,JOB040,Inventory Clerk,0.7392
+PWD0120,Inventory Clerk,3,JOB060,Inventory Clerk,0.7392
+PWD0120,Inventory Clerk,4,JOB080,Inventory Clerk,0.7392
+PWD0120,Inventory Clerk,5,JOB100,Inventory Clerk,0.7392
+PWD0121,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0121,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0121,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0121,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0121,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0122,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0122,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0122,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0122,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0122,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0123,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0123,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0123,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0123,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0123,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0124,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0124,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0124,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0124,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0124,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0125,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0125,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0125,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0125,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0125,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0126,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0126,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0126,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0126,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0126,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0127,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0127,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0127,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0127,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0127,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0128,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0128,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0128,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0128,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0128,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0129,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0129,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0129,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0129,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0129,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0130,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0130,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0130,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0130,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0130,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0131,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0131,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0131,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0131,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0131,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0132,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0132,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0132,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0132,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0132,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0133,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0133,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0133,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0133,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0133,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0134,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0134,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0134,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0134,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0134,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0135,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0135,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0135,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0135,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0135,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0136,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0136,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0136,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0136,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0136,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0137,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0137,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0137,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0137,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0137,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0138,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0138,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0138,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0138,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0138,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0139,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0139,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0139,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0139,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0139,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0140,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0140,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0140,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0140,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0140,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094
+PWD0141,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.7012
+PWD0141,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.7012
+PWD0141,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.7012
+PWD0141,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.7012
+PWD0141,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.7012
+PWD0142,Customer Service Representative,1,JOB002,Customer Service Representative,0.7791
+PWD0142,Customer Service Representative,2,JOB022,Customer Service Representative,0.7791
+PWD0142,Customer Service Representative,3,JOB062,Customer Service Representative,0.7791
+PWD0142,Customer Service Representative,4,JOB042,Customer Service Representative,0.7791
+PWD0142,Customer Service Representative,5,JOB082,Customer Service Representative,0.7791
+PWD0143,Graphic Designer,1,JOB003,Graphic Designer,0.706
+PWD0143,Graphic Designer,2,JOB023,Graphic Designer,0.706
+PWD0143,Graphic Designer,3,JOB063,Graphic Designer,0.706
+PWD0143,Graphic Designer,4,JOB043,Graphic Designer,0.706
+PWD0143,Graphic Designer,5,JOB083,Graphic Designer,0.706
+PWD0144,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8087
+PWD0144,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8087
+PWD0144,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8087
+PWD0144,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8087
+PWD0144,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8087
+PWD0145,Junior Web Developer,1,JOB005,Junior Web Developer,0.7103
+PWD0145,Junior Web Developer,2,JOB025,Junior Web Developer,0.7103
+PWD0145,Junior Web Developer,3,JOB045,Junior Web Developer,0.7103
+PWD0145,Junior Web Developer,4,JOB065,Junior Web Developer,0.7103
+PWD0145,Junior Web Developer,5,JOB085,Junior Web Developer,0.7103
+PWD0146,Accounting Assistant,1,JOB006,Accounting Assistant,0.6183
+PWD0146,Accounting Assistant,2,JOB026,Accounting Assistant,0.6183
+PWD0146,Accounting Assistant,3,JOB046,Accounting Assistant,0.6183
+PWD0146,Accounting Assistant,4,JOB066,Accounting Assistant,0.6183
+PWD0146,Accounting Assistant,5,JOB086,Accounting Assistant,0.6183
+PWD0147,Content Writer,1,JOB007,Content Writer,0.6688
+PWD0147,Content Writer,2,JOB027,Content Writer,0.6688
+PWD0147,Content Writer,3,JOB047,Content Writer,0.6688
+PWD0147,Content Writer,4,JOB067,Content Writer,0.6688
+PWD0147,Content Writer,5,JOB087,Content Writer,0.6688
+PWD0148,Social Media Assistant,1,JOB008,Social Media Assistant,0.6822
+PWD0148,Social Media Assistant,2,JOB028,Social Media Assistant,0.6822
+PWD0148,Social Media Assistant,3,JOB048,Social Media Assistant,0.6822
+PWD0148,Social Media Assistant,4,JOB068,Social Media Assistant,0.6822
+PWD0148,Social Media Assistant,5,JOB088,Social Media Assistant,0.6822
+PWD0149,Inventory Assistant,1,JOB009,Inventory Assistant,0.75
+PWD0149,Inventory Assistant,2,JOB029,Inventory Assistant,0.75
+PWD0149,Inventory Assistant,3,JOB049,Inventory Assistant,0.75
+PWD0149,Inventory Assistant,4,JOB069,Inventory Assistant,0.75
+PWD0149,Inventory Assistant,5,JOB089,Inventory Assistant,0.75
+PWD0150,Online Tutor,1,JOB010,Online Tutor,0.6922
+PWD0150,Online Tutor,2,JOB030,Online Tutor,0.6922
+PWD0150,Online Tutor,3,JOB050,Online Tutor,0.6922
+PWD0150,Online Tutor,4,JOB070,Online Tutor,0.6922
+PWD0150,Online Tutor,5,JOB090,Online Tutor,0.6922
+PWD0151,Administrative Assistant,1,JOB011,Administrative Assistant,0.642
+PWD0151,Administrative Assistant,2,JOB031,Administrative Assistant,0.642
+PWD0151,Administrative Assistant,3,JOB051,Administrative Assistant,0.642
+PWD0151,Administrative Assistant,4,JOB071,Administrative Assistant,0.642
+PWD0151,Administrative Assistant,5,JOB091,Administrative Assistant,0.642
+PWD0152,Sales Assistant,1,JOB012,Sales Assistant,0.7618
+PWD0152,Sales Assistant,2,JOB032,Sales Assistant,0.7618
+PWD0152,Sales Assistant,3,JOB052,Sales Assistant,0.7618
+PWD0152,Sales Assistant,4,JOB072,Sales Assistant,0.7618
+PWD0152,Sales Assistant,5,JOB092,Sales Assistant,0.7618
+PWD0153,Photo Editor,1,JOB013,Photo Editor,0.6993
+PWD0153,Photo Editor,2,JOB033,Photo Editor,0.6993
+PWD0153,Photo Editor,3,JOB053,Photo Editor,0.6993
+PWD0153,Photo Editor,4,JOB073,Photo Editor,0.6993
+PWD0153,Photo Editor,5,JOB093,Photo Editor,0.6993
+PWD0154,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6412
+PWD0154,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6412
+PWD0154,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6412
+PWD0154,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6412
+PWD0154,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6412
+PWD0155,Office Assistant,1,JOB015,Office Assistant,0.701
+PWD0155,Office Assistant,2,JOB035,Office Assistant,0.701
+PWD0155,Office Assistant,3,JOB055,Office Assistant,0.701
+PWD0155,Office Assistant,4,JOB075,Office Assistant,0.701
+PWD0155,Office Assistant,5,JOB095,Office Assistant,0.701
+PWD0156,Junior Programmer,1,JOB016,Junior Programmer,0.699
+PWD0156,Junior Programmer,2,JOB036,Junior Programmer,0.699
+PWD0156,Junior Programmer,3,JOB056,Junior Programmer,0.699
+PWD0156,Junior Programmer,4,JOB076,Junior Programmer,0.699
+PWD0156,Junior Programmer,5,JOB096,Junior Programmer,0.699
+PWD0157,Customer Support Agent,1,JOB017,Customer Support Agent,0.6784
+PWD0157,Customer Support Agent,2,JOB037,Customer Support Agent,0.6784
+PWD0157,Customer Support Agent,3,JOB057,Customer Support Agent,0.6784
+PWD0157,Customer Support Agent,4,JOB077,Customer Support Agent,0.6784
+PWD0157,Customer Support Agent,5,JOB097,Customer Support Agent,0.6784
+PWD0158,Bakery Assistant,1,JOB018,Bakery Assistant,0.8019
+PWD0158,Bakery Assistant,2,JOB038,Bakery Assistant,0.8019
+PWD0158,Bakery Assistant,3,JOB058,Bakery Assistant,0.8019
+PWD0158,Bakery Assistant,4,JOB078,Bakery Assistant,0.8019
+PWD0158,Bakery Assistant,5,JOB098,Bakery Assistant,0.8019
+PWD0159,Research Assistant,1,JOB019,Research Assistant,0.7397
+PWD0159,Research Assistant,2,JOB039,Research Assistant,0.7397
+PWD0159,Research Assistant,3,JOB059,Research Assistant,0.7397
+PWD0159,Research Assistant,4,JOB079,Research Assistant,0.7397
+PWD0159,Research Assistant,5,JOB099,Research Assistant,0.7397
+PWD0160,Inventory Clerk,1,JOB020,Inventory Clerk,0.7316
+PWD0160,Inventory Clerk,2,JOB040,Inventory Clerk,0.7316
+PWD0160,Inventory Clerk,3,JOB060,Inventory Clerk,0.7316
+PWD0160,Inventory Clerk,4,JOB080,Inventory Clerk,0.7316
+PWD0160,Inventory Clerk,5,JOB100,Inventory Clerk,0.7316
+PWD0161,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.704
+PWD0161,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.704
+PWD0161,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.704
+PWD0161,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.704
+PWD0161,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.704
+PWD0162,Customer Service Representative,1,JOB002,Customer Service Representative,0.7454
+PWD0162,Customer Service Representative,2,JOB022,Customer Service Representative,0.7454
+PWD0162,Customer Service Representative,3,JOB062,Customer Service Representative,0.7454
+PWD0162,Customer Service Representative,4,JOB042,Customer Service Representative,0.7454
+PWD0162,Customer Service Representative,5,JOB082,Customer Service Representative,0.7454
+PWD0163,Graphic Designer,1,JOB003,Graphic Designer,0.6899
+PWD0163,Graphic Designer,2,JOB023,Graphic Designer,0.6899
+PWD0163,Graphic Designer,3,JOB063,Graphic Designer,0.6899
+PWD0163,Graphic Designer,4,JOB043,Graphic Designer,0.6899
+PWD0163,Graphic Designer,5,JOB083,Graphic Designer,0.6899
+PWD0164,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8293
+PWD0164,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8293
+PWD0164,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8293
+PWD0164,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8293
+PWD0164,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8293
+PWD0165,Junior Web Developer,1,JOB005,Junior Web Developer,0.714
+PWD0165,Junior Web Developer,2,JOB025,Junior Web Developer,0.714
+PWD0165,Junior Web Developer,3,JOB045,Junior Web Developer,0.714
+PWD0165,Junior Web Developer,4,JOB065,Junior Web Developer,0.714
+PWD0165,Junior Web Developer,5,JOB085,Junior Web Developer,0.714
+PWD0166,Accounting Assistant,1,JOB006,Accounting Assistant,0.5973
+PWD0166,Accounting Assistant,2,JOB026,Accounting Assistant,0.5973
+PWD0166,Accounting Assistant,3,JOB046,Accounting Assistant,0.5973
+PWD0166,Accounting Assistant,4,JOB066,Accounting Assistant,0.5973
+PWD0166,Accounting Assistant,5,JOB086,Accounting Assistant,0.5973
+PWD0167,Content Writer,1,JOB007,Content Writer,0.6793
+PWD0167,Content Writer,2,JOB027,Content Writer,0.6793
+PWD0167,Content Writer,3,JOB047,Content Writer,0.6793
+PWD0167,Content Writer,4,JOB067,Content Writer,0.6793
+PWD0167,Content Writer,5,JOB087,Content Writer,0.6793
+PWD0168,Social Media Assistant,1,JOB008,Social Media Assistant,0.6804
+PWD0168,Social Media Assistant,2,JOB028,Social Media Assistant,0.6804
+PWD0168,Social Media Assistant,3,JOB048,Social Media Assistant,0.6804
+PWD0168,Social Media Assistant,4,JOB068,Social Media Assistant,0.6804
+PWD0168,Social Media Assistant,5,JOB088,Social Media Assistant,0.6804
+PWD0169,Inventory Assistant,1,JOB009,Inventory Assistant,0.7613
+PWD0169,Inventory Assistant,2,JOB029,Inventory Assistant,0.7613
+PWD0169,Inventory Assistant,3,JOB049,Inventory Assistant,0.7613
+PWD0169,Inventory Assistant,4,JOB069,Inventory Assistant,0.7613
+PWD0169,Inventory Assistant,5,JOB089,Inventory Assistant,0.7613
+PWD0170,Online Tutor,1,JOB010,Online Tutor,0.6881
+PWD0170,Online Tutor,2,JOB030,Online Tutor,0.6881
+PWD0170,Online Tutor,3,JOB050,Online Tutor,0.6881
+PWD0170,Online Tutor,4,JOB070,Online Tutor,0.6881
+PWD0170,Online Tutor,5,JOB090,Online Tutor,0.6881
+PWD0171,Administrative Assistant,1,JOB011,Administrative Assistant,0.6421
+PWD0171,Administrative Assistant,2,JOB031,Administrative Assistant,0.6421
+PWD0171,Administrative Assistant,3,JOB051,Administrative Assistant,0.6421
+PWD0171,Administrative Assistant,4,JOB071,Administrative Assistant,0.6421
+PWD0171,Administrative Assistant,5,JOB091,Administrative Assistant,0.6421
+PWD0172,Sales Assistant,1,JOB012,Sales Assistant,0.7908
+PWD0172,Sales Assistant,2,JOB032,Sales Assistant,0.7908
+PWD0172,Sales Assistant,3,JOB052,Sales Assistant,0.7908
+PWD0172,Sales Assistant,4,JOB072,Sales Assistant,0.7908
+PWD0172,Sales Assistant,5,JOB092,Sales Assistant,0.7908
+PWD0173,Photo Editor,1,JOB013,Photo Editor,0.6846
+PWD0173,Photo Editor,2,JOB033,Photo Editor,0.6846
+PWD0173,Photo Editor,3,JOB053,Photo Editor,0.6846
+PWD0173,Photo Editor,4,JOB073,Photo Editor,0.6846
+PWD0173,Photo Editor,5,JOB093,Photo Editor,0.6846
+PWD0174,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6149
+PWD0174,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6149
+PWD0174,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6149
+PWD0174,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6149
+PWD0174,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6149
+PWD0175,Office Assistant,1,JOB015,Office Assistant,0.6983
+PWD0175,Office Assistant,2,JOB035,Office Assistant,0.6983
+PWD0175,Office Assistant,3,JOB055,Office Assistant,0.6983
+PWD0175,Office Assistant,4,JOB075,Office Assistant,0.6983
+PWD0175,Office Assistant,5,JOB095,Office Assistant,0.6983
+PWD0176,Junior Programmer,1,JOB016,Junior Programmer,0.7235
+PWD0176,Junior Programmer,2,JOB036,Junior Programmer,0.7235
+PWD0176,Junior Programmer,3,JOB056,Junior Programmer,0.7235
+PWD0176,Junior Programmer,4,JOB076,Junior Programmer,0.7235
+PWD0176,Junior Programmer,5,JOB096,Junior Programmer,0.7235
+PWD0177,Customer Support Agent,1,JOB017,Customer Support Agent,0.6672
+PWD0177,Customer Support Agent,2,JOB037,Customer Support Agent,0.6672
+PWD0177,Customer Support Agent,3,JOB057,Customer Support Agent,0.6672
+PWD0177,Customer Support Agent,4,JOB077,Customer Support Agent,0.6672
+PWD0177,Customer Support Agent,5,JOB097,Customer Support Agent,0.6672
+PWD0178,Bakery Assistant,1,JOB018,Bakery Assistant,0.8023
+PWD0178,Bakery Assistant,2,JOB038,Bakery Assistant,0.8023
+PWD0178,Bakery Assistant,3,JOB058,Bakery Assistant,0.8023
+PWD0178,Bakery Assistant,4,JOB078,Bakery Assistant,0.8023
+PWD0178,Bakery Assistant,5,JOB098,Bakery Assistant,0.8023
+PWD0179,Research Assistant,1,JOB019,Research Assistant,0.7247
+PWD0179,Research Assistant,2,JOB039,Research Assistant,0.7247
+PWD0179,Research Assistant,3,JOB059,Research Assistant,0.7247
+PWD0179,Research Assistant,4,JOB079,Research Assistant,0.7247
+PWD0179,Research Assistant,5,JOB099,Research Assistant,0.7247
+PWD0180,Inventory Clerk,1,JOB020,Inventory Clerk,0.7392
+PWD0180,Inventory Clerk,2,JOB040,Inventory Clerk,0.7392
+PWD0180,Inventory Clerk,3,JOB060,Inventory Clerk,0.7392
+PWD0180,Inventory Clerk,4,JOB080,Inventory Clerk,0.7392
+PWD0180,Inventory Clerk,5,JOB100,Inventory Clerk,0.7392
+PWD0181,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0181,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0181,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0181,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0181,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0182,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0182,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0182,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0182,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0182,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0183,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0183,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0183,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0183,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0183,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0184,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0184,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0184,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0184,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0184,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0185,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0185,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0185,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0185,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0185,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0186,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0186,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0186,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0186,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0186,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0187,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0187,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0187,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0187,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0187,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0188,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0188,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0188,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0188,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0188,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0189,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0189,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0189,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0189,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0189,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0190,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0190,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0190,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0190,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0190,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0191,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0191,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0191,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0191,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0191,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0192,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0192,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0192,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0192,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0192,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0193,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0193,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0193,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0193,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0193,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0194,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0194,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0194,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0194,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0194,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0195,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0195,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0195,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0195,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0195,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0196,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0196,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0196,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0196,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0196,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0197,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0197,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0197,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0197,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0197,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0198,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0198,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0198,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0198,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0198,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0199,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0199,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0199,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0199,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0199,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0200,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0200,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0200,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0200,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0200,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094
+PWD0201,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.7012
+PWD0201,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.7012
+PWD0201,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.7012
+PWD0201,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.7012
+PWD0201,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.7012
+PWD0202,Customer Service Representative,1,JOB002,Customer Service Representative,0.7791
+PWD0202,Customer Service Representative,2,JOB022,Customer Service Representative,0.7791
+PWD0202,Customer Service Representative,3,JOB062,Customer Service Representative,0.7791
+PWD0202,Customer Service Representative,4,JOB042,Customer Service Representative,0.7791
+PWD0202,Customer Service Representative,5,JOB082,Customer Service Representative,0.7791
+PWD0203,Graphic Designer,1,JOB003,Graphic Designer,0.706
+PWD0203,Graphic Designer,2,JOB023,Graphic Designer,0.706
+PWD0203,Graphic Designer,3,JOB063,Graphic Designer,0.706
+PWD0203,Graphic Designer,4,JOB043,Graphic Designer,0.706
+PWD0203,Graphic Designer,5,JOB083,Graphic Designer,0.706
+PWD0204,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8087
+PWD0204,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8087
+PWD0204,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8087
+PWD0204,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8087
+PWD0204,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8087
+PWD0205,Junior Web Developer,1,JOB005,Junior Web Developer,0.7103
+PWD0205,Junior Web Developer,2,JOB025,Junior Web Developer,0.7103
+PWD0205,Junior Web Developer,3,JOB045,Junior Web Developer,0.7103
+PWD0205,Junior Web Developer,4,JOB065,Junior Web Developer,0.7103
+PWD0205,Junior Web Developer,5,JOB085,Junior Web Developer,0.7103
+PWD0206,Accounting Assistant,1,JOB006,Accounting Assistant,0.6183
+PWD0206,Accounting Assistant,2,JOB026,Accounting Assistant,0.6183
+PWD0206,Accounting Assistant,3,JOB046,Accounting Assistant,0.6183
+PWD0206,Accounting Assistant,4,JOB066,Accounting Assistant,0.6183
+PWD0206,Accounting Assistant,5,JOB086,Accounting Assistant,0.6183
+PWD0207,Content Writer,1,JOB007,Content Writer,0.6688
+PWD0207,Content Writer,2,JOB027,Content Writer,0.6688
+PWD0207,Content Writer,3,JOB047,Content Writer,0.6688
+PWD0207,Content Writer,4,JOB067,Content Writer,0.6688
+PWD0207,Content Writer,5,JOB087,Content Writer,0.6688
+PWD0208,Social Media Assistant,1,JOB008,Social Media Assistant,0.6822
+PWD0208,Social Media Assistant,2,JOB028,Social Media Assistant,0.6822
+PWD0208,Social Media Assistant,3,JOB048,Social Media Assistant,0.6822
+PWD0208,Social Media Assistant,4,JOB068,Social Media Assistant,0.6822
+PWD0208,Social Media Assistant,5,JOB088,Social Media Assistant,0.6822
+PWD0209,Inventory Assistant,1,JOB009,Inventory Assistant,0.75
+PWD0209,Inventory Assistant,2,JOB029,Inventory Assistant,0.75
+PWD0209,Inventory Assistant,3,JOB049,Inventory Assistant,0.75
+PWD0209,Inventory Assistant,4,JOB069,Inventory Assistant,0.75
+PWD0209,Inventory Assistant,5,JOB089,Inventory Assistant,0.75
+PWD0210,Online Tutor,1,JOB010,Online Tutor,0.6922
+PWD0210,Online Tutor,2,JOB030,Online Tutor,0.6922
+PWD0210,Online Tutor,3,JOB050,Online Tutor,0.6922
+PWD0210,Online Tutor,4,JOB070,Online Tutor,0.6922
+PWD0210,Online Tutor,5,JOB090,Online Tutor,0.6922
+PWD0211,Administrative Assistant,1,JOB011,Administrative Assistant,0.642
+PWD0211,Administrative Assistant,2,JOB031,Administrative Assistant,0.642
+PWD0211,Administrative Assistant,3,JOB051,Administrative Assistant,0.642
+PWD0211,Administrative Assistant,4,JOB071,Administrative Assistant,0.642
+PWD0211,Administrative Assistant,5,JOB091,Administrative Assistant,0.642
+PWD0212,Sales Assistant,1,JOB012,Sales Assistant,0.7618
+PWD0212,Sales Assistant,2,JOB032,Sales Assistant,0.7618
+PWD0212,Sales Assistant,3,JOB052,Sales Assistant,0.7618
+PWD0212,Sales Assistant,4,JOB072,Sales Assistant,0.7618
+PWD0212,Sales Assistant,5,JOB092,Sales Assistant,0.7618
+PWD0213,Photo Editor,1,JOB013,Photo Editor,0.6993
+PWD0213,Photo Editor,2,JOB033,Photo Editor,0.6993
+PWD0213,Photo Editor,3,JOB053,Photo Editor,0.6993
+PWD0213,Photo Editor,4,JOB073,Photo Editor,0.6993
+PWD0213,Photo Editor,5,JOB093,Photo Editor,0.6993
+PWD0214,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6412
+PWD0214,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6412
+PWD0214,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6412
+PWD0214,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6412
+PWD0214,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6412
+PWD0215,Office Assistant,1,JOB015,Office Assistant,0.701
+PWD0215,Office Assistant,2,JOB035,Office Assistant,0.701
+PWD0215,Office Assistant,3,JOB055,Office Assistant,0.701
+PWD0215,Office Assistant,4,JOB075,Office Assistant,0.701
+PWD0215,Office Assistant,5,JOB095,Office Assistant,0.701
+PWD0216,Junior Programmer,1,JOB016,Junior Programmer,0.699
+PWD0216,Junior Programmer,2,JOB036,Junior Programmer,0.699
+PWD0216,Junior Programmer,3,JOB056,Junior Programmer,0.699
+PWD0216,Junior Programmer,4,JOB076,Junior Programmer,0.699
+PWD0216,Junior Programmer,5,JOB096,Junior Programmer,0.699
+PWD0217,Customer Support Agent,1,JOB017,Customer Support Agent,0.6784
+PWD0217,Customer Support Agent,2,JOB037,Customer Support Agent,0.6784
+PWD0217,Customer Support Agent,3,JOB057,Customer Support Agent,0.6784
+PWD0217,Customer Support Agent,4,JOB077,Customer Support Agent,0.6784
+PWD0217,Customer Support Agent,5,JOB097,Customer Support Agent,0.6784
+PWD0218,Bakery Assistant,1,JOB018,Bakery Assistant,0.8019
+PWD0218,Bakery Assistant,2,JOB038,Bakery Assistant,0.8019
+PWD0218,Bakery Assistant,3,JOB058,Bakery Assistant,0.8019
+PWD0218,Bakery Assistant,4,JOB078,Bakery Assistant,0.8019
+PWD0218,Bakery Assistant,5,JOB098,Bakery Assistant,0.8019
+PWD0219,Research Assistant,1,JOB019,Research Assistant,0.7397
+PWD0219,Research Assistant,2,JOB039,Research Assistant,0.7397
+PWD0219,Research Assistant,3,JOB059,Research Assistant,0.7397
+PWD0219,Research Assistant,4,JOB079,Research Assistant,0.7397
+PWD0219,Research Assistant,5,JOB099,Research Assistant,0.7397
+PWD0220,Inventory Clerk,1,JOB020,Inventory Clerk,0.7316
+PWD0220,Inventory Clerk,2,JOB040,Inventory Clerk,0.7316
+PWD0220,Inventory Clerk,3,JOB060,Inventory Clerk,0.7316
+PWD0220,Inventory Clerk,4,JOB080,Inventory Clerk,0.7316
+PWD0220,Inventory Clerk,5,JOB100,Inventory Clerk,0.7316
+PWD0221,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.704
+PWD0221,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.704
+PWD0221,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.704
+PWD0221,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.704
+PWD0221,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.704
+PWD0222,Customer Service Representative,1,JOB002,Customer Service Representative,0.7454
+PWD0222,Customer Service Representative,2,JOB022,Customer Service Representative,0.7454
+PWD0222,Customer Service Representative,3,JOB062,Customer Service Representative,0.7454
+PWD0222,Customer Service Representative,4,JOB042,Customer Service Representative,0.7454
+PWD0222,Customer Service Representative,5,JOB082,Customer Service Representative,0.7454
+PWD0223,Graphic Designer,1,JOB003,Graphic Designer,0.6899
+PWD0223,Graphic Designer,2,JOB023,Graphic Designer,0.6899
+PWD0223,Graphic Designer,3,JOB063,Graphic Designer,0.6899
+PWD0223,Graphic Designer,4,JOB043,Graphic Designer,0.6899
+PWD0223,Graphic Designer,5,JOB083,Graphic Designer,0.6899
+PWD0224,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8293
+PWD0224,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8293
+PWD0224,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8293
+PWD0224,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8293
+PWD0224,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8293
+PWD0225,Junior Web Developer,1,JOB005,Junior Web Developer,0.714
+PWD0225,Junior Web Developer,2,JOB025,Junior Web Developer,0.714
+PWD0225,Junior Web Developer,3,JOB045,Junior Web Developer,0.714
+PWD0225,Junior Web Developer,4,JOB065,Junior Web Developer,0.714
+PWD0225,Junior Web Developer,5,JOB085,Junior Web Developer,0.714
+PWD0226,Accounting Assistant,1,JOB006,Accounting Assistant,0.5973
+PWD0226,Accounting Assistant,2,JOB026,Accounting Assistant,0.5973
+PWD0226,Accounting Assistant,3,JOB046,Accounting Assistant,0.5973
+PWD0226,Accounting Assistant,4,JOB066,Accounting Assistant,0.5973
+PWD0226,Accounting Assistant,5,JOB086,Accounting Assistant,0.5973
+PWD0227,Content Writer,1,JOB007,Content Writer,0.6793
+PWD0227,Content Writer,2,JOB027,Content Writer,0.6793
+PWD0227,Content Writer,3,JOB047,Content Writer,0.6793
+PWD0227,Content Writer,4,JOB067,Content Writer,0.6793
+PWD0227,Content Writer,5,JOB087,Content Writer,0.6793
+PWD0228,Social Media Assistant,1,JOB008,Social Media Assistant,0.6804
+PWD0228,Social Media Assistant,2,JOB028,Social Media Assistant,0.6804
+PWD0228,Social Media Assistant,3,JOB048,Social Media Assistant,0.6804
+PWD0228,Social Media Assistant,4,JOB068,Social Media Assistant,0.6804
+PWD0228,Social Media Assistant,5,JOB088,Social Media Assistant,0.6804
+PWD0229,Inventory Assistant,1,JOB009,Inventory Assistant,0.7613
+PWD0229,Inventory Assistant,2,JOB029,Inventory Assistant,0.7613
+PWD0229,Inventory Assistant,3,JOB049,Inventory Assistant,0.7613
+PWD0229,Inventory Assistant,4,JOB069,Inventory Assistant,0.7613
+PWD0229,Inventory Assistant,5,JOB089,Inventory Assistant,0.7613
+PWD0230,Online Tutor,1,JOB010,Online Tutor,0.6881
+PWD0230,Online Tutor,2,JOB030,Online Tutor,0.6881
+PWD0230,Online Tutor,3,JOB050,Online Tutor,0.6881
+PWD0230,Online Tutor,4,JOB070,Online Tutor,0.6881
+PWD0230,Online Tutor,5,JOB090,Online Tutor,0.6881
+PWD0231,Administrative Assistant,1,JOB011,Administrative Assistant,0.6421
+PWD0231,Administrative Assistant,2,JOB031,Administrative Assistant,0.6421
+PWD0231,Administrative Assistant,3,JOB051,Administrative Assistant,0.6421
+PWD0231,Administrative Assistant,4,JOB071,Administrative Assistant,0.6421
+PWD0231,Administrative Assistant,5,JOB091,Administrative Assistant,0.6421
+PWD0232,Sales Assistant,1,JOB012,Sales Assistant,0.7908
+PWD0232,Sales Assistant,2,JOB032,Sales Assistant,0.7908
+PWD0232,Sales Assistant,3,JOB052,Sales Assistant,0.7908
+PWD0232,Sales Assistant,4,JOB072,Sales Assistant,0.7908
+PWD0232,Sales Assistant,5,JOB092,Sales Assistant,0.7908
+PWD0233,Photo Editor,1,JOB013,Photo Editor,0.6846
+PWD0233,Photo Editor,2,JOB033,Photo Editor,0.6846
+PWD0233,Photo Editor,3,JOB053,Photo Editor,0.6846
+PWD0233,Photo Editor,4,JOB073,Photo Editor,0.6846
+PWD0233,Photo Editor,5,JOB093,Photo Editor,0.6846
+PWD0234,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6149
+PWD0234,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6149
+PWD0234,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6149
+PWD0234,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6149
+PWD0234,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6149
+PWD0235,Office Assistant,1,JOB015,Office Assistant,0.6983
+PWD0235,Office Assistant,2,JOB035,Office Assistant,0.6983
+PWD0235,Office Assistant,3,JOB055,Office Assistant,0.6983
+PWD0235,Office Assistant,4,JOB075,Office Assistant,0.6983
+PWD0235,Office Assistant,5,JOB095,Office Assistant,0.6983
+PWD0236,Junior Programmer,1,JOB016,Junior Programmer,0.7235
+PWD0236,Junior Programmer,2,JOB036,Junior Programmer,0.7235
+PWD0236,Junior Programmer,3,JOB056,Junior Programmer,0.7235
+PWD0236,Junior Programmer,4,JOB076,Junior Programmer,0.7235
+PWD0236,Junior Programmer,5,JOB096,Junior Programmer,0.7235
+PWD0237,Customer Support Agent,1,JOB017,Customer Support Agent,0.6672
+PWD0237,Customer Support Agent,2,JOB037,Customer Support Agent,0.6672
+PWD0237,Customer Support Agent,3,JOB057,Customer Support Agent,0.6672
+PWD0237,Customer Support Agent,4,JOB077,Customer Support Agent,0.6672
+PWD0237,Customer Support Agent,5,JOB097,Customer Support Agent,0.6672
+PWD0238,Bakery Assistant,1,JOB018,Bakery Assistant,0.8023
+PWD0238,Bakery Assistant,2,JOB038,Bakery Assistant,0.8023
+PWD0238,Bakery Assistant,3,JOB058,Bakery Assistant,0.8023
+PWD0238,Bakery Assistant,4,JOB078,Bakery Assistant,0.8023
+PWD0238,Bakery Assistant,5,JOB098,Bakery Assistant,0.8023
+PWD0239,Research Assistant,1,JOB019,Research Assistant,0.7247
+PWD0239,Research Assistant,2,JOB039,Research Assistant,0.7247
+PWD0239,Research Assistant,3,JOB059,Research Assistant,0.7247
+PWD0239,Research Assistant,4,JOB079,Research Assistant,0.7247
+PWD0239,Research Assistant,5,JOB099,Research Assistant,0.7247
+PWD0240,Inventory Clerk,1,JOB020,Inventory Clerk,0.7392
+PWD0240,Inventory Clerk,2,JOB040,Inventory Clerk,0.7392
+PWD0240,Inventory Clerk,3,JOB060,Inventory Clerk,0.7392
+PWD0240,Inventory Clerk,4,JOB080,Inventory Clerk,0.7392
+PWD0240,Inventory Clerk,5,JOB100,Inventory Clerk,0.7392
+PWD0241,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0241,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0241,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0241,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0241,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0242,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0242,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0242,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0242,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0242,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0243,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0243,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0243,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0243,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0243,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0244,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0244,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0244,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0244,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0244,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0245,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0245,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0245,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0245,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0245,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0246,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0246,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0246,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0246,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0246,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0247,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0247,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0247,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0247,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0247,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0248,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0248,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0248,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0248,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0248,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0249,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0249,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0249,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0249,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0249,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0250,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0250,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0250,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0250,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0250,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0251,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0251,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0251,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0251,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0251,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0252,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0252,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0252,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0252,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0252,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0253,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0253,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0253,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0253,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0253,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0254,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0254,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0254,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0254,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0254,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0255,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0255,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0255,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0255,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0255,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0256,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0256,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0256,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0256,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0256,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0257,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0257,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0257,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0257,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0257,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0258,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0258,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0258,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0258,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0258,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0259,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0259,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0259,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0259,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0259,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0260,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0260,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0260,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0260,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0260,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094
+PWD0261,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.7012
+PWD0261,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.7012
+PWD0261,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.7012
+PWD0261,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.7012
+PWD0261,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.7012
+PWD0262,Customer Service Representative,1,JOB002,Customer Service Representative,0.7791
+PWD0262,Customer Service Representative,2,JOB022,Customer Service Representative,0.7791
+PWD0262,Customer Service Representative,3,JOB062,Customer Service Representative,0.7791
+PWD0262,Customer Service Representative,4,JOB042,Customer Service Representative,0.7791
+PWD0262,Customer Service Representative,5,JOB082,Customer Service Representative,0.7791
+PWD0263,Graphic Designer,1,JOB003,Graphic Designer,0.706
+PWD0263,Graphic Designer,2,JOB023,Graphic Designer,0.706
+PWD0263,Graphic Designer,3,JOB063,Graphic Designer,0.706
+PWD0263,Graphic Designer,4,JOB043,Graphic Designer,0.706
+PWD0263,Graphic Designer,5,JOB083,Graphic Designer,0.706
+PWD0264,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8087
+PWD0264,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8087
+PWD0264,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8087
+PWD0264,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8087
+PWD0264,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8087
+PWD0265,Junior Web Developer,1,JOB005,Junior Web Developer,0.7103
+PWD0265,Junior Web Developer,2,JOB025,Junior Web Developer,0.7103
+PWD0265,Junior Web Developer,3,JOB045,Junior Web Developer,0.7103
+PWD0265,Junior Web Developer,4,JOB065,Junior Web Developer,0.7103
+PWD0265,Junior Web Developer,5,JOB085,Junior Web Developer,0.7103
+PWD0266,Accounting Assistant,1,JOB006,Accounting Assistant,0.6183
+PWD0266,Accounting Assistant,2,JOB026,Accounting Assistant,0.6183
+PWD0266,Accounting Assistant,3,JOB046,Accounting Assistant,0.6183
+PWD0266,Accounting Assistant,4,JOB066,Accounting Assistant,0.6183
+PWD0266,Accounting Assistant,5,JOB086,Accounting Assistant,0.6183
+PWD0267,Content Writer,1,JOB007,Content Writer,0.6688
+PWD0267,Content Writer,2,JOB027,Content Writer,0.6688
+PWD0267,Content Writer,3,JOB047,Content Writer,0.6688
+PWD0267,Content Writer,4,JOB067,Content Writer,0.6688
+PWD0267,Content Writer,5,JOB087,Content Writer,0.6688
+PWD0268,Social Media Assistant,1,JOB008,Social Media Assistant,0.6822
+PWD0268,Social Media Assistant,2,JOB028,Social Media Assistant,0.6822
+PWD0268,Social Media Assistant,3,JOB048,Social Media Assistant,0.6822
+PWD0268,Social Media Assistant,4,JOB068,Social Media Assistant,0.6822
+PWD0268,Social Media Assistant,5,JOB088,Social Media Assistant,0.6822
+PWD0269,Inventory Assistant,1,JOB009,Inventory Assistant,0.75
+PWD0269,Inventory Assistant,2,JOB029,Inventory Assistant,0.75
+PWD0269,Inventory Assistant,3,JOB049,Inventory Assistant,0.75
+PWD0269,Inventory Assistant,4,JOB069,Inventory Assistant,0.75
+PWD0269,Inventory Assistant,5,JOB089,Inventory Assistant,0.75
+PWD0270,Online Tutor,1,JOB010,Online Tutor,0.6922
+PWD0270,Online Tutor,2,JOB030,Online Tutor,0.6922
+PWD0270,Online Tutor,3,JOB050,Online Tutor,0.6922
+PWD0270,Online Tutor,4,JOB070,Online Tutor,0.6922
+PWD0270,Online Tutor,5,JOB090,Online Tutor,0.6922
+PWD0271,Administrative Assistant,1,JOB011,Administrative Assistant,0.642
+PWD0271,Administrative Assistant,2,JOB031,Administrative Assistant,0.642
+PWD0271,Administrative Assistant,3,JOB051,Administrative Assistant,0.642
+PWD0271,Administrative Assistant,4,JOB071,Administrative Assistant,0.642
+PWD0271,Administrative Assistant,5,JOB091,Administrative Assistant,0.642
+PWD0272,Sales Assistant,1,JOB012,Sales Assistant,0.7618
+PWD0272,Sales Assistant,2,JOB032,Sales Assistant,0.7618
+PWD0272,Sales Assistant,3,JOB052,Sales Assistant,0.7618
+PWD0272,Sales Assistant,4,JOB072,Sales Assistant,0.7618
+PWD0272,Sales Assistant,5,JOB092,Sales Assistant,0.7618
+PWD0273,Photo Editor,1,JOB013,Photo Editor,0.6993
+PWD0273,Photo Editor,2,JOB033,Photo Editor,0.6993
+PWD0273,Photo Editor,3,JOB053,Photo Editor,0.6993
+PWD0273,Photo Editor,4,JOB073,Photo Editor,0.6993
+PWD0273,Photo Editor,5,JOB093,Photo Editor,0.6993
+PWD0274,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6412
+PWD0274,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6412
+PWD0274,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6412
+PWD0274,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6412
+PWD0274,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6412
+PWD0275,Office Assistant,1,JOB015,Office Assistant,0.701
+PWD0275,Office Assistant,2,JOB035,Office Assistant,0.701
+PWD0275,Office Assistant,3,JOB055,Office Assistant,0.701
+PWD0275,Office Assistant,4,JOB075,Office Assistant,0.701
+PWD0275,Office Assistant,5,JOB095,Office Assistant,0.701
+PWD0276,Junior Programmer,1,JOB016,Junior Programmer,0.699
+PWD0276,Junior Programmer,2,JOB036,Junior Programmer,0.699
+PWD0276,Junior Programmer,3,JOB056,Junior Programmer,0.699
+PWD0276,Junior Programmer,4,JOB076,Junior Programmer,0.699
+PWD0276,Junior Programmer,5,JOB096,Junior Programmer,0.699
+PWD0277,Customer Support Agent,1,JOB017,Customer Support Agent,0.6784
+PWD0277,Customer Support Agent,2,JOB037,Customer Support Agent,0.6784
+PWD0277,Customer Support Agent,3,JOB057,Customer Support Agent,0.6784
+PWD0277,Customer Support Agent,4,JOB077,Customer Support Agent,0.6784
+PWD0277,Customer Support Agent,5,JOB097,Customer Support Agent,0.6784
+PWD0278,Bakery Assistant,1,JOB018,Bakery Assistant,0.8019
+PWD0278,Bakery Assistant,2,JOB038,Bakery Assistant,0.8019
+PWD0278,Bakery Assistant,3,JOB058,Bakery Assistant,0.8019
+PWD0278,Bakery Assistant,4,JOB078,Bakery Assistant,0.8019
+PWD0278,Bakery Assistant,5,JOB098,Bakery Assistant,0.8019
+PWD0279,Research Assistant,1,JOB019,Research Assistant,0.7397
+PWD0279,Research Assistant,2,JOB039,Research Assistant,0.7397
+PWD0279,Research Assistant,3,JOB059,Research Assistant,0.7397
+PWD0279,Research Assistant,4,JOB079,Research Assistant,0.7397
+PWD0279,Research Assistant,5,JOB099,Research Assistant,0.7397
+PWD0280,Inventory Clerk,1,JOB020,Inventory Clerk,0.7316
+PWD0280,Inventory Clerk,2,JOB040,Inventory Clerk,0.7316
+PWD0280,Inventory Clerk,3,JOB060,Inventory Clerk,0.7316
+PWD0280,Inventory Clerk,4,JOB080,Inventory Clerk,0.7316
+PWD0280,Inventory Clerk,5,JOB100,Inventory Clerk,0.7316
+PWD0281,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.704
+PWD0281,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.704
+PWD0281,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.704
+PWD0281,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.704
+PWD0281,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.704
+PWD0282,Customer Service Representative,1,JOB002,Customer Service Representative,0.7454
+PWD0282,Customer Service Representative,2,JOB022,Customer Service Representative,0.7454
+PWD0282,Customer Service Representative,3,JOB062,Customer Service Representative,0.7454
+PWD0282,Customer Service Representative,4,JOB042,Customer Service Representative,0.7454
+PWD0282,Customer Service Representative,5,JOB082,Customer Service Representative,0.7454
+PWD0283,Graphic Designer,1,JOB003,Graphic Designer,0.6899
+PWD0283,Graphic Designer,2,JOB023,Graphic Designer,0.6899
+PWD0283,Graphic Designer,3,JOB063,Graphic Designer,0.6899
+PWD0283,Graphic Designer,4,JOB043,Graphic Designer,0.6899
+PWD0283,Graphic Designer,5,JOB083,Graphic Designer,0.6899
+PWD0284,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8293
+PWD0284,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8293
+PWD0284,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8293
+PWD0284,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8293
+PWD0284,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8293
+PWD0285,Junior Web Developer,1,JOB005,Junior Web Developer,0.714
+PWD0285,Junior Web Developer,2,JOB025,Junior Web Developer,0.714
+PWD0285,Junior Web Developer,3,JOB045,Junior Web Developer,0.714
+PWD0285,Junior Web Developer,4,JOB065,Junior Web Developer,0.714
+PWD0285,Junior Web Developer,5,JOB085,Junior Web Developer,0.714
+PWD0286,Accounting Assistant,1,JOB006,Accounting Assistant,0.5973
+PWD0286,Accounting Assistant,2,JOB026,Accounting Assistant,0.5973
+PWD0286,Accounting Assistant,3,JOB046,Accounting Assistant,0.5973
+PWD0286,Accounting Assistant,4,JOB066,Accounting Assistant,0.5973
+PWD0286,Accounting Assistant,5,JOB086,Accounting Assistant,0.5973
+PWD0287,Content Writer,1,JOB007,Content Writer,0.6793
+PWD0287,Content Writer,2,JOB027,Content Writer,0.6793
+PWD0287,Content Writer,3,JOB047,Content Writer,0.6793
+PWD0287,Content Writer,4,JOB067,Content Writer,0.6793
+PWD0287,Content Writer,5,JOB087,Content Writer,0.6793
+PWD0288,Social Media Assistant,1,JOB008,Social Media Assistant,0.6804
+PWD0288,Social Media Assistant,2,JOB028,Social Media Assistant,0.6804
+PWD0288,Social Media Assistant,3,JOB048,Social Media Assistant,0.6804
+PWD0288,Social Media Assistant,4,JOB068,Social Media Assistant,0.6804
+PWD0288,Social Media Assistant,5,JOB088,Social Media Assistant,0.6804
+PWD0289,Inventory Assistant,1,JOB009,Inventory Assistant,0.7613
+PWD0289,Inventory Assistant,2,JOB029,Inventory Assistant,0.7613
+PWD0289,Inventory Assistant,3,JOB049,Inventory Assistant,0.7613
+PWD0289,Inventory Assistant,4,JOB069,Inventory Assistant,0.7613
+PWD0289,Inventory Assistant,5,JOB089,Inventory Assistant,0.7613
+PWD0290,Online Tutor,1,JOB010,Online Tutor,0.6881
+PWD0290,Online Tutor,2,JOB030,Online Tutor,0.6881
+PWD0290,Online Tutor,3,JOB050,Online Tutor,0.6881
+PWD0290,Online Tutor,4,JOB070,Online Tutor,0.6881
+PWD0290,Online Tutor,5,JOB090,Online Tutor,0.6881
+PWD0291,Administrative Assistant,1,JOB011,Administrative Assistant,0.6421
+PWD0291,Administrative Assistant,2,JOB031,Administrative Assistant,0.6421
+PWD0291,Administrative Assistant,3,JOB051,Administrative Assistant,0.6421
+PWD0291,Administrative Assistant,4,JOB071,Administrative Assistant,0.6421
+PWD0291,Administrative Assistant,5,JOB091,Administrative Assistant,0.6421
+PWD0292,Sales Assistant,1,JOB012,Sales Assistant,0.7908
+PWD0292,Sales Assistant,2,JOB032,Sales Assistant,0.7908
+PWD0292,Sales Assistant,3,JOB052,Sales Assistant,0.7908
+PWD0292,Sales Assistant,4,JOB072,Sales Assistant,0.7908
+PWD0292,Sales Assistant,5,JOB092,Sales Assistant,0.7908
+PWD0293,Photo Editor,1,JOB013,Photo Editor,0.6846
+PWD0293,Photo Editor,2,JOB033,Photo Editor,0.6846
+PWD0293,Photo Editor,3,JOB053,Photo Editor,0.6846
+PWD0293,Photo Editor,4,JOB073,Photo Editor,0.6846
+PWD0293,Photo Editor,5,JOB093,Photo Editor,0.6846
+PWD0294,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6149
+PWD0294,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6149
+PWD0294,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6149
+PWD0294,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6149
+PWD0294,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6149
+PWD0295,Office Assistant,1,JOB015,Office Assistant,0.6983
+PWD0295,Office Assistant,2,JOB035,Office Assistant,0.6983
+PWD0295,Office Assistant,3,JOB055,Office Assistant,0.6983
+PWD0295,Office Assistant,4,JOB075,Office Assistant,0.6983
+PWD0295,Office Assistant,5,JOB095,Office Assistant,0.6983
+PWD0296,Junior Programmer,1,JOB016,Junior Programmer,0.7235
+PWD0296,Junior Programmer,2,JOB036,Junior Programmer,0.7235
+PWD0296,Junior Programmer,3,JOB056,Junior Programmer,0.7235
+PWD0296,Junior Programmer,4,JOB076,Junior Programmer,0.7235
+PWD0296,Junior Programmer,5,JOB096,Junior Programmer,0.7235
+PWD0297,Customer Support Agent,1,JOB017,Customer Support Agent,0.6672
+PWD0297,Customer Support Agent,2,JOB037,Customer Support Agent,0.6672
+PWD0297,Customer Support Agent,3,JOB057,Customer Support Agent,0.6672
+PWD0297,Customer Support Agent,4,JOB077,Customer Support Agent,0.6672
+PWD0297,Customer Support Agent,5,JOB097,Customer Support Agent,0.6672
+PWD0298,Bakery Assistant,1,JOB018,Bakery Assistant,0.8023
+PWD0298,Bakery Assistant,2,JOB038,Bakery Assistant,0.8023
+PWD0298,Bakery Assistant,3,JOB058,Bakery Assistant,0.8023
+PWD0298,Bakery Assistant,4,JOB078,Bakery Assistant,0.8023
+PWD0298,Bakery Assistant,5,JOB098,Bakery Assistant,0.8023
+PWD0299,Research Assistant,1,JOB019,Research Assistant,0.7247
+PWD0299,Research Assistant,2,JOB039,Research Assistant,0.7247
+PWD0299,Research Assistant,3,JOB059,Research Assistant,0.7247
+PWD0299,Research Assistant,4,JOB079,Research Assistant,0.7247
+PWD0299,Research Assistant,5,JOB099,Research Assistant,0.7247
+PWD0300,Inventory Clerk,1,JOB020,Inventory Clerk,0.7392
+PWD0300,Inventory Clerk,2,JOB040,Inventory Clerk,0.7392
+PWD0300,Inventory Clerk,3,JOB060,Inventory Clerk,0.7392
+PWD0300,Inventory Clerk,4,JOB080,Inventory Clerk,0.7392
+PWD0300,Inventory Clerk,5,JOB100,Inventory Clerk,0.7392
+PWD0301,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0301,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0301,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0301,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0301,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0302,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0302,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0302,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0302,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0302,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0303,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0303,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0303,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0303,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0303,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0304,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0304,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0304,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0304,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0304,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0305,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0305,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0305,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0305,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0305,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0306,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0306,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0306,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0306,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0306,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0307,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0307,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0307,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0307,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0307,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0308,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0308,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0308,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0308,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0308,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0309,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0309,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0309,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0309,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0309,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0310,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0310,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0310,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0310,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0310,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0311,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0311,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0311,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0311,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0311,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0312,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0312,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0312,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0312,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0312,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0313,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0313,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0313,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0313,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0313,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0314,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0314,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0314,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0314,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0314,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0315,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0315,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0315,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0315,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0315,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0316,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0316,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0316,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0316,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0316,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0317,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0317,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0317,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0317,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0317,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0318,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0318,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0318,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0318,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0318,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0319,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0319,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0319,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0319,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0319,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0320,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0320,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0320,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0320,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0320,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094
+PWD0321,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.7012
+PWD0321,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.7012
+PWD0321,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.7012
+PWD0321,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.7012
+PWD0321,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.7012
+PWD0322,Customer Service Representative,1,JOB002,Customer Service Representative,0.7791
+PWD0322,Customer Service Representative,2,JOB022,Customer Service Representative,0.7791
+PWD0322,Customer Service Representative,3,JOB062,Customer Service Representative,0.7791
+PWD0322,Customer Service Representative,4,JOB042,Customer Service Representative,0.7791
+PWD0322,Customer Service Representative,5,JOB082,Customer Service Representative,0.7791
+PWD0323,Graphic Designer,1,JOB003,Graphic Designer,0.706
+PWD0323,Graphic Designer,2,JOB023,Graphic Designer,0.706
+PWD0323,Graphic Designer,3,JOB063,Graphic Designer,0.706
+PWD0323,Graphic Designer,4,JOB043,Graphic Designer,0.706
+PWD0323,Graphic Designer,5,JOB083,Graphic Designer,0.706
+PWD0324,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8087
+PWD0324,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8087
+PWD0324,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8087
+PWD0324,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8087
+PWD0324,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8087
+PWD0325,Junior Web Developer,1,JOB005,Junior Web Developer,0.7103
+PWD0325,Junior Web Developer,2,JOB025,Junior Web Developer,0.7103
+PWD0325,Junior Web Developer,3,JOB045,Junior Web Developer,0.7103
+PWD0325,Junior Web Developer,4,JOB065,Junior Web Developer,0.7103
+PWD0325,Junior Web Developer,5,JOB085,Junior Web Developer,0.7103
+PWD0326,Accounting Assistant,1,JOB006,Accounting Assistant,0.6183
+PWD0326,Accounting Assistant,2,JOB026,Accounting Assistant,0.6183
+PWD0326,Accounting Assistant,3,JOB046,Accounting Assistant,0.6183
+PWD0326,Accounting Assistant,4,JOB066,Accounting Assistant,0.6183
+PWD0326,Accounting Assistant,5,JOB086,Accounting Assistant,0.6183
+PWD0327,Content Writer,1,JOB007,Content Writer,0.6688
+PWD0327,Content Writer,2,JOB027,Content Writer,0.6688
+PWD0327,Content Writer,3,JOB047,Content Writer,0.6688
+PWD0327,Content Writer,4,JOB067,Content Writer,0.6688
+PWD0327,Content Writer,5,JOB087,Content Writer,0.6688
+PWD0328,Social Media Assistant,1,JOB008,Social Media Assistant,0.6822
+PWD0328,Social Media Assistant,2,JOB028,Social Media Assistant,0.6822
+PWD0328,Social Media Assistant,3,JOB048,Social Media Assistant,0.6822
+PWD0328,Social Media Assistant,4,JOB068,Social Media Assistant,0.6822
+PWD0328,Social Media Assistant,5,JOB088,Social Media Assistant,0.6822
+PWD0329,Inventory Assistant,1,JOB009,Inventory Assistant,0.75
+PWD0329,Inventory Assistant,2,JOB029,Inventory Assistant,0.75
+PWD0329,Inventory Assistant,3,JOB049,Inventory Assistant,0.75
+PWD0329,Inventory Assistant,4,JOB069,Inventory Assistant,0.75
+PWD0329,Inventory Assistant,5,JOB089,Inventory Assistant,0.75
+PWD0330,Online Tutor,1,JOB010,Online Tutor,0.6922
+PWD0330,Online Tutor,2,JOB030,Online Tutor,0.6922
+PWD0330,Online Tutor,3,JOB050,Online Tutor,0.6922
+PWD0330,Online Tutor,4,JOB070,Online Tutor,0.6922
+PWD0330,Online Tutor,5,JOB090,Online Tutor,0.6922
+PWD0331,Administrative Assistant,1,JOB011,Administrative Assistant,0.642
+PWD0331,Administrative Assistant,2,JOB031,Administrative Assistant,0.642
+PWD0331,Administrative Assistant,3,JOB051,Administrative Assistant,0.642
+PWD0331,Administrative Assistant,4,JOB071,Administrative Assistant,0.642
+PWD0331,Administrative Assistant,5,JOB091,Administrative Assistant,0.642
+PWD0332,Sales Assistant,1,JOB012,Sales Assistant,0.7618
+PWD0332,Sales Assistant,2,JOB032,Sales Assistant,0.7618
+PWD0332,Sales Assistant,3,JOB052,Sales Assistant,0.7618
+PWD0332,Sales Assistant,4,JOB072,Sales Assistant,0.7618
+PWD0332,Sales Assistant,5,JOB092,Sales Assistant,0.7618
+PWD0333,Photo Editor,1,JOB013,Photo Editor,0.6993
+PWD0333,Photo Editor,2,JOB033,Photo Editor,0.6993
+PWD0333,Photo Editor,3,JOB053,Photo Editor,0.6993
+PWD0333,Photo Editor,4,JOB073,Photo Editor,0.6993
+PWD0333,Photo Editor,5,JOB093,Photo Editor,0.6993
+PWD0334,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6412
+PWD0334,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6412
+PWD0334,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6412
+PWD0334,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6412
+PWD0334,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6412
+PWD0335,Office Assistant,1,JOB015,Office Assistant,0.701
+PWD0335,Office Assistant,2,JOB035,Office Assistant,0.701
+PWD0335,Office Assistant,3,JOB055,Office Assistant,0.701
+PWD0335,Office Assistant,4,JOB075,Office Assistant,0.701
+PWD0335,Office Assistant,5,JOB095,Office Assistant,0.701
+PWD0336,Junior Programmer,1,JOB016,Junior Programmer,0.699
+PWD0336,Junior Programmer,2,JOB036,Junior Programmer,0.699
+PWD0336,Junior Programmer,3,JOB056,Junior Programmer,0.699
+PWD0336,Junior Programmer,4,JOB076,Junior Programmer,0.699
+PWD0336,Junior Programmer,5,JOB096,Junior Programmer,0.699
+PWD0337,Customer Support Agent,1,JOB017,Customer Support Agent,0.6784
+PWD0337,Customer Support Agent,2,JOB037,Customer Support Agent,0.6784
+PWD0337,Customer Support Agent,3,JOB057,Customer Support Agent,0.6784
+PWD0337,Customer Support Agent,4,JOB077,Customer Support Agent,0.6784
+PWD0337,Customer Support Agent,5,JOB097,Customer Support Agent,0.6784
+PWD0338,Bakery Assistant,1,JOB018,Bakery Assistant,0.8019
+PWD0338,Bakery Assistant,2,JOB038,Bakery Assistant,0.8019
+PWD0338,Bakery Assistant,3,JOB058,Bakery Assistant,0.8019
+PWD0338,Bakery Assistant,4,JOB078,Bakery Assistant,0.8019
+PWD0338,Bakery Assistant,5,JOB098,Bakery Assistant,0.8019
+PWD0339,Research Assistant,1,JOB019,Research Assistant,0.7397
+PWD0339,Research Assistant,2,JOB039,Research Assistant,0.7397
+PWD0339,Research Assistant,3,JOB059,Research Assistant,0.7397
+PWD0339,Research Assistant,4,JOB079,Research Assistant,0.7397
+PWD0339,Research Assistant,5,JOB099,Research Assistant,0.7397
+PWD0340,Inventory Clerk,1,JOB020,Inventory Clerk,0.7316
+PWD0340,Inventory Clerk,2,JOB040,Inventory Clerk,0.7316
+PWD0340,Inventory Clerk,3,JOB060,Inventory Clerk,0.7316
+PWD0340,Inventory Clerk,4,JOB080,Inventory Clerk,0.7316
+PWD0340,Inventory Clerk,5,JOB100,Inventory Clerk,0.7316
+PWD0341,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.704
+PWD0341,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.704
+PWD0341,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.704
+PWD0341,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.704
+PWD0341,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.704
+PWD0342,Customer Service Representative,1,JOB002,Customer Service Representative,0.7454
+PWD0342,Customer Service Representative,2,JOB022,Customer Service Representative,0.7454
+PWD0342,Customer Service Representative,3,JOB062,Customer Service Representative,0.7454
+PWD0342,Customer Service Representative,4,JOB042,Customer Service Representative,0.7454
+PWD0342,Customer Service Representative,5,JOB082,Customer Service Representative,0.7454
+PWD0343,Graphic Designer,1,JOB003,Graphic Designer,0.6899
+PWD0343,Graphic Designer,2,JOB023,Graphic Designer,0.6899
+PWD0343,Graphic Designer,3,JOB063,Graphic Designer,0.6899
+PWD0343,Graphic Designer,4,JOB043,Graphic Designer,0.6899
+PWD0343,Graphic Designer,5,JOB083,Graphic Designer,0.6899
+PWD0344,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8293
+PWD0344,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8293
+PWD0344,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8293
+PWD0344,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8293
+PWD0344,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8293
+PWD0345,Junior Web Developer,1,JOB005,Junior Web Developer,0.714
+PWD0345,Junior Web Developer,2,JOB025,Junior Web Developer,0.714
+PWD0345,Junior Web Developer,3,JOB045,Junior Web Developer,0.714
+PWD0345,Junior Web Developer,4,JOB065,Junior Web Developer,0.714
+PWD0345,Junior Web Developer,5,JOB085,Junior Web Developer,0.714
+PWD0346,Accounting Assistant,1,JOB006,Accounting Assistant,0.5973
+PWD0346,Accounting Assistant,2,JOB026,Accounting Assistant,0.5973
+PWD0346,Accounting Assistant,3,JOB046,Accounting Assistant,0.5973
+PWD0346,Accounting Assistant,4,JOB066,Accounting Assistant,0.5973
+PWD0346,Accounting Assistant,5,JOB086,Accounting Assistant,0.5973
+PWD0347,Content Writer,1,JOB007,Content Writer,0.6793
+PWD0347,Content Writer,2,JOB027,Content Writer,0.6793
+PWD0347,Content Writer,3,JOB047,Content Writer,0.6793
+PWD0347,Content Writer,4,JOB067,Content Writer,0.6793
+PWD0347,Content Writer,5,JOB087,Content Writer,0.6793
+PWD0348,Social Media Assistant,1,JOB008,Social Media Assistant,0.6804
+PWD0348,Social Media Assistant,2,JOB028,Social Media Assistant,0.6804
+PWD0348,Social Media Assistant,3,JOB048,Social Media Assistant,0.6804
+PWD0348,Social Media Assistant,4,JOB068,Social Media Assistant,0.6804
+PWD0348,Social Media Assistant,5,JOB088,Social Media Assistant,0.6804
+PWD0349,Inventory Assistant,1,JOB009,Inventory Assistant,0.7613
+PWD0349,Inventory Assistant,2,JOB029,Inventory Assistant,0.7613
+PWD0349,Inventory Assistant,3,JOB049,Inventory Assistant,0.7613
+PWD0349,Inventory Assistant,4,JOB069,Inventory Assistant,0.7613
+PWD0349,Inventory Assistant,5,JOB089,Inventory Assistant,0.7613
+PWD0350,Online Tutor,1,JOB010,Online Tutor,0.6881
+PWD0350,Online Tutor,2,JOB030,Online Tutor,0.6881
+PWD0350,Online Tutor,3,JOB050,Online Tutor,0.6881
+PWD0350,Online Tutor,4,JOB070,Online Tutor,0.6881
+PWD0350,Online Tutor,5,JOB090,Online Tutor,0.6881
+PWD0351,Administrative Assistant,1,JOB011,Administrative Assistant,0.6421
+PWD0351,Administrative Assistant,2,JOB031,Administrative Assistant,0.6421
+PWD0351,Administrative Assistant,3,JOB051,Administrative Assistant,0.6421
+PWD0351,Administrative Assistant,4,JOB071,Administrative Assistant,0.6421
+PWD0351,Administrative Assistant,5,JOB091,Administrative Assistant,0.6421
+PWD0352,Sales Assistant,1,JOB012,Sales Assistant,0.7908
+PWD0352,Sales Assistant,2,JOB032,Sales Assistant,0.7908
+PWD0352,Sales Assistant,3,JOB052,Sales Assistant,0.7908
+PWD0352,Sales Assistant,4,JOB072,Sales Assistant,0.7908
+PWD0352,Sales Assistant,5,JOB092,Sales Assistant,0.7908
+PWD0353,Photo Editor,1,JOB013,Photo Editor,0.6846
+PWD0353,Photo Editor,2,JOB033,Photo Editor,0.6846
+PWD0353,Photo Editor,3,JOB053,Photo Editor,0.6846
+PWD0353,Photo Editor,4,JOB073,Photo Editor,0.6846
+PWD0353,Photo Editor,5,JOB093,Photo Editor,0.6846
+PWD0354,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6149
+PWD0354,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6149
+PWD0354,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6149
+PWD0354,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6149
+PWD0354,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6149
+PWD0355,Office Assistant,1,JOB015,Office Assistant,0.6983
+PWD0355,Office Assistant,2,JOB035,Office Assistant,0.6983
+PWD0355,Office Assistant,3,JOB055,Office Assistant,0.6983
+PWD0355,Office Assistant,4,JOB075,Office Assistant,0.6983
+PWD0355,Office Assistant,5,JOB095,Office Assistant,0.6983
+PWD0356,Junior Programmer,1,JOB016,Junior Programmer,0.7235
+PWD0356,Junior Programmer,2,JOB036,Junior Programmer,0.7235
+PWD0356,Junior Programmer,3,JOB056,Junior Programmer,0.7235
+PWD0356,Junior Programmer,4,JOB076,Junior Programmer,0.7235
+PWD0356,Junior Programmer,5,JOB096,Junior Programmer,0.7235
+PWD0357,Customer Support Agent,1,JOB017,Customer Support Agent,0.6672
+PWD0357,Customer Support Agent,2,JOB037,Customer Support Agent,0.6672
+PWD0357,Customer Support Agent,3,JOB057,Customer Support Agent,0.6672
+PWD0357,Customer Support Agent,4,JOB077,Customer Support Agent,0.6672
+PWD0357,Customer Support Agent,5,JOB097,Customer Support Agent,0.6672
+PWD0358,Bakery Assistant,1,JOB018,Bakery Assistant,0.8023
+PWD0358,Bakery Assistant,2,JOB038,Bakery Assistant,0.8023
+PWD0358,Bakery Assistant,3,JOB058,Bakery Assistant,0.8023
+PWD0358,Bakery Assistant,4,JOB078,Bakery Assistant,0.8023
+PWD0358,Bakery Assistant,5,JOB098,Bakery Assistant,0.8023
+PWD0359,Research Assistant,1,JOB019,Research Assistant,0.7247
+PWD0359,Research Assistant,2,JOB039,Research Assistant,0.7247
+PWD0359,Research Assistant,3,JOB059,Research Assistant,0.7247
+PWD0359,Research Assistant,4,JOB079,Research Assistant,0.7247
+PWD0359,Research Assistant,5,JOB099,Research Assistant,0.7247
+PWD0360,Inventory Clerk,1,JOB020,Inventory Clerk,0.7392
+PWD0360,Inventory Clerk,2,JOB040,Inventory Clerk,0.7392
+PWD0360,Inventory Clerk,3,JOB060,Inventory Clerk,0.7392
+PWD0360,Inventory Clerk,4,JOB080,Inventory Clerk,0.7392
+PWD0360,Inventory Clerk,5,JOB100,Inventory Clerk,0.7392
+PWD0361,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0361,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0361,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0361,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0361,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0362,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0362,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0362,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0362,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0362,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0363,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0363,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0363,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0363,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0363,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0364,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0364,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0364,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0364,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0364,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0365,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0365,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0365,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0365,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0365,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0366,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0366,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0366,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0366,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0366,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0367,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0367,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0367,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0367,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0367,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0368,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0368,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0368,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0368,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0368,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0369,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0369,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0369,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0369,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0369,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0370,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0370,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0370,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0370,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0370,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0371,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0371,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0371,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0371,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0371,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0372,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0372,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0372,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0372,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0372,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0373,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0373,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0373,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0373,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0373,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0374,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0374,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0374,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0374,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0374,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0375,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0375,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0375,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0375,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0375,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0376,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0376,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0376,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0376,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0376,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0377,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0377,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0377,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0377,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0377,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0378,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0378,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0378,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0378,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0378,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0379,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0379,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0379,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0379,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0379,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0380,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0380,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0380,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0380,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0380,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094
+PWD0381,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.7012
+PWD0381,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.7012
+PWD0381,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.7012
+PWD0381,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.7012
+PWD0381,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.7012
+PWD0382,Customer Service Representative,1,JOB002,Customer Service Representative,0.7791
+PWD0382,Customer Service Representative,2,JOB022,Customer Service Representative,0.7791
+PWD0382,Customer Service Representative,3,JOB062,Customer Service Representative,0.7791
+PWD0382,Customer Service Representative,4,JOB042,Customer Service Representative,0.7791
+PWD0382,Customer Service Representative,5,JOB082,Customer Service Representative,0.7791
+PWD0383,Graphic Designer,1,JOB003,Graphic Designer,0.706
+PWD0383,Graphic Designer,2,JOB023,Graphic Designer,0.706
+PWD0383,Graphic Designer,3,JOB063,Graphic Designer,0.706
+PWD0383,Graphic Designer,4,JOB043,Graphic Designer,0.706
+PWD0383,Graphic Designer,5,JOB083,Graphic Designer,0.706
+PWD0384,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8087
+PWD0384,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8087
+PWD0384,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8087
+PWD0384,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8087
+PWD0384,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8087
+PWD0385,Junior Web Developer,1,JOB005,Junior Web Developer,0.7103
+PWD0385,Junior Web Developer,2,JOB025,Junior Web Developer,0.7103
+PWD0385,Junior Web Developer,3,JOB045,Junior Web Developer,0.7103
+PWD0385,Junior Web Developer,4,JOB065,Junior Web Developer,0.7103
+PWD0385,Junior Web Developer,5,JOB085,Junior Web Developer,0.7103
+PWD0386,Accounting Assistant,1,JOB006,Accounting Assistant,0.6183
+PWD0386,Accounting Assistant,2,JOB026,Accounting Assistant,0.6183
+PWD0386,Accounting Assistant,3,JOB046,Accounting Assistant,0.6183
+PWD0386,Accounting Assistant,4,JOB066,Accounting Assistant,0.6183
+PWD0386,Accounting Assistant,5,JOB086,Accounting Assistant,0.6183
+PWD0387,Content Writer,1,JOB007,Content Writer,0.6688
+PWD0387,Content Writer,2,JOB027,Content Writer,0.6688
+PWD0387,Content Writer,3,JOB047,Content Writer,0.6688
+PWD0387,Content Writer,4,JOB067,Content Writer,0.6688
+PWD0387,Content Writer,5,JOB087,Content Writer,0.6688
+PWD0388,Social Media Assistant,1,JOB008,Social Media Assistant,0.6822
+PWD0388,Social Media Assistant,2,JOB028,Social Media Assistant,0.6822
+PWD0388,Social Media Assistant,3,JOB048,Social Media Assistant,0.6822
+PWD0388,Social Media Assistant,4,JOB068,Social Media Assistant,0.6822
+PWD0388,Social Media Assistant,5,JOB088,Social Media Assistant,0.6822
+PWD0389,Inventory Assistant,1,JOB009,Inventory Assistant,0.75
+PWD0389,Inventory Assistant,2,JOB029,Inventory Assistant,0.75
+PWD0389,Inventory Assistant,3,JOB049,Inventory Assistant,0.75
+PWD0389,Inventory Assistant,4,JOB069,Inventory Assistant,0.75
+PWD0389,Inventory Assistant,5,JOB089,Inventory Assistant,0.75
+PWD0390,Online Tutor,1,JOB010,Online Tutor,0.6922
+PWD0390,Online Tutor,2,JOB030,Online Tutor,0.6922
+PWD0390,Online Tutor,3,JOB050,Online Tutor,0.6922
+PWD0390,Online Tutor,4,JOB070,Online Tutor,0.6922
+PWD0390,Online Tutor,5,JOB090,Online Tutor,0.6922
+PWD0391,Administrative Assistant,1,JOB011,Administrative Assistant,0.642
+PWD0391,Administrative Assistant,2,JOB031,Administrative Assistant,0.642
+PWD0391,Administrative Assistant,3,JOB051,Administrative Assistant,0.642
+PWD0391,Administrative Assistant,4,JOB071,Administrative Assistant,0.642
+PWD0391,Administrative Assistant,5,JOB091,Administrative Assistant,0.642
+PWD0392,Sales Assistant,1,JOB012,Sales Assistant,0.7618
+PWD0392,Sales Assistant,2,JOB032,Sales Assistant,0.7618
+PWD0392,Sales Assistant,3,JOB052,Sales Assistant,0.7618
+PWD0392,Sales Assistant,4,JOB072,Sales Assistant,0.7618
+PWD0392,Sales Assistant,5,JOB092,Sales Assistant,0.7618
+PWD0393,Photo Editor,1,JOB013,Photo Editor,0.6993
+PWD0393,Photo Editor,2,JOB033,Photo Editor,0.6993
+PWD0393,Photo Editor,3,JOB053,Photo Editor,0.6993
+PWD0393,Photo Editor,4,JOB073,Photo Editor,0.6993
+PWD0393,Photo Editor,5,JOB093,Photo Editor,0.6993
+PWD0394,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6412
+PWD0394,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6412
+PWD0394,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6412
+PWD0394,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6412
+PWD0394,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6412
+PWD0395,Office Assistant,1,JOB015,Office Assistant,0.701
+PWD0395,Office Assistant,2,JOB035,Office Assistant,0.701
+PWD0395,Office Assistant,3,JOB055,Office Assistant,0.701
+PWD0395,Office Assistant,4,JOB075,Office Assistant,0.701
+PWD0395,Office Assistant,5,JOB095,Office Assistant,0.701
+PWD0396,Junior Programmer,1,JOB016,Junior Programmer,0.699
+PWD0396,Junior Programmer,2,JOB036,Junior Programmer,0.699
+PWD0396,Junior Programmer,3,JOB056,Junior Programmer,0.699
+PWD0396,Junior Programmer,4,JOB076,Junior Programmer,0.699
+PWD0396,Junior Programmer,5,JOB096,Junior Programmer,0.699
+PWD0397,Customer Support Agent,1,JOB017,Customer Support Agent,0.6784
+PWD0397,Customer Support Agent,2,JOB037,Customer Support Agent,0.6784
+PWD0397,Customer Support Agent,3,JOB057,Customer Support Agent,0.6784
+PWD0397,Customer Support Agent,4,JOB077,Customer Support Agent,0.6784
+PWD0397,Customer Support Agent,5,JOB097,Customer Support Agent,0.6784
+PWD0398,Bakery Assistant,1,JOB018,Bakery Assistant,0.8019
+PWD0398,Bakery Assistant,2,JOB038,Bakery Assistant,0.8019
+PWD0398,Bakery Assistant,3,JOB058,Bakery Assistant,0.8019
+PWD0398,Bakery Assistant,4,JOB078,Bakery Assistant,0.8019
+PWD0398,Bakery Assistant,5,JOB098,Bakery Assistant,0.8019
+PWD0399,Research Assistant,1,JOB019,Research Assistant,0.7397
+PWD0399,Research Assistant,2,JOB039,Research Assistant,0.7397
+PWD0399,Research Assistant,3,JOB059,Research Assistant,0.7397
+PWD0399,Research Assistant,4,JOB079,Research Assistant,0.7397
+PWD0399,Research Assistant,5,JOB099,Research Assistant,0.7397
+PWD0400,Inventory Clerk,1,JOB020,Inventory Clerk,0.7316
+PWD0400,Inventory Clerk,2,JOB040,Inventory Clerk,0.7316
+PWD0400,Inventory Clerk,3,JOB060,Inventory Clerk,0.7316
+PWD0400,Inventory Clerk,4,JOB080,Inventory Clerk,0.7316
+PWD0400,Inventory Clerk,5,JOB100,Inventory Clerk,0.7316
+PWD0401,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.704
+PWD0401,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.704
+PWD0401,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.704
+PWD0401,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.704
+PWD0401,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.704
+PWD0402,Customer Service Representative,1,JOB002,Customer Service Representative,0.7454
+PWD0402,Customer Service Representative,2,JOB022,Customer Service Representative,0.7454
+PWD0402,Customer Service Representative,3,JOB062,Customer Service Representative,0.7454
+PWD0402,Customer Service Representative,4,JOB042,Customer Service Representative,0.7454
+PWD0402,Customer Service Representative,5,JOB082,Customer Service Representative,0.7454
+PWD0403,Graphic Designer,1,JOB003,Graphic Designer,0.6899
+PWD0403,Graphic Designer,2,JOB023,Graphic Designer,0.6899
+PWD0403,Graphic Designer,3,JOB063,Graphic Designer,0.6899
+PWD0403,Graphic Designer,4,JOB043,Graphic Designer,0.6899
+PWD0403,Graphic Designer,5,JOB083,Graphic Designer,0.6899
+PWD0404,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8293
+PWD0404,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8293
+PWD0404,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8293
+PWD0404,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8293
+PWD0404,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8293
+PWD0405,Junior Web Developer,1,JOB005,Junior Web Developer,0.714
+PWD0405,Junior Web Developer,2,JOB025,Junior Web Developer,0.714
+PWD0405,Junior Web Developer,3,JOB045,Junior Web Developer,0.714
+PWD0405,Junior Web Developer,4,JOB065,Junior Web Developer,0.714
+PWD0405,Junior Web Developer,5,JOB085,Junior Web Developer,0.714
+PWD0406,Accounting Assistant,1,JOB006,Accounting Assistant,0.5973
+PWD0406,Accounting Assistant,2,JOB026,Accounting Assistant,0.5973
+PWD0406,Accounting Assistant,3,JOB046,Accounting Assistant,0.5973
+PWD0406,Accounting Assistant,4,JOB066,Accounting Assistant,0.5973
+PWD0406,Accounting Assistant,5,JOB086,Accounting Assistant,0.5973
+PWD0407,Content Writer,1,JOB007,Content Writer,0.6793
+PWD0407,Content Writer,2,JOB027,Content Writer,0.6793
+PWD0407,Content Writer,3,JOB047,Content Writer,0.6793
+PWD0407,Content Writer,4,JOB067,Content Writer,0.6793
+PWD0407,Content Writer,5,JOB087,Content Writer,0.6793
+PWD0408,Social Media Assistant,1,JOB008,Social Media Assistant,0.6804
+PWD0408,Social Media Assistant,2,JOB028,Social Media Assistant,0.6804
+PWD0408,Social Media Assistant,3,JOB048,Social Media Assistant,0.6804
+PWD0408,Social Media Assistant,4,JOB068,Social Media Assistant,0.6804
+PWD0408,Social Media Assistant,5,JOB088,Social Media Assistant,0.6804
+PWD0409,Inventory Assistant,1,JOB009,Inventory Assistant,0.7613
+PWD0409,Inventory Assistant,2,JOB029,Inventory Assistant,0.7613
+PWD0409,Inventory Assistant,3,JOB049,Inventory Assistant,0.7613
+PWD0409,Inventory Assistant,4,JOB069,Inventory Assistant,0.7613
+PWD0409,Inventory Assistant,5,JOB089,Inventory Assistant,0.7613
+PWD0410,Online Tutor,1,JOB010,Online Tutor,0.6881
+PWD0410,Online Tutor,2,JOB030,Online Tutor,0.6881
+PWD0410,Online Tutor,3,JOB050,Online Tutor,0.6881
+PWD0410,Online Tutor,4,JOB070,Online Tutor,0.6881
+PWD0410,Online Tutor,5,JOB090,Online Tutor,0.6881
+PWD0411,Administrative Assistant,1,JOB011,Administrative Assistant,0.6421
+PWD0411,Administrative Assistant,2,JOB031,Administrative Assistant,0.6421
+PWD0411,Administrative Assistant,3,JOB051,Administrative Assistant,0.6421
+PWD0411,Administrative Assistant,4,JOB071,Administrative Assistant,0.6421
+PWD0411,Administrative Assistant,5,JOB091,Administrative Assistant,0.6421
+PWD0412,Sales Assistant,1,JOB012,Sales Assistant,0.7908
+PWD0412,Sales Assistant,2,JOB032,Sales Assistant,0.7908
+PWD0412,Sales Assistant,3,JOB052,Sales Assistant,0.7908
+PWD0412,Sales Assistant,4,JOB072,Sales Assistant,0.7908
+PWD0412,Sales Assistant,5,JOB092,Sales Assistant,0.7908
+PWD0413,Photo Editor,1,JOB013,Photo Editor,0.6846
+PWD0413,Photo Editor,2,JOB033,Photo Editor,0.6846
+PWD0413,Photo Editor,3,JOB053,Photo Editor,0.6846
+PWD0413,Photo Editor,4,JOB073,Photo Editor,0.6846
+PWD0413,Photo Editor,5,JOB093,Photo Editor,0.6846
+PWD0414,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6149
+PWD0414,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6149
+PWD0414,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6149
+PWD0414,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6149
+PWD0414,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6149
+PWD0415,Office Assistant,1,JOB015,Office Assistant,0.6983
+PWD0415,Office Assistant,2,JOB035,Office Assistant,0.6983
+PWD0415,Office Assistant,3,JOB055,Office Assistant,0.6983
+PWD0415,Office Assistant,4,JOB075,Office Assistant,0.6983
+PWD0415,Office Assistant,5,JOB095,Office Assistant,0.6983
+PWD0416,Junior Programmer,1,JOB016,Junior Programmer,0.7235
+PWD0416,Junior Programmer,2,JOB036,Junior Programmer,0.7235
+PWD0416,Junior Programmer,3,JOB056,Junior Programmer,0.7235
+PWD0416,Junior Programmer,4,JOB076,Junior Programmer,0.7235
+PWD0416,Junior Programmer,5,JOB096,Junior Programmer,0.7235
+PWD0417,Customer Support Agent,1,JOB017,Customer Support Agent,0.6672
+PWD0417,Customer Support Agent,2,JOB037,Customer Support Agent,0.6672
+PWD0417,Customer Support Agent,3,JOB057,Customer Support Agent,0.6672
+PWD0417,Customer Support Agent,4,JOB077,Customer Support Agent,0.6672
+PWD0417,Customer Support Agent,5,JOB097,Customer Support Agent,0.6672
+PWD0418,Bakery Assistant,1,JOB018,Bakery Assistant,0.8023
+PWD0418,Bakery Assistant,2,JOB038,Bakery Assistant,0.8023
+PWD0418,Bakery Assistant,3,JOB058,Bakery Assistant,0.8023
+PWD0418,Bakery Assistant,4,JOB078,Bakery Assistant,0.8023
+PWD0418,Bakery Assistant,5,JOB098,Bakery Assistant,0.8023
+PWD0419,Research Assistant,1,JOB019,Research Assistant,0.7247
+PWD0419,Research Assistant,2,JOB039,Research Assistant,0.7247
+PWD0419,Research Assistant,3,JOB059,Research Assistant,0.7247
+PWD0419,Research Assistant,4,JOB079,Research Assistant,0.7247
+PWD0419,Research Assistant,5,JOB099,Research Assistant,0.7247
+PWD0420,Inventory Clerk,1,JOB020,Inventory Clerk,0.7392
+PWD0420,Inventory Clerk,2,JOB040,Inventory Clerk,0.7392
+PWD0420,Inventory Clerk,3,JOB060,Inventory Clerk,0.7392
+PWD0420,Inventory Clerk,4,JOB080,Inventory Clerk,0.7392
+PWD0420,Inventory Clerk,5,JOB100,Inventory Clerk,0.7392
+PWD0421,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0421,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0421,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0421,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0421,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0422,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0422,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0422,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0422,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0422,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0423,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0423,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0423,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0423,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0423,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0424,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0424,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0424,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0424,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0424,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0425,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0425,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0425,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0425,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0425,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0426,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0426,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0426,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0426,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0426,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0427,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0427,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0427,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0427,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0427,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0428,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0428,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0428,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0428,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0428,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0429,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0429,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0429,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0429,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0429,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0430,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0430,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0430,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0430,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0430,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0431,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0431,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0431,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0431,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0431,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0432,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0432,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0432,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0432,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0432,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0433,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0433,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0433,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0433,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0433,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0434,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0434,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0434,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0434,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0434,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0435,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0435,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0435,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0435,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0435,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0436,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0436,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0436,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0436,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0436,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0437,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0437,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0437,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0437,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0437,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0438,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0438,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0438,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0438,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0438,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0439,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0439,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0439,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0439,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0439,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0440,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0440,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0440,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0440,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0440,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094
+PWD0441,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.7012
+PWD0441,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.7012
+PWD0441,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.7012
+PWD0441,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.7012
+PWD0441,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.7012
+PWD0442,Customer Service Representative,1,JOB002,Customer Service Representative,0.7791
+PWD0442,Customer Service Representative,2,JOB022,Customer Service Representative,0.7791
+PWD0442,Customer Service Representative,3,JOB062,Customer Service Representative,0.7791
+PWD0442,Customer Service Representative,4,JOB042,Customer Service Representative,0.7791
+PWD0442,Customer Service Representative,5,JOB082,Customer Service Representative,0.7791
+PWD0443,Graphic Designer,1,JOB003,Graphic Designer,0.706
+PWD0443,Graphic Designer,2,JOB023,Graphic Designer,0.706
+PWD0443,Graphic Designer,3,JOB063,Graphic Designer,0.706
+PWD0443,Graphic Designer,4,JOB043,Graphic Designer,0.706
+PWD0443,Graphic Designer,5,JOB083,Graphic Designer,0.706
+PWD0444,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8087
+PWD0444,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8087
+PWD0444,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8087
+PWD0444,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8087
+PWD0444,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8087
+PWD0445,Junior Web Developer,1,JOB005,Junior Web Developer,0.7103
+PWD0445,Junior Web Developer,2,JOB025,Junior Web Developer,0.7103
+PWD0445,Junior Web Developer,3,JOB045,Junior Web Developer,0.7103
+PWD0445,Junior Web Developer,4,JOB065,Junior Web Developer,0.7103
+PWD0445,Junior Web Developer,5,JOB085,Junior Web Developer,0.7103
+PWD0446,Accounting Assistant,1,JOB006,Accounting Assistant,0.6183
+PWD0446,Accounting Assistant,2,JOB026,Accounting Assistant,0.6183
+PWD0446,Accounting Assistant,3,JOB046,Accounting Assistant,0.6183
+PWD0446,Accounting Assistant,4,JOB066,Accounting Assistant,0.6183
+PWD0446,Accounting Assistant,5,JOB086,Accounting Assistant,0.6183
+PWD0447,Content Writer,1,JOB007,Content Writer,0.6688
+PWD0447,Content Writer,2,JOB027,Content Writer,0.6688
+PWD0447,Content Writer,3,JOB047,Content Writer,0.6688
+PWD0447,Content Writer,4,JOB067,Content Writer,0.6688
+PWD0447,Content Writer,5,JOB087,Content Writer,0.6688
+PWD0448,Social Media Assistant,1,JOB008,Social Media Assistant,0.6822
+PWD0448,Social Media Assistant,2,JOB028,Social Media Assistant,0.6822
+PWD0448,Social Media Assistant,3,JOB048,Social Media Assistant,0.6822
+PWD0448,Social Media Assistant,4,JOB068,Social Media Assistant,0.6822
+PWD0448,Social Media Assistant,5,JOB088,Social Media Assistant,0.6822
+PWD0449,Inventory Assistant,1,JOB009,Inventory Assistant,0.75
+PWD0449,Inventory Assistant,2,JOB029,Inventory Assistant,0.75
+PWD0449,Inventory Assistant,3,JOB049,Inventory Assistant,0.75
+PWD0449,Inventory Assistant,4,JOB069,Inventory Assistant,0.75
+PWD0449,Inventory Assistant,5,JOB089,Inventory Assistant,0.75
+PWD0450,Online Tutor,1,JOB010,Online Tutor,0.6922
+PWD0450,Online Tutor,2,JOB030,Online Tutor,0.6922
+PWD0450,Online Tutor,3,JOB050,Online Tutor,0.6922
+PWD0450,Online Tutor,4,JOB070,Online Tutor,0.6922
+PWD0450,Online Tutor,5,JOB090,Online Tutor,0.6922
+PWD0451,Administrative Assistant,1,JOB011,Administrative Assistant,0.642
+PWD0451,Administrative Assistant,2,JOB031,Administrative Assistant,0.642
+PWD0451,Administrative Assistant,3,JOB051,Administrative Assistant,0.642
+PWD0451,Administrative Assistant,4,JOB071,Administrative Assistant,0.642
+PWD0451,Administrative Assistant,5,JOB091,Administrative Assistant,0.642
+PWD0452,Sales Assistant,1,JOB012,Sales Assistant,0.7618
+PWD0452,Sales Assistant,2,JOB032,Sales Assistant,0.7618
+PWD0452,Sales Assistant,3,JOB052,Sales Assistant,0.7618
+PWD0452,Sales Assistant,4,JOB072,Sales Assistant,0.7618
+PWD0452,Sales Assistant,5,JOB092,Sales Assistant,0.7618
+PWD0453,Photo Editor,1,JOB013,Photo Editor,0.6993
+PWD0453,Photo Editor,2,JOB033,Photo Editor,0.6993
+PWD0453,Photo Editor,3,JOB053,Photo Editor,0.6993
+PWD0453,Photo Editor,4,JOB073,Photo Editor,0.6993
+PWD0453,Photo Editor,5,JOB093,Photo Editor,0.6993
+PWD0454,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6412
+PWD0454,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6412
+PWD0454,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6412
+PWD0454,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6412
+PWD0454,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6412
+PWD0455,Office Assistant,1,JOB015,Office Assistant,0.701
+PWD0455,Office Assistant,2,JOB035,Office Assistant,0.701
+PWD0455,Office Assistant,3,JOB055,Office Assistant,0.701
+PWD0455,Office Assistant,4,JOB075,Office Assistant,0.701
+PWD0455,Office Assistant,5,JOB095,Office Assistant,0.701
+PWD0456,Junior Programmer,1,JOB016,Junior Programmer,0.699
+PWD0456,Junior Programmer,2,JOB036,Junior Programmer,0.699
+PWD0456,Junior Programmer,3,JOB056,Junior Programmer,0.699
+PWD0456,Junior Programmer,4,JOB076,Junior Programmer,0.699
+PWD0456,Junior Programmer,5,JOB096,Junior Programmer,0.699
+PWD0457,Customer Support Agent,1,JOB017,Customer Support Agent,0.6784
+PWD0457,Customer Support Agent,2,JOB037,Customer Support Agent,0.6784
+PWD0457,Customer Support Agent,3,JOB057,Customer Support Agent,0.6784
+PWD0457,Customer Support Agent,4,JOB077,Customer Support Agent,0.6784
+PWD0457,Customer Support Agent,5,JOB097,Customer Support Agent,0.6784
+PWD0458,Bakery Assistant,1,JOB018,Bakery Assistant,0.8019
+PWD0458,Bakery Assistant,2,JOB038,Bakery Assistant,0.8019
+PWD0458,Bakery Assistant,3,JOB058,Bakery Assistant,0.8019
+PWD0458,Bakery Assistant,4,JOB078,Bakery Assistant,0.8019
+PWD0458,Bakery Assistant,5,JOB098,Bakery Assistant,0.8019
+PWD0459,Research Assistant,1,JOB019,Research Assistant,0.7397
+PWD0459,Research Assistant,2,JOB039,Research Assistant,0.7397
+PWD0459,Research Assistant,3,JOB059,Research Assistant,0.7397
+PWD0459,Research Assistant,4,JOB079,Research Assistant,0.7397
+PWD0459,Research Assistant,5,JOB099,Research Assistant,0.7397
+PWD0460,Inventory Clerk,1,JOB020,Inventory Clerk,0.7316
+PWD0460,Inventory Clerk,2,JOB040,Inventory Clerk,0.7316
+PWD0460,Inventory Clerk,3,JOB060,Inventory Clerk,0.7316
+PWD0460,Inventory Clerk,4,JOB080,Inventory Clerk,0.7316
+PWD0460,Inventory Clerk,5,JOB100,Inventory Clerk,0.7316
+PWD0461,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.704
+PWD0461,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.704
+PWD0461,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.704
+PWD0461,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.704
+PWD0461,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.704
+PWD0462,Customer Service Representative,1,JOB002,Customer Service Representative,0.7454
+PWD0462,Customer Service Representative,2,JOB022,Customer Service Representative,0.7454
+PWD0462,Customer Service Representative,3,JOB062,Customer Service Representative,0.7454
+PWD0462,Customer Service Representative,4,JOB042,Customer Service Representative,0.7454
+PWD0462,Customer Service Representative,5,JOB082,Customer Service Representative,0.7454
+PWD0463,Graphic Designer,1,JOB003,Graphic Designer,0.6899
+PWD0463,Graphic Designer,2,JOB023,Graphic Designer,0.6899
+PWD0463,Graphic Designer,3,JOB063,Graphic Designer,0.6899
+PWD0463,Graphic Designer,4,JOB043,Graphic Designer,0.6899
+PWD0463,Graphic Designer,5,JOB083,Graphic Designer,0.6899
+PWD0464,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8293
+PWD0464,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8293
+PWD0464,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8293
+PWD0464,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8293
+PWD0464,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8293
+PWD0465,Junior Web Developer,1,JOB005,Junior Web Developer,0.714
+PWD0465,Junior Web Developer,2,JOB025,Junior Web Developer,0.714
+PWD0465,Junior Web Developer,3,JOB045,Junior Web Developer,0.714
+PWD0465,Junior Web Developer,4,JOB065,Junior Web Developer,0.714
+PWD0465,Junior Web Developer,5,JOB085,Junior Web Developer,0.714
+PWD0466,Accounting Assistant,1,JOB006,Accounting Assistant,0.5973
+PWD0466,Accounting Assistant,2,JOB026,Accounting Assistant,0.5973
+PWD0466,Accounting Assistant,3,JOB046,Accounting Assistant,0.5973
+PWD0466,Accounting Assistant,4,JOB066,Accounting Assistant,0.5973
+PWD0466,Accounting Assistant,5,JOB086,Accounting Assistant,0.5973
+PWD0467,Content Writer,1,JOB007,Content Writer,0.6793
+PWD0467,Content Writer,2,JOB027,Content Writer,0.6793
+PWD0467,Content Writer,3,JOB047,Content Writer,0.6793
+PWD0467,Content Writer,4,JOB067,Content Writer,0.6793
+PWD0467,Content Writer,5,JOB087,Content Writer,0.6793
+PWD0468,Social Media Assistant,1,JOB008,Social Media Assistant,0.6804
+PWD0468,Social Media Assistant,2,JOB028,Social Media Assistant,0.6804
+PWD0468,Social Media Assistant,3,JOB048,Social Media Assistant,0.6804
+PWD0468,Social Media Assistant,4,JOB068,Social Media Assistant,0.6804
+PWD0468,Social Media Assistant,5,JOB088,Social Media Assistant,0.6804
+PWD0469,Inventory Assistant,1,JOB009,Inventory Assistant,0.7613
+PWD0469,Inventory Assistant,2,JOB029,Inventory Assistant,0.7613
+PWD0469,Inventory Assistant,3,JOB049,Inventory Assistant,0.7613
+PWD0469,Inventory Assistant,4,JOB069,Inventory Assistant,0.7613
+PWD0469,Inventory Assistant,5,JOB089,Inventory Assistant,0.7613
+PWD0470,Online Tutor,1,JOB010,Online Tutor,0.6881
+PWD0470,Online Tutor,2,JOB030,Online Tutor,0.6881
+PWD0470,Online Tutor,3,JOB050,Online Tutor,0.6881
+PWD0470,Online Tutor,4,JOB070,Online Tutor,0.6881
+PWD0470,Online Tutor,5,JOB090,Online Tutor,0.6881
+PWD0471,Administrative Assistant,1,JOB011,Administrative Assistant,0.6421
+PWD0471,Administrative Assistant,2,JOB031,Administrative Assistant,0.6421
+PWD0471,Administrative Assistant,3,JOB051,Administrative Assistant,0.6421
+PWD0471,Administrative Assistant,4,JOB071,Administrative Assistant,0.6421
+PWD0471,Administrative Assistant,5,JOB091,Administrative Assistant,0.6421
+PWD0472,Sales Assistant,1,JOB012,Sales Assistant,0.7908
+PWD0472,Sales Assistant,2,JOB032,Sales Assistant,0.7908
+PWD0472,Sales Assistant,3,JOB052,Sales Assistant,0.7908
+PWD0472,Sales Assistant,4,JOB072,Sales Assistant,0.7908
+PWD0472,Sales Assistant,5,JOB092,Sales Assistant,0.7908
+PWD0473,Photo Editor,1,JOB013,Photo Editor,0.6846
+PWD0473,Photo Editor,2,JOB033,Photo Editor,0.6846
+PWD0473,Photo Editor,3,JOB053,Photo Editor,0.6846
+PWD0473,Photo Editor,4,JOB073,Photo Editor,0.6846
+PWD0473,Photo Editor,5,JOB093,Photo Editor,0.6846
+PWD0474,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6149
+PWD0474,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6149
+PWD0474,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6149
+PWD0474,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6149
+PWD0474,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6149
+PWD0475,Office Assistant,1,JOB015,Office Assistant,0.6983
+PWD0475,Office Assistant,2,JOB035,Office Assistant,0.6983
+PWD0475,Office Assistant,3,JOB055,Office Assistant,0.6983
+PWD0475,Office Assistant,4,JOB075,Office Assistant,0.6983
+PWD0475,Office Assistant,5,JOB095,Office Assistant,0.6983
+PWD0476,Junior Programmer,1,JOB016,Junior Programmer,0.7235
+PWD0476,Junior Programmer,2,JOB036,Junior Programmer,0.7235
+PWD0476,Junior Programmer,3,JOB056,Junior Programmer,0.7235
+PWD0476,Junior Programmer,4,JOB076,Junior Programmer,0.7235
+PWD0476,Junior Programmer,5,JOB096,Junior Programmer,0.7235
+PWD0477,Customer Support Agent,1,JOB017,Customer Support Agent,0.6672
+PWD0477,Customer Support Agent,2,JOB037,Customer Support Agent,0.6672
+PWD0477,Customer Support Agent,3,JOB057,Customer Support Agent,0.6672
+PWD0477,Customer Support Agent,4,JOB077,Customer Support Agent,0.6672
+PWD0477,Customer Support Agent,5,JOB097,Customer Support Agent,0.6672
+PWD0478,Bakery Assistant,1,JOB018,Bakery Assistant,0.8023
+PWD0478,Bakery Assistant,2,JOB038,Bakery Assistant,0.8023
+PWD0478,Bakery Assistant,3,JOB058,Bakery Assistant,0.8023
+PWD0478,Bakery Assistant,4,JOB078,Bakery Assistant,0.8023
+PWD0478,Bakery Assistant,5,JOB098,Bakery Assistant,0.8023
+PWD0479,Research Assistant,1,JOB019,Research Assistant,0.7247
+PWD0479,Research Assistant,2,JOB039,Research Assistant,0.7247
+PWD0479,Research Assistant,3,JOB059,Research Assistant,0.7247
+PWD0479,Research Assistant,4,JOB079,Research Assistant,0.7247
+PWD0479,Research Assistant,5,JOB099,Research Assistant,0.7247
+PWD0480,Inventory Clerk,1,JOB020,Inventory Clerk,0.7392
+PWD0480,Inventory Clerk,2,JOB040,Inventory Clerk,0.7392
+PWD0480,Inventory Clerk,3,JOB060,Inventory Clerk,0.7392
+PWD0480,Inventory Clerk,4,JOB080,Inventory Clerk,0.7392
+PWD0480,Inventory Clerk,5,JOB100,Inventory Clerk,0.7392
+PWD0481,Data Entry Clerk,1,JOB001,Data Entry Clerk,0.6811
+PWD0481,Data Entry Clerk,2,JOB021,Data Entry Clerk,0.6811
+PWD0481,Data Entry Clerk,3,JOB061,Data Entry Clerk,0.6811
+PWD0481,Data Entry Clerk,4,JOB041,Data Entry Clerk,0.6811
+PWD0481,Data Entry Clerk,5,JOB081,Data Entry Clerk,0.6811
+PWD0482,Customer Service Representative,1,JOB002,Customer Service Representative,0.7809
+PWD0482,Customer Service Representative,2,JOB022,Customer Service Representative,0.7809
+PWD0482,Customer Service Representative,3,JOB062,Customer Service Representative,0.7809
+PWD0482,Customer Service Representative,4,JOB042,Customer Service Representative,0.7809
+PWD0482,Customer Service Representative,5,JOB082,Customer Service Representative,0.7809
+PWD0483,Graphic Designer,1,JOB003,Graphic Designer,0.69
+PWD0483,Graphic Designer,2,JOB023,Graphic Designer,0.69
+PWD0483,Graphic Designer,3,JOB063,Graphic Designer,0.69
+PWD0483,Graphic Designer,4,JOB043,Graphic Designer,0.69
+PWD0483,Graphic Designer,5,JOB083,Graphic Designer,0.69
+PWD0484,Kitchen Assistant,1,JOB004,Kitchen Assistant,0.8319
+PWD0484,Kitchen Assistant,2,JOB024,Kitchen Assistant,0.8319
+PWD0484,Kitchen Assistant,3,JOB064,Kitchen Assistant,0.8319
+PWD0484,Kitchen Assistant,4,JOB044,Kitchen Assistant,0.8319
+PWD0484,Kitchen Assistant,5,JOB084,Kitchen Assistant,0.8319
+PWD0485,Junior Web Developer,1,JOB005,Junior Web Developer,0.6943
+PWD0485,Junior Web Developer,2,JOB025,Junior Web Developer,0.6943
+PWD0485,Junior Web Developer,3,JOB045,Junior Web Developer,0.6943
+PWD0485,Junior Web Developer,4,JOB065,Junior Web Developer,0.6943
+PWD0485,Junior Web Developer,5,JOB085,Junior Web Developer,0.6943
+PWD0486,Accounting Assistant,1,JOB006,Accounting Assistant,0.6127
+PWD0486,Accounting Assistant,2,JOB026,Accounting Assistant,0.6127
+PWD0486,Accounting Assistant,3,JOB046,Accounting Assistant,0.6127
+PWD0486,Accounting Assistant,4,JOB066,Accounting Assistant,0.6127
+PWD0486,Accounting Assistant,5,JOB086,Accounting Assistant,0.6127
+PWD0487,Content Writer,1,JOB007,Content Writer,0.6835
+PWD0487,Content Writer,2,JOB027,Content Writer,0.6835
+PWD0487,Content Writer,3,JOB047,Content Writer,0.6835
+PWD0487,Content Writer,4,JOB067,Content Writer,0.6835
+PWD0487,Content Writer,5,JOB087,Content Writer,0.6835
+PWD0488,Social Media Assistant,1,JOB008,Social Media Assistant,0.6963
+PWD0488,Social Media Assistant,2,JOB028,Social Media Assistant,0.6963
+PWD0488,Social Media Assistant,3,JOB048,Social Media Assistant,0.6963
+PWD0488,Social Media Assistant,4,JOB068,Social Media Assistant,0.6963
+PWD0488,Social Media Assistant,5,JOB088,Social Media Assistant,0.6963
+PWD0489,Inventory Assistant,1,JOB009,Inventory Assistant,0.7486
+PWD0489,Inventory Assistant,2,JOB029,Inventory Assistant,0.7486
+PWD0489,Inventory Assistant,3,JOB049,Inventory Assistant,0.7486
+PWD0489,Inventory Assistant,4,JOB069,Inventory Assistant,0.7486
+PWD0489,Inventory Assistant,5,JOB089,Inventory Assistant,0.7486
+PWD0490,Online Tutor,1,JOB010,Online Tutor,0.6864
+PWD0490,Online Tutor,2,JOB030,Online Tutor,0.6864
+PWD0490,Online Tutor,3,JOB050,Online Tutor,0.6864
+PWD0490,Online Tutor,4,JOB070,Online Tutor,0.6864
+PWD0490,Online Tutor,5,JOB090,Online Tutor,0.6864
+PWD0491,Administrative Assistant,1,JOB011,Administrative Assistant,0.6358
+PWD0491,Administrative Assistant,2,JOB031,Administrative Assistant,0.6358
+PWD0491,Administrative Assistant,3,JOB051,Administrative Assistant,0.6358
+PWD0491,Administrative Assistant,4,JOB071,Administrative Assistant,0.6358
+PWD0491,Administrative Assistant,5,JOB091,Administrative Assistant,0.6358
+PWD0492,Sales Assistant,1,JOB012,Sales Assistant,0.7771
+PWD0492,Sales Assistant,2,JOB032,Sales Assistant,0.7771
+PWD0492,Sales Assistant,3,JOB052,Sales Assistant,0.7771
+PWD0492,Sales Assistant,4,JOB072,Sales Assistant,0.7771
+PWD0492,Sales Assistant,5,JOB092,Sales Assistant,0.7771
+PWD0493,Photo Editor,1,JOB013,Photo Editor,0.6804
+PWD0493,Photo Editor,2,JOB033,Photo Editor,0.6804
+PWD0493,Photo Editor,3,JOB053,Photo Editor,0.6804
+PWD0493,Photo Editor,4,JOB073,Photo Editor,0.6804
+PWD0493,Photo Editor,5,JOB093,Photo Editor,0.6804
+PWD0494,Bookkeeping Assistant,1,JOB014,Bookkeeping Assistant,0.6413
+PWD0494,Bookkeeping Assistant,2,JOB034,Bookkeeping Assistant,0.6413
+PWD0494,Bookkeeping Assistant,3,JOB054,Bookkeeping Assistant,0.6413
+PWD0494,Bookkeeping Assistant,4,JOB074,Bookkeeping Assistant,0.6413
+PWD0494,Bookkeeping Assistant,5,JOB094,Bookkeeping Assistant,0.6413
+PWD0495,Office Assistant,1,JOB015,Office Assistant,0.6997
+PWD0495,Office Assistant,2,JOB035,Office Assistant,0.6997
+PWD0495,Office Assistant,3,JOB055,Office Assistant,0.6997
+PWD0495,Office Assistant,4,JOB075,Office Assistant,0.6997
+PWD0495,Office Assistant,5,JOB095,Office Assistant,0.6997
+PWD0496,Junior Programmer,1,JOB016,Junior Programmer,0.7067
+PWD0496,Junior Programmer,2,JOB036,Junior Programmer,0.7067
+PWD0496,Junior Programmer,3,JOB056,Junior Programmer,0.7067
+PWD0496,Junior Programmer,4,JOB076,Junior Programmer,0.7067
+PWD0496,Junior Programmer,5,JOB096,Junior Programmer,0.7067
+PWD0497,Customer Support Agent,1,JOB017,Customer Support Agent,0.6845
+PWD0497,Customer Support Agent,2,JOB037,Customer Support Agent,0.6845
+PWD0497,Customer Support Agent,3,JOB057,Customer Support Agent,0.6845
+PWD0497,Customer Support Agent,4,JOB077,Customer Support Agent,0.6845
+PWD0497,Customer Support Agent,5,JOB097,Customer Support Agent,0.6845
+PWD0498,Bakery Assistant,1,JOB018,Bakery Assistant,0.7903
+PWD0498,Bakery Assistant,2,JOB038,Bakery Assistant,0.7903
+PWD0498,Bakery Assistant,3,JOB058,Bakery Assistant,0.7903
+PWD0498,Bakery Assistant,4,JOB078,Bakery Assistant,0.7903
+PWD0498,Bakery Assistant,5,JOB098,Bakery Assistant,0.7903
+PWD0499,Research Assistant,1,JOB019,Research Assistant,0.7376
+PWD0499,Research Assistant,2,JOB039,Research Assistant,0.7376
+PWD0499,Research Assistant,3,JOB059,Research Assistant,0.7376
+PWD0499,Research Assistant,4,JOB079,Research Assistant,0.7376
+PWD0499,Research Assistant,5,JOB099,Research Assistant,0.7376
+PWD0500,Inventory Clerk,1,JOB020,Inventory Clerk,0.7094
+PWD0500,Inventory Clerk,2,JOB040,Inventory Clerk,0.7094
+PWD0500,Inventory Clerk,3,JOB060,Inventory Clerk,0.7094
+PWD0500,Inventory Clerk,4,JOB080,Inventory Clerk,0.7094
+PWD0500,Inventory Clerk,5,JOB100,Inventory Clerk,0.7094

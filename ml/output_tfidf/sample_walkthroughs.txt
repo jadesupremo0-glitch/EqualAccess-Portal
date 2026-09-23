@@ -1,0 +1,54 @@
+=== PWD0001 ===
+Skills: typing, data entry, Microsoft Office, communication, graphic design
+Education: Senior High School  |  Experience: No formal experience
+Stated preferred job: Data Entry Clerk
+Top 5 recommended jobs:
+  1. Data Entry Clerk (JOB001) — similarity 0.681 <-- matches stated preference
+  2. Data Entry Clerk (JOB021) — similarity 0.681 <-- matches stated preference
+  3. Data Entry Clerk (JOB061) — similarity 0.681 <-- matches stated preference
+  4. Data Entry Clerk (JOB041) — similarity 0.681 <-- matches stated preference
+  5. Data Entry Clerk (JOB081) — similarity 0.681 <-- matches stated preference
+
+=== PWD0002 ===
+Skills: customer service, communication, computer skills, English, HTML
+Education: Senior High School  |  Experience: 6 months internship
+Stated preferred job: Customer Service Representative
+Top 5 recommended jobs:
+  1. Customer Service Representative (JOB002) — similarity 0.781 <-- matches stated preference
+  2. Customer Service Representative (JOB022) — similarity 0.781 <-- matches stated preference
+  3. Customer Service Representative (JOB062) — similarity 0.781 <-- matches stated preference
+  4. Customer Service Representative (JOB042) — similarity 0.781 <-- matches stated preference
+  5. Customer Service Representative (JOB082) — similarity 0.781 <-- matches stated preference
+
+=== PWD0003 ===
+Skills: graphic design, Canva, Photoshop, creativity, cooking
+Education: College level  |  Experience: 6 months work experience
+Stated preferred job: Graphic Designer
+Top 5 recommended jobs:
+  1. Graphic Designer (JOB003) — similarity 0.690 <-- matches stated preference
+  2. Graphic Designer (JOB023) — similarity 0.690 <-- matches stated preference
+  3. Graphic Designer (JOB063) — similarity 0.690 <-- matches stated preference
+  4. Graphic Designer (JOB043) — similarity 0.690 <-- matches stated preference
+  5. Graphic Designer (JOB083) — similarity 0.690 <-- matches stated preference
+
+=== PWD0004 ===
+Skills: cooking, food preparation, cleanliness, teamwork, Excel
+Education: BS Information Technology  |  Experience: 1 year work experience
+Stated preferred job: Kitchen Assistant
+Top 5 recommended jobs:
+  1. Kitchen Assistant (JOB004) — similarity 0.832 <-- matches stated preference
+  2. Kitchen Assistant (JOB024) — similarity 0.832 <-- matches stated preference
+  3. Kitchen Assistant (JOB064) — similarity 0.832 <-- matches stated preference
+  4. Kitchen Assistant (JOB044) — similarity 0.832 <-- matches stated preference
+  5. Kitchen Assistant (JOB084) — similarity 0.832 <-- matches stated preference
+
+=== PWD0005 ===
+Skills: HTML, CSS, JavaScript, web development, social media
+Education: BS Business Administration  |  Experience: 1 year internship
+Stated preferred job: Junior Web Developer
+Top 5 recommended jobs:
+  1. Junior Web Developer (JOB005) — similarity 0.694 <-- matches stated preference
+  2. Junior Web Developer (JOB025) — similarity 0.694 <-- matches stated preference
+  3. Junior Web Developer (JOB045) — similarity 0.694 <-- matches stated preference
+  4. Junior Web Developer (JOB065) — similarity 0.694 <-- matches stated preference
+  5. Junior Web Developer (JOB085) — similarity 0.694 <-- matches stated preference
