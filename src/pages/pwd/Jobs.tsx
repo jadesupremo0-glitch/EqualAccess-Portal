@@ -30,13 +30,7 @@ const COMPONENT_LABEL: Record<ComponentKey, string> = {
   skills: 'Skills match',
   suitability: 'Suitability & accommodations',
   education: 'Education fit',
-  location: 'Location',
-  preference: 'Work type & arrangement',
 }
-
-// Shown in the "How the score is built" breakdown. Location and work-type/arrangement still
-// count toward the match score behind the scenes — they're just not surfaced in this list.
-const VISIBLE_COMPONENTS: ComponentKey[] = ['skills', 'suitability', 'education']
 
 const formatDate = (iso: string) =>
   iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No end date'
@@ -165,7 +159,7 @@ function JobDetail({ job, rec, saved, onClose, onToggleSave }: {
             <MatchRing percent={rec.score} band={rec.band} />
             <div className="flex-1">
               <p className="font-bold text-teal-900 text-sm">{rec.score}% match — {rec.band} fit</p>
-              <p className="text-teal-800 text-xs mt-0.5">Your skills, accommodations, education, location and preferences compared with this listing.</p>
+              <p className="text-teal-800 text-xs mt-0.5">Your skills, accommodations and education compared with this listing.</p>
             </div>
           </div>
         )}
@@ -185,7 +179,7 @@ function JobDetail({ job, rec, saved, onClose, onToggleSave }: {
             <div>
               <h3 className="text-xs uppercase tracking-wide font-bold text-gray-600 mb-2">How the score is built</h3>
               <ul className="space-y-2">
-                {VISIBLE_COMPONENTS.map((k) => {
+                {(Object.keys(COMPONENT_LABEL) as ComponentKey[]).map((k) => {
                   const max = DEFAULT_WEIGHTS[k]
                   const pts = Math.round(rec.components[k] * 10) / 10
                   return (
@@ -305,7 +299,7 @@ export default function Jobs({ onNavigate }: { onNavigate: (p: string) => void }
     <div>
       <h1 className="text-2xl font-bold text-gray-900">Job Recommendations</h1>
       <p className="text-gray-600 text-sm mt-0.5">
-        Jobs matched to your skills, education, location and preferences. These are suggestions only — you can&apos;t apply here. Your disability type is never used to hide a job.
+        Jobs matched to your skills, accommodations and education. These are suggestions only — you can&apos;t apply here. Your disability type is never used to hide a job.
       </p>
     </div>
   )

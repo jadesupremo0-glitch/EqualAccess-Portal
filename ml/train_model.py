@@ -1,7 +1,9 @@
 """
 Trains a Decision Tree classifier (with a Random Forest for comparison) that
 reproduces the PWD-job recommendation engine's recommend/hide decision from its
-five weighted matching variables.
+three weighted matching variables (location and work-type/arrangement preference
+are computed by the engine but no longer scored — they only drive the Jobs page's
+location filter — so they are not training features here).
 
 Input : ml/dataset.csv          (built by `npx tsx scripts/export-ml-dataset.ts`)
 Output: ml/output/
@@ -46,19 +48,15 @@ FEATURES = [
     "skill_coverage",
     "suitability_fraction",
     "education_fraction",
-    "location_fraction",
-    "preference_fraction",
     "disability_listed",
 ]
 FEATURE_LABELS = [
     "Skill coverage",
     "Disability/accommodation suitability",
     "Education fit",
-    "Location proximity",
-    "Job-type & work-setup preference",
     "Disability type explicitly listed",
 ]
-# "label" = the weighted match score alone (>=40), i.e. the five ML features above.
+# "label" = the weighted match score alone (>=40), i.e. the ML features above.
 # "label_gated" = the engine's real recommend/hide decision, which ALSO applies a fixed
 # 40% skill-coverage cutoff (MIN_SKILL_COVERAGE) as a hard business rule on top. That
 # cutoff is a single-variable threshold, not something worth training a model to find,

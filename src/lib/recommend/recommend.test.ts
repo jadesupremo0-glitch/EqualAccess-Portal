@@ -54,17 +54,16 @@ const maria = user({
 })
 
 describe('weights', () => {
-  it('default weights are 35 / 25 / 15 / 15 / 10 and add up to 100', () => {
-    expect(DEFAULT_WEIGHTS).toEqual({ skills: 35, suitability: 25, education: 15, location: 15, preference: 10 })
+  it('default weights are 47 / 33 / 20 and add up to 100', () => {
+    expect(DEFAULT_WEIGHTS).toEqual({ skills: 47, suitability: 33, education: 20 })
     expect(Object.values(DEFAULT_WEIGHTS).reduce((a, b) => a + b, 0)).toBe(100)
   })
 
   it('scores stay within 0–100 and the perfect case reaches 100', () => {
     const perfect = scoreJob(
-      user({ ...maria, barangay: 'Brgy. Malinta', disabilityType: 'Visual Disability' }),
+      user({ ...maria, disabilityType: 'Visual Disability' }),
       job({
         skills: ['Data Entry'],
-        location: 'Brgy. Malinta',
         suitableDisabilities: ['Visual Disability'],
         accommodations: ['Screen-reader-compatible tools'],
         minEducation: 'Vocational',
@@ -74,13 +73,13 @@ describe('weights', () => {
   })
 
   it('can be reweighted', () => {
-    const skillsOnly = { skills: 100, suitability: 0, education: 0, location: 0, preference: 0 }
+    const skillsOnly = { skills: 100, suitability: 0, education: 0 }
     const rec = scoreJob(maria, job({ skills: ['Data Entry', 'Welding'] }), skillsOnly)!
     expect(rec.score).toBe(50)
   })
 })
 
-describe('skills match (35)', () => {
+describe('skills match (47)', () => {
   it('is synonym-aware and reports matched vs missing skills', () => {
     const rec = scoreJob(
       user({ skills: ['MS Office', 'Data Encoding'] }),
@@ -88,11 +87,11 @@ describe('skills match (35)', () => {
     )!
     expect(rec.skills.matched).toEqual(['Microsoft Office', 'Data Entry'])
     expect(rec.skills.missing).toEqual(['Welding'])
-    expect(rec.components.skills).toBeCloseTo((35 * 2) / 3, 5)
+    expect(rec.components.skills).toBeCloseTo((47 * 2) / 3, 5)
   })
 })
 
-describe('disability suitability & accommodations (25)', () => {
+describe('disability suitability & accommodations (33)', () => {
   it('never hides a job because of disability type when the listing is open to all', () => {
     for (const disabilityType of ['Physical Disability', 'Visual Disability', 'Deaf or Hard of Hearing', 'Rare Disease (RA 10747)', 'Speech & Language Impairment'] as const) {
       const rec = scoreJob(user({ disabilityType, skills: ['Data Entry'] }), job())
@@ -142,14 +141,14 @@ describe('disability suitability & accommodations (25)', () => {
   })
 })
 
-describe('education fit (15)', () => {
+describe('education fit (20)', () => {
   it('meets or exceeds the minimum → full marks; each level below costs points but never excludes', () => {
     const j = job({ minEducation: 'College Graduate' })
     const grad = scoreJob(user({ educationLevel: 'College Graduate' }), j)!
     const level = scoreJob(user({ educationLevel: 'College Level' }), j)!
     const hs = scoreJob(user({ educationLevel: 'High School Graduate' }), j)!
-    expect(grad.components.education).toBe(15)
-    expect(level.components.education).toBeCloseTo(9, 5)
+    expect(grad.components.education).toBe(20)
+    expect(level.components.education).toBeCloseTo(12, 5)
     expect(hs.components.education).toBeLessThan(level.components.education)
     expect(hs.components.education).toBeGreaterThan(0)
   })
@@ -160,8 +159,8 @@ describe('education fit (15)', () => {
   })
 })
 
-describe('location proximity (15)', () => {
-  it('ranks same barangay > Los Baños > elsewhere in Laguna > far / remote is a full pass', () => {
+describe('location proximity (filter only — not scored)', () => {
+  it('ranks same barangay > Los Baños > elsewhere in Laguna > far / remote is a full pass, for the location filter', () => {
     const u = user({ barangay: 'Brgy. Malinta' })
     const same = scoreJob(u, job({ location: 'Brgy. Malinta' }))!
     const town = scoreJob(u, job({ location: 'Los Baños, Laguna' }))!
@@ -169,23 +168,30 @@ describe('location proximity (15)', () => {
     const province = scoreJob(u, job({ location: 'Bay, Laguna' }))!
     const far = scoreJob(u, job({ location: 'Quezon City' }))!
     const remote = scoreJob(u, job({ location: 'Quezon City', workArrangement: 'Remote' }))!
-    expect(same.components.location).toBe(15)
-    expect(same.components.location).toBeGreaterThan(town.components.location)
-    expect(town.components.location).toBe(otherBrgy.components.location)
-    expect(town.components.location).toBeGreaterThan(province.components.location)
-    expect(province.components.location).toBeGreaterThan(far.components.location)
-    expect(remote.components.location).toBe(15)
+    expect(same.location.level).toBe('barangay')
+    expect(same.location.fraction).toBeGreaterThan(town.location.fraction)
+    expect(town.location.level).toBe('municipality')
+    expect(town.location.fraction).toBe(otherBrgy.location.fraction)
+    expect(town.location.fraction).toBeGreaterThan(province.location.fraction)
+    expect(province.location.fraction).toBeGreaterThan(far.location.fraction)
+    expect(remote.location.level).toBe('remote')
+  })
+
+  it('never affects the match score, since it only drives the location filter', () => {
+    const u = user({ barangay: 'Brgy. Malinta' })
+    const near = scoreJob(u, job({ location: 'Brgy. Malinta' }))!
+    const far = scoreJob(u, job({ location: 'Quezon City' }))!
+    expect(near.score).toBe(far.score)
   })
 })
 
-describe('work arrangement / employment type preference (10)', () => {
-  it('rewards matching preferences, is neutral when none are stated, and zero on a mismatch', () => {
+describe('work arrangement / employment type preference (removed — not scored)', () => {
+  it('preferredJobTypes and preferredWorkSetup never affect the score', () => {
     const match = scoreJob(user({ preferredJobTypes: ['Full-time'], preferredWorkSetup: ['On-site'] }), job())!
     const neutral = scoreJob(user(), job())!
     const mismatch = scoreJob(user({ preferredJobTypes: ['Freelance'], preferredWorkSetup: ['Remote'] }), job())!
-    expect(match.components.preference).toBe(10)
-    expect(neutral.components.preference).toBe(5)
-    expect(mismatch.components.preference).toBe(0)
+    expect(match.score).toBe(neutral.score)
+    expect(neutral.score).toBe(mismatch.score)
   })
 })
 

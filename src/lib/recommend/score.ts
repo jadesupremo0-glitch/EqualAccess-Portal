@@ -14,13 +14,16 @@ import {
 } from './types'
 import type { PWDUser, Job } from '../../data'
 
-/** Points per component (sum = 100). Change here to reweight the whole engine. */
+/**
+ * Points per component (sum = 100). Change here to reweight the whole engine.
+ * Location and work-type/arrangement preference are not scored — they only drive the location
+ * filter on the Jobs page (see LocationFit / matchesLocation) — so their former 15 + 10 points are
+ * folded proportionally into the three components below (35/25/15 scaled up to 47/33/20).
+ */
 export const DEFAULT_WEIGHTS: MatchWeights = {
-  skills: 35,
-  suitability: 25,
-  education: 15,
-  location: 15,
-  preference: 10,
+  skills: 47,
+  suitability: 33,
+  education: 20,
 }
 
 /** Listings scoring below this are hidden from the recommended list. */
@@ -28,8 +31,8 @@ export const MIN_MATCH_SCORE = 40
 
 /**
  * A listing must be covered by at least this share of the applicant's skills (a related skill counts as
- * 0.4). Without it, the 65 points for accommodations, education, location and preferences let a job the
- * applicant can barely do outrank one they are qualified for.
+ * 0.4). Without it, the 53 points for accommodations and education let a job the applicant can barely
+ * do outrank one they are qualified for.
  */
 export const MIN_SKILL_COVERAGE = 0.4
 
@@ -55,11 +58,6 @@ export function isOpenAndCurrent(job: Job, now: Date = new Date()): boolean {
   return !job.deadline || job.deadline >= manilaDate(now)
 }
 
-function preferenceFraction(preferred: string[] | undefined, actual: string): number {
-  if (!preferred || preferred.length === 0) return 0.5 // nothing stated → neutral
-  return preferred.some((p) => norm(p) === norm(actual)) ? 1 : 0
-}
-
 const shortAccommodation: Record<string, string> = {
   'Wheelchair-accessible workplace': 'Wheelchair accessible',
   'Screen-reader-compatible tools': 'Screen-reader compatible',
@@ -76,6 +74,7 @@ export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAUL
   const skills = computeSkillsFit(user, job)
   const education = computeEducationFit(user, job)
   const accommodation = computeAccommodationFit(user, job)
+  // Not scored — only feeds the location filter on the Jobs page (rec.location.level).
   const location = computeLocationFit(user, job)
 
   const disabilityListed = (job.suitableDisabilities ?? []).some((d) => sameDisability(d, user.disabilityType))
@@ -84,15 +83,10 @@ export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAUL
     ? DISABILITY_SHARE_WITH_NEEDS * disabilityFraction + (1 - DISABILITY_SHARE_WITH_NEEDS) * accommodation.fraction
     : disabilityFraction
 
-  const typeFraction = preferenceFraction(user.preferredJobTypes, job.employmentType)
-  const arrangementFraction = preferenceFraction(user.preferredWorkSetup, job.workArrangement)
-
   const components: Record<ComponentKey, number> = {
     skills: weights.skills * skills.coverage,
     suitability: weights.suitability * suitabilityFraction,
     education: weights.education * education.fraction,
-    location: weights.location * location.fraction,
-    preference: weights.preference * ((typeFraction + arrangementFraction) / 2),
   }
   const total = Object.values(components).reduce((a, b) => a + b, 0)
   const weightSum = Object.values(weights).reduce((a, b) => a + b, 0) || 100
@@ -111,8 +105,6 @@ export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAUL
   }
   if (disabilityListed) reasons.push({ label: 'Employer welcomes your disability type', tone: 'positive' })
   if (education.status === 'Met') reasons.push({ label: 'Education requirement met', tone: 'positive' })
-  if (typeFraction === 1 && (user.preferredJobTypes?.length ?? 0) > 0) reasons.push({ label: `${job.employmentType}, as you prefer`, tone: 'positive' })
-  if (arrangementFraction === 1 && (user.preferredWorkSetup?.length ?? 0) > 0) reasons.push({ label: `${job.workArrangement}, as you prefer`, tone: 'positive' })
 
   if (skills.missing.length > 0) reasons.push({ label: `Missing: ${skills.missing.slice(0, 2).join(', ')}`, tone: 'caution' })
   if (accommodation.unmet.length > 0) reasons.push({ label: `Confirm: ${accommodation.unmet[0]}`, tone: 'caution' })

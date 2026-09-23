@@ -1,6 +1,6 @@
 import type { Job } from '../../data'
 
-export type ComponentKey = 'skills' | 'suitability' | 'education' | 'location' | 'preference'
+export type ComponentKey = 'skills' | 'suitability' | 'education'
 
 /** Points available per component. They add up to 100 by default; override to reweight. */
 export type MatchWeights = Record<ComponentKey, number>
