@@ -10,6 +10,7 @@
     "format": "oxfmt",
     "seed": "tsx scripts/seed.ts",
     "seed:recap": "tsx scripts/seed-recapitulation.ts",
+    "seed:mldataset-jobs": "tsx scripts/add-mldataset-jobs.ts",
     "test": "vitest run"
   },
   "dependencies": {

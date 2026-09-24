@@ -1,4 +1,5 @@
 import type { DisabilityType, EmploymentType, WorkArrangement, JobStatus } from './lib/catalog'
+import { mldatasetJobs } from './mldatasetJobs'
 
 export type { DisabilityType, EmploymentType, WorkArrangement, JobStatus }
 
@@ -1018,6 +1019,9 @@ export const jobs: Job[] = [
     status: 'Open',
     accessibilityInfo: 'Fully remote with flexible deadlines; instructions are given in writing.',
   },
+  // JOB-014..JOB-113: mapped from the 100-job capstone dataset (dataset/mldataset.xlsx); see
+  // scripts/map_mldataset_jobs.py + scripts/import-mldataset-jobs.ts to regenerate.
+  ...mldatasetJobs,
 ]
 
 export const adminUsers: AdminUser[] = [
