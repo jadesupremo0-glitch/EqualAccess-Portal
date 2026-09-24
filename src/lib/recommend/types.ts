@@ -1,6 +1,6 @@
 import type { Job } from '../../data'
 
-export type ComponentKey = 'skills' | 'suitability' | 'education'
+export type ComponentKey = 'skills' | 'suitability' | 'education' | 'semantic'
 
 /** Points available per component. They add up to 100 by default; override to reweight. */
 export type MatchWeights = Record<ComponentKey, number>
@@ -36,6 +36,15 @@ export interface LocationFit {
   note: string
 }
 
+/** Free-text similarity between the applicant's profile and the listing, via TF-IDF + Cosine
+ * Similarity — the same method validated in ml/train_tfidf_model.py, run live on real text. */
+export interface SemanticFit {
+  /** Cosine similarity, 0–1. */
+  similarity: number
+  /** Terms present in both documents, ranked by combined TF-IDF weight (highest first). */
+  sharedTerms: string[]
+}
+
 export interface MatchReason {
   label: string
   /** positive = a reason it matches; caution = something to check before pursuing it. */
@@ -55,6 +64,7 @@ export interface Recommendation {
   education: EducationFit
   accommodation: AccommodationFit
   location: LocationFit
+  semantic: SemanticFit
   /** True when the employer lists this PWD's disability type as suitable. */
   disabilityListed: boolean
   reasons: MatchReason[]

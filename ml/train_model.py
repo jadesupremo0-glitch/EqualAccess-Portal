@@ -1,9 +1,11 @@
 """
 Trains a Decision Tree classifier (with a Random Forest for comparison) that
 reproduces the PWD-job recommendation engine's recommend/hide decision from its
-three weighted matching variables (location and work-type/arrangement preference
-are computed by the engine but no longer scored — they only drive the Jobs page's
-location filter — so they are not training features here).
+four weighted matching variables — including semantic_similarity, the engine's
+own live TF-IDF + Cosine Similarity score (src/lib/recommend/semantic.ts), not a
+simulated stand-in. (Location and work-type/arrangement preference are computed
+by the engine but not scored — they only drive the Jobs page's location filter —
+so they are not training features here.)
 
 Input : ml/dataset.csv          (built by `npx tsx scripts/export-ml-dataset.ts`)
 Output: ml/output/
@@ -48,12 +50,14 @@ FEATURES = [
     "skill_coverage",
     "suitability_fraction",
     "education_fraction",
+    "semantic_similarity",
     "disability_listed",
 ]
 FEATURE_LABELS = [
     "Skill coverage",
     "Disability/accommodation suitability",
     "Education fit",
+    "Semantic similarity (TF-IDF + Cosine)",
     "Disability type explicitly listed",
 ]
 # "label" = the weighted match score alone (>=40), i.e. the ML features above.

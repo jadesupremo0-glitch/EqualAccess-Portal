@@ -3,6 +3,7 @@ import { computeSkillsFit } from './skill'
 import { computeEducationFit } from './education'
 import { computeAccommodationFit } from './accommodations'
 import { computeLocationFit } from './location'
+import { computeSemanticFit } from './semantic'
 import { canRecommend } from './profile'
 import {
   bandForScore,
@@ -17,13 +18,15 @@ import type { PWDUser, Job } from '../../data'
 /**
  * Points per component (sum = 100). Change here to reweight the whole engine.
  * Location and work-type/arrangement preference are not scored — they only drive the location
- * filter on the Jobs page (see LocationFit / matchesLocation) — so their former 15 + 10 points are
- * folded proportionally into the three components below (35/25/15 scaled up to 47/33/20).
+ * filter on the Jobs page (see LocationFit / matchesLocation). Their former 15 + 10 points now go to
+ * "semantic" — free-text TF-IDF + Cosine Similarity (see semantic.ts) — the same method validated
+ * offline in ml/train_tfidf_model.py, run live here on real profile/listing text.
  */
 export const DEFAULT_WEIGHTS: MatchWeights = {
-  skills: 47,
-  suitability: 33,
-  education: 20,
+  skills: 35,
+  suitability: 25,
+  education: 15,
+  semantic: 25,
 }
 
 /** Listings scoring below this are hidden from the recommended list. */
@@ -31,8 +34,8 @@ export const MIN_MATCH_SCORE = 40
 
 /**
  * A listing must be covered by at least this share of the applicant's skills (a related skill counts as
- * 0.4). Without it, the 53 points for accommodations and education let a job the applicant can barely
- * do outrank one they are qualified for.
+ * 0.4). Without it, the 65 points for suitability, education and semantic fit let a job the applicant
+ * can barely do outrank one they are qualified for.
  */
 export const MIN_SKILL_COVERAGE = 0.4
 
@@ -67,8 +70,12 @@ const shortAccommodation: Record<string, string> = {
 /**
  * Score one listing for one PWD (0–100), or return null when the employer explicitly
  * restricted the listing to other disability types.
+ *
+ * `corpusJobs` — typically every open, current candidate job in this recommendation request — gives
+ * the semantic (TF-IDF) component a richer vocabulary; getRecommendations passes it automatically.
+ * Omit it to score a single pair standalone (its TF-IDF space is then fit from just this one pair).
  */
-export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAULT_WEIGHTS): Recommendation | null {
+export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAULT_WEIGHTS, corpusJobs?: Job[]): Recommendation | null {
   if (isRestrictedAgainst(user, job)) return null
 
   const skills = computeSkillsFit(user, job)
@@ -76,6 +83,7 @@ export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAUL
   const accommodation = computeAccommodationFit(user, job)
   // Not scored — only feeds the location filter on the Jobs page (rec.location.level).
   const location = computeLocationFit(user, job)
+  const semantic = computeSemanticFit(user, job, corpusJobs)
 
   const disabilityListed = (job.suitableDisabilities ?? []).some((d) => sameDisability(d, user.disabilityType))
   const disabilityFraction = disabilityListed ? 1 : OPEN_TO_ALL_CREDIT
@@ -87,6 +95,7 @@ export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAUL
     skills: weights.skills * skills.coverage,
     suitability: weights.suitability * suitabilityFraction,
     education: weights.education * education.fraction,
+    semantic: weights.semantic * semantic.similarity,
   }
   const total = Object.values(components).reduce((a, b) => a + b, 0)
   const weightSum = Object.values(weights).reduce((a, b) => a + b, 0) || 100
@@ -105,6 +114,9 @@ export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAUL
   }
   if (disabilityListed) reasons.push({ label: 'Employer welcomes your disability type', tone: 'positive' })
   if (education.status === 'Met') reasons.push({ label: 'Education requirement met', tone: 'positive' })
+  if (semantic.similarity >= 0.3 && semantic.sharedTerms.length > 0) {
+    reasons.push({ label: `Similar background: ${semantic.sharedTerms.join(', ')}`, tone: 'positive' })
+  }
 
   if (skills.missing.length > 0) reasons.push({ label: `Missing: ${skills.missing.slice(0, 2).join(', ')}`, tone: 'caution' })
   if (accommodation.unmet.length > 0) reasons.push({ label: `Confirm: ${accommodation.unmet[0]}`, tone: 'caution' })
@@ -119,6 +131,7 @@ export function scoreJob(user: PWDUser, job: Job, weights: MatchWeights = DEFAUL
     education,
     accommodation,
     location,
+    semantic,
     disabilityListed,
     reasons,
   }
@@ -151,7 +164,9 @@ export function getRecommendations(user: PWDUser, jobs: Job[], options: Recommen
   let restricted = 0
   const scored: Recommendation[] = []
   for (const job of current) {
-    const rec = scoreJob(user, job, weights)
+    // `current` (every open, candidate job) is passed as the semantic component's TF-IDF corpus,
+    // fit once per recommendation request rather than once per job.
+    const rec = scoreJob(user, job, weights, current)
     if (rec) scored.push(rec)
     else restricted += 1
   }

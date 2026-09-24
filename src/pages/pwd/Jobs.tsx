@@ -30,6 +30,7 @@ const COMPONENT_LABEL: Record<ComponentKey, string> = {
   skills: 'Skills match',
   suitability: 'Suitability & accommodations',
   education: 'Education fit',
+  semantic: 'Overall fit (AI-matched)',
 }
 
 const formatDate = (iso: string) =>
@@ -392,6 +393,7 @@ export default function Jobs({ onNavigate }: { onNavigate: (p: string) => void }
             <li><strong>Skills match ({DEFAULT_WEIGHTS.skills}):</strong> how many of the required skills you have. Different wordings count as the same skill (for example &quot;MS Excel&quot; and &quot;Microsoft Office&quot;), and a closely related skill earns partial credit.</li>
             <li><strong>Suitability &amp; accommodations ({DEFAULT_WEIGHTS.suitability}):</strong> whether the employer offers the accommodations you asked for, with a boost when they list your disability type as suitable.</li>
             <li><strong>Education fit ({DEFAULT_WEIGHTS.education}):</strong> your highest level against the minimum.</li>
+            <li><strong>Overall fit ({DEFAULT_WEIGHTS.semantic}):</strong> how closely your skills, education and work experience match this listing's description, computed automatically from the wording of both.</li>
           </ul>
           <p>A job is left out only if the employer has restricted it to specific disability types that don&apos;t include yours.</p>
         </div>

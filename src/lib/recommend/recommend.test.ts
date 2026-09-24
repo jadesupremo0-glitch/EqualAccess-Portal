@@ -54,16 +54,20 @@ const maria = user({
 })
 
 describe('weights', () => {
-  it('default weights are 47 / 33 / 20 and add up to 100', () => {
-    expect(DEFAULT_WEIGHTS).toEqual({ skills: 47, suitability: 33, education: 20 })
+  it('default weights are 35 / 25 / 15 / 25 and add up to 100', () => {
+    expect(DEFAULT_WEIGHTS).toEqual({ skills: 35, suitability: 25, education: 15, semantic: 25 })
     expect(Object.values(DEFAULT_WEIGHTS).reduce((a, b) => a + b, 0)).toBe(100)
   })
 
   it('scores stay within 0–100 and the perfect case reaches 100', () => {
     const perfect = scoreJob(
-      user({ ...maria, disabilityType: 'Visual Disability' }),
+      // Same text on both sides (skills + education vs. title + skills, no description) makes the
+      // semantic component's cosine similarity exactly 1, alongside full skills/suitability/education.
+      user({ ...maria, disabilityType: 'Visual Disability', skills: ['Data Entry'], education: 'Data Entry', workExperience: '' }),
       job({
+        title: 'Data Entry',
         skills: ['Data Entry'],
+        description: '',
         suitableDisabilities: ['Visual Disability'],
         accommodations: ['Screen-reader-compatible tools'],
         minEducation: 'Vocational',
@@ -73,13 +77,13 @@ describe('weights', () => {
   })
 
   it('can be reweighted', () => {
-    const skillsOnly = { skills: 100, suitability: 0, education: 0 }
+    const skillsOnly = { skills: 100, suitability: 0, education: 0, semantic: 0 }
     const rec = scoreJob(maria, job({ skills: ['Data Entry', 'Welding'] }), skillsOnly)!
     expect(rec.score).toBe(50)
   })
 })
 
-describe('skills match (47)', () => {
+describe('skills match (35)', () => {
   it('is synonym-aware and reports matched vs missing skills', () => {
     const rec = scoreJob(
       user({ skills: ['MS Office', 'Data Encoding'] }),
@@ -87,11 +91,11 @@ describe('skills match (47)', () => {
     )!
     expect(rec.skills.matched).toEqual(['Microsoft Office', 'Data Entry'])
     expect(rec.skills.missing).toEqual(['Welding'])
-    expect(rec.components.skills).toBeCloseTo((47 * 2) / 3, 5)
+    expect(rec.components.skills).toBeCloseTo((35 * 2) / 3, 5)
   })
 })
 
-describe('disability suitability & accommodations (33)', () => {
+describe('disability suitability & accommodations (25)', () => {
   it('never hides a job because of disability type when the listing is open to all', () => {
     for (const disabilityType of ['Physical Disability', 'Visual Disability', 'Deaf or Hard of Hearing', 'Rare Disease (RA 10747)', 'Speech & Language Impairment'] as const) {
       const rec = scoreJob(user({ disabilityType, skills: ['Data Entry'] }), job())
@@ -141,14 +145,14 @@ describe('disability suitability & accommodations (33)', () => {
   })
 })
 
-describe('education fit (20)', () => {
+describe('education fit (15)', () => {
   it('meets or exceeds the minimum → full marks; each level below costs points but never excludes', () => {
     const j = job({ minEducation: 'College Graduate' })
     const grad = scoreJob(user({ educationLevel: 'College Graduate' }), j)!
     const level = scoreJob(user({ educationLevel: 'College Level' }), j)!
     const hs = scoreJob(user({ educationLevel: 'High School Graduate' }), j)!
-    expect(grad.components.education).toBe(20)
-    expect(level.components.education).toBeCloseTo(12, 5)
+    expect(grad.components.education).toBe(15)
+    expect(level.components.education).toBeCloseTo(9, 5)
     expect(hs.components.education).toBeLessThan(level.components.education)
     expect(hs.components.education).toBeGreaterThan(0)
   })
@@ -156,6 +160,24 @@ describe('education fit (20)', () => {
   it('infers a level from free-text education when no explicit level is set', () => {
     const rec = scoreJob(user({ education: 'Bachelor of Science in Information Technology' }), job({ minEducation: 'College Graduate' }))!
     expect(rec.education.status).toBe('Met')
+  })
+})
+
+describe('semantic fit (25)', () => {
+  it('scores free-text similarity via TF-IDF + cosine similarity, higher for a matching background', () => {
+    const dataEntryJob = job({ id: 'JOB-DE', title: 'Data Entry Clerk', skills: ['Data Entry'], description: 'Encoding documents and organizing office files.' })
+    const landscapingJob = job({ id: 'JOB-LS', title: 'Landscaping Helper', skills: ['Horticulture'], description: 'Gardening and maintaining outdoor grounds.' })
+    const applicant = user({ skills: ['Data Entry'], workExperience: 'Encoded records and organized office files' })
+    const relevant = scoreJob(applicant, dataEntryJob, DEFAULT_WEIGHTS, [dataEntryJob, landscapingJob])!
+    const unrelated = scoreJob(applicant, landscapingJob, DEFAULT_WEIGHTS, [dataEntryJob, landscapingJob])!
+    expect(relevant.components.semantic).toBeGreaterThan(unrelated.components.semantic)
+    expect(relevant.semantic.sharedTerms.length).toBeGreaterThan(0)
+  })
+
+  it('adds a "similar background" reason when the semantic similarity is strong', () => {
+    const j = job({ title: 'Data Entry Clerk', skills: ['Data Entry'], description: 'Encoding documents.' })
+    const rec = scoreJob(user({ skills: ['Data Entry'], workExperience: 'Encoding documents' }), j)!
+    expect(rec.reasons.some((r) => r.label.startsWith('Similar background:'))).toBe(true)
   })
 })
 

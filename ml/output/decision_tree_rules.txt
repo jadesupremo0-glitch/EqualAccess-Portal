@@ -1,13 +1,4 @@
-|--- Disability/accommodation suitability <= 0.62
-|   |--- Skill coverage <= 0.43
-|   |   |--- Skill coverage <= 0.09
-|   |   |   |--- class: 0
-|   |   |--- Skill coverage >  0.09
-|   |   |   |--- class: 0
-|   |--- Skill coverage >  0.43
-|   |   |--- class: 1
-|--- Disability/accommodation suitability >  0.62
-|   |--- Skill coverage <= 0.12
-|   |   |--- class: 1
-|   |--- Skill coverage >  0.12
-|   |   |--- class: 1
+|--- Skill coverage <= 0.18
+|   |--- class: 0
+|--- Skill coverage >  0.18
+|   |--- class: 1

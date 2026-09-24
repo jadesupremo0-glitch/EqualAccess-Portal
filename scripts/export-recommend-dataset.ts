@@ -103,6 +103,7 @@ async function main() {
     { k: 'Weight: Skills', v: DEFAULT_WEIGHTS.skills, d: 'Points for the share of required skills the applicant has (exact or synonym match; related skills earn 0.4 credit).' },
     { k: 'Weight: Suitability', v: DEFAULT_WEIGHTS.suitability, d: 'Points for disability-type fit + accommodation fit. Listed disability = full credit, open-to-all = 0.7 credit.' },
     { k: 'Weight: Education', v: DEFAULT_WEIGHTS.education, d: "Points for how the applicant's highest education compares to the job's minimum requirement." },
+    { k: 'Weight: Semantic (ML)', v: DEFAULT_WEIGHTS.semantic, d: 'Points from real TF-IDF + Cosine Similarity (semantic.ts) between the applicant\'s skills/education/experience text and the listing\'s title/skills/description, normalized against this applicant\'s best-matching candidate job.' },
     { k: 'Location (not scored)', v: '—', d: 'Proximity is computed but only drives the Jobs page location filter — it no longer earns or costs match-score points.' },
     { k: 'Preference (not scored)', v: '—', d: "Preferred employment type / work arrangement no longer affect the match score." },
     { k: 'Minimum match score', v: 40, d: 'Listings scoring below this are hidden from the recommended list.' },
@@ -125,14 +126,17 @@ async function main() {
     { header: 'Skills Related (partial)', key: 'skillsRelated', width: 26 },
     { header: 'Skills Missing', key: 'skillsMissing', width: 26 },
     { header: 'Skill Coverage (0-1)', key: 'skillCoverage', width: 12 },
-    { header: 'Skills Points (/47)', key: 'skillsPts', width: 12 },
+    { header: 'Skills Points (/35)', key: 'skillsPts', width: 12 },
     { header: 'Disability Listed?', key: 'disabilityListed', width: 12 },
     { header: 'Accommodations Met', key: 'accMet', width: 26 },
     { header: 'Accommodations Unmet', key: 'accUnmet', width: 26 },
-    { header: 'Suitability Points (/33)', key: 'suitabilityPts', width: 14 },
+    { header: 'Suitability Points (/25)', key: 'suitabilityPts', width: 14 },
     { header: 'Education Status', key: 'eduStatus', width: 14 },
     { header: 'Education Fraction (0-1)', key: 'eduFraction', width: 14 },
-    { header: 'Education Points (/20)', key: 'eduPts', width: 12 },
+    { header: 'Education Points (/15)', key: 'eduPts', width: 12 },
+    { header: 'Semantic Similarity (0-1, ML)', key: 'semanticSim', width: 16 },
+    { header: 'Semantic Shared Terms', key: 'semanticTerms', width: 26 },
+    { header: 'Semantic Points (/25)', key: 'semanticPts', width: 12 },
     { header: 'Location Level (filter only, not scored)', key: 'locLevel', width: 18 },
     { header: 'Location Fraction (filter only, not scored)', key: 'locFraction', width: 14 },
     { header: 'TOTAL SCORE (0-100)', key: 'score', width: 14 },
@@ -146,10 +150,13 @@ async function main() {
   const now = new Date('2026-09-22T04:00:00Z') // matches accuracy.test.ts fixture clock
 
   for (const u of pwdUsers) {
+    // Same corpus getRecommendations would pass, so the semantic component's TF-IDF space (and its
+    // within-applicant normalization) matches exactly what the live app computes for this applicant.
+    const candidateJobs = jobs.filter((j) => !isRestrictedAgainst(u, j))
     for (const j of jobs) {
       const restricted = isRestrictedAgainst(u, j)
       const openCurrent = isOpenAndCurrent(j, now)
-      const rec = canRecommend(u) && !restricted ? scoreJob(u, j, DEFAULT_WEIGHTS) : null
+      const rec = canRecommend(u) && !restricted ? scoreJob(u, j, DEFAULT_WEIGHTS, candidateJobs) : null
 
       matrixSheet.addRow({
         pwdId: u.id,
@@ -171,6 +178,9 @@ async function main() {
         eduStatus: rec ? rec.education.status : '',
         eduFraction: rec ? Number(rec.education.fraction.toFixed(3)) : '',
         eduPts: rec ? Number(rec.components.education.toFixed(2)) : '',
+        semanticSim: rec ? Number(rec.semantic.similarity.toFixed(3)) : '',
+        semanticTerms: rec ? rec.semantic.sharedTerms.join(', ') : '',
+        semanticPts: rec ? Number(rec.components.semantic.toFixed(2)) : '',
         locLevel: rec ? rec.location.level : '',
         locFraction: rec ? Number(rec.location.fraction.toFixed(3)) : '',
         score: rec ? rec.score : '',
