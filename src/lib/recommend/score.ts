@@ -171,9 +171,20 @@ export function getRecommendations(user: PWDUser, jobs: Job[], options: Recommen
     else restricted += 1
   }
 
-  const recommendations = scored
+  const ranked = scored
     .filter((r) => r.score >= minScore && hasEnoughSkills(r))
     .sort((a, b) => b.score - a.score || b.skills.coverage - a.skills.coverage || a.job.title.localeCompare(b.job.title))
+
+  // Several listings can be the same job template posted for different towns (same title +
+  // description, e.g. the mldataset import). Recommending near-identical cards adds no value, so
+  // once ranked, keep only the best-scoring copy of each distinct title + description.
+  const seenTemplates = new Set<string>()
+  const recommendations = ranked.filter((r) => {
+    const template = `${norm(r.job.title)}|${norm(r.job.description)}`
+    if (seenTemplates.has(template)) return false
+    seenTemplates.add(template)
+    return true
+  })
 
   return {
     locked: false,

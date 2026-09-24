@@ -7,7 +7,7 @@
  */
 import ExcelJS from 'exceljs'
 import { pwdUsers, jobs } from '../src/data'
-import { scoreJob, isOpenAndCurrent, isRestrictedAgainst, DEFAULT_WEIGHTS } from '../src/lib/recommend/score'
+import { scoreJob, isOpenAndCurrent, isRestrictedAgainst, getRecommendations, DEFAULT_WEIGHTS } from '../src/lib/recommend/score'
 import { canRecommend } from '../src/lib/recommend/profile'
 
 const outFile = process.argv[2] ?? 'recommendation-dataset.xlsx'
@@ -110,6 +110,7 @@ async function main() {
     { k: 'Minimum skill coverage', v: '40%', d: 'A listing must be covered by at least this share of the required skills to be shown at all.' },
     { k: 'Related-skill credit', v: '0.4', d: 'A close-but-not-identical skill (e.g. Typing vs. Data Entry) counts as this fraction of an exact match.' },
     { k: 'Open-to-all credit', v: '0.7', d: 'Disability-fit credit when the employer did not restrict the listing to specific disability types.' },
+    { k: 'Duplicate-template dedup', v: 'best copy only', d: "Several mldataset.xlsx listings share the same title + description (posted per town). Once ranked, only the highest-scoring copy of each is kept in the shown recommendations." },
   ])
 
   // ── Sheet 4: Applicant × Job scoring matrix (the variables actually checked) ──
@@ -150,9 +151,12 @@ async function main() {
   const now = new Date('2026-09-22T04:00:00Z') // matches accuracy.test.ts fixture clock
 
   for (const u of pwdUsers) {
-    // Same corpus getRecommendations would pass, so the semantic component's TF-IDF space (and its
-    // within-applicant normalization) matches exactly what the live app computes for this applicant.
-    const candidateJobs = jobs.filter((j) => !isRestrictedAgainst(u, j))
+    // Same corpus getRecommendations passes (every open, current listing), so the semantic
+    // component's TF-IDF space matches exactly what the live app computes for this applicant.
+    const candidateJobs = jobs.filter((j) => isOpenAndCurrent(j, now))
+    // What the Jobs page would actually show this applicant — after the score/coverage threshold
+    // AND the same-title-and-description dedup (several mldataset listings share a job template).
+    const shownIds = new Set(getRecommendations(u, jobs, { now }).recommendations.map((r) => r.job.id))
     for (const j of jobs) {
       const restricted = isRestrictedAgainst(u, j)
       const openCurrent = isOpenAndCurrent(j, now)
@@ -186,10 +190,7 @@ async function main() {
         score: rec ? rec.score : '',
         band: rec ? rec.band : '',
         meetsCoverage: rec ? (j.skills.length === 0 || rec.skills.coverage >= 0.4 ? 'Yes' : 'No') : '',
-        shown:
-          rec && openCurrent && rec.score >= 40 && (j.skills.length === 0 || rec.skills.coverage >= 0.4)
-            ? 'Yes'
-            : 'No',
+        shown: shownIds.has(j.id) ? 'Yes' : 'No',
       })
     }
   }

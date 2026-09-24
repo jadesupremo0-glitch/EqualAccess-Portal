@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import {
-  Briefcase, Clock, CheckCircle, Bookmark, BookmarkCheck, AlertTriangle, Info, Pencil,
+  Briefcase, CheckCircle, Bookmark, BookmarkCheck, AlertTriangle, Info, Pencil,
 } from 'lucide-react'
 import { Card, Button, SearchBar, Select, Modal, Tabs, EmptyState } from '../../components/ui'
 import { usePWDSession } from '../../context'
@@ -31,26 +31,6 @@ const COMPONENT_LABEL: Record<ComponentKey, string> = {
   suitability: 'Suitability & accommodations',
   education: 'Education fit',
   semantic: 'Overall fit (AI-matched)',
-}
-
-const formatDate = (iso: string) =>
-  iso ? new Date(`${iso}T00:00:00`).toLocaleDateString('en-PH', { year: 'numeric', month: 'short', day: 'numeric' }) : 'No end date'
-
-const LOCATION_FILTERS = [
-  { value: 'mine', label: 'My barangay' },
-  { value: 'losbanos', label: 'Anywhere in Los Baños' },
-  { value: 'outside', label: 'Outside Los Baños' },
-  { value: 'remote', label: 'Work from home' },
-]
-
-function matchesLocation(rec: Recommendation | null, filter: string): boolean {
-  if (!filter) return true
-  if (!rec) return false
-  const level = rec.location.level
-  if (filter === 'mine') return level === 'barangay'
-  if (filter === 'losbanos') return level === 'barangay' || level === 'municipality'
-  if (filter === 'outside') return level === 'province' || level === 'far'
-  return level === 'remote'
 }
 
 function MatchRing({ percent, band }: { percent: number; band: MatchBand }) {
@@ -128,7 +108,6 @@ function JobCard({ job, rec, saved, onView, onToggleSave }: {
 
       <ul className="space-y-1 mb-3 text-xs text-gray-600">
         <li className="flex items-center gap-1.5"><Briefcase size={12} className="shrink-0 text-gray-600" aria-hidden="true" />{job.employmentType} · {job.workArrangement}</li>
-        <li className="flex items-center gap-1.5"><Clock size={12} className="shrink-0 text-gray-600" aria-hidden="true" />Open until {formatDate(job.deadline)}</li>
       </ul>
 
       {rec && rec.reasons.length > 0 && (
@@ -287,7 +266,6 @@ export default function Jobs({ onNavigate }: { onNavigate: (p: string) => void }
   const [search, setSearch] = useState('')
   const [typeFilter, setTypeFilter] = useState('')
   const [arrangementFilter, setArrangementFilter] = useState('')
-  const [locationFilter, setLocationFilter] = useState('')
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [editingSetup, setEditingSetup] = useState(false)
 
@@ -318,25 +296,24 @@ export default function Jobs({ onNavigate }: { onNavigate: (p: string) => void }
   const recFor = (job: Job): Recommendation | null =>
     result.recommendations.find((r) => r.job.id === job.id) ?? scoreJob(user, job)
 
-  const passesFilters = (job: Job, rec: Recommendation | null) => {
+  const passesFilters = (job: Job) => {
     const q = search.trim().toLowerCase()
     return (
-      (!q || job.title.toLowerCase().includes(q) || job.company.toLowerCase().includes(q) || job.location.toLowerCase().includes(q)) &&
+      (!q || job.title.toLowerCase().includes(q) || job.company.toLowerCase().includes(q)) &&
       (!typeFilter || job.employmentType === typeFilter) &&
-      (!arrangementFilter || job.workArrangement === arrangementFilter) &&
-      matchesLocation(rec, locationFilter)
+      (!arrangementFilter || job.workArrangement === arrangementFilter)
     )
   }
 
-  const recommended = result.recommendations.filter((r) => passesFilters(r.job, r))
+  const recommended = result.recommendations.filter((r) => passesFilters(r.job))
   const savedJobs = saved
     .map((id) => jobs.find((j) => j.id === id))
     .filter((j): j is Job => Boolean(j))
     .map((job) => ({ job, rec: recFor(job) }))
-    .filter(({ job, rec }) => passesFilters(job, rec))
+    .filter(({ job }) => passesFilters(job))
 
-  const filtersActive = Boolean(search || typeFilter || arrangementFilter || locationFilter)
-  const clearFilters = () => { setSearch(''); setTypeFilter(''); setArrangementFilter(''); setLocationFilter('') }
+  const filtersActive = Boolean(search || typeFilter || arrangementFilter)
+  const clearFilters = () => { setSearch(''); setTypeFilter(''); setArrangementFilter('') }
 
   const selectedJob = selectedId ? jobs.find((j) => j.id === selectedId) : undefined
   const tabLabels = [`Recommended (${result.recommendations.length})`, `Saved (${saved.length})`]
@@ -402,10 +379,9 @@ export default function Jobs({ onNavigate }: { onNavigate: (p: string) => void }
       <Tabs tabs={tabLabels} active={activeLabel} onChange={(l) => setTab((['Recommended', 'Saved'] as const)[tabLabels.indexOf(l)])} />
 
       <div className="flex gap-3 flex-wrap items-end" role="group" aria-label="Filter jobs">
-        <div className="flex-1 min-w-52"><SearchBar value={search} onChange={setSearch} placeholder="Search jobs, employers, locations..." /></div>
+        <div className="flex-1 min-w-52"><SearchBar value={search} onChange={setSearch} placeholder="Search jobs, employers..." /></div>
         <div className="min-w-36"><Select label="" ariaLabel="Filter by employment type" options={EMPLOYMENT_TYPES.map((t) => ({ value: t, label: t }))} value={typeFilter} onChange={setTypeFilter} placeholder="All Types" /></div>
         <div className="min-w-36"><Select label="" ariaLabel="Filter by work arrangement" options={WORK_ARRANGEMENTS.map((t) => ({ value: t, label: t }))} value={arrangementFilter} onChange={setArrangementFilter} placeholder="All Arrangements" /></div>
-        <div className="min-w-44"><Select label="" ariaLabel="Filter by location" options={LOCATION_FILTERS} value={locationFilter} onChange={setLocationFilter} placeholder="Any Location" /></div>
         {filtersActive && <Button variant="ghost" size="sm" onClick={clearFilters}>Clear</Button>}
       </div>
 
