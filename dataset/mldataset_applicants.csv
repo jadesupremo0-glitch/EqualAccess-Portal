@@ -1,0 +1,501 @@
+﻿Applicant_ID,Skills,Education,Experience,Capabilities,Preferred_Job
+PWD0001,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0002,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0003,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0004,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0005,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0006,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0007,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0008,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0009,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0010,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0011,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0012,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0013,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0014,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0015,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0016,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0017,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0018,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0019,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0020,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0021,"typing, data entry, Microsoft Office, communication, customer service",Senior High School,6 months work experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0022,"customer service, communication, computer skills, English, cooking",Senior High School,1 year work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0023,"graphic design, Canva, Photoshop, creativity, Excel",College level,1 year internship,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0024,"cooking, food preparation, cleanliness, teamwork, HTML",BS Information Technology,2 years work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0025,"HTML, CSS, JavaScript, web development, writing",BS Business Administration,No formal experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0026,"Excel, bookkeeping, accounting, organization, inventory",BS Office Administration,6 months internship,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0027,"writing, English, research, proofreading, social media",BS Accounting Technology,6 months work experience,"Writing articles, researching, proofreading",Content Writer
+PWD0028,"social media, Canva, communication, creativity, teaching",BA Communication,1 year work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0029,"inventory, Excel, organization, record keeping, sales",BS Multimedia Arts,1 year internship,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0030,"teaching, communication, patience, English, typing",BS Education,2 years work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0031,"typing, Word, Excel, filing, organization, photography",Senior High School,No formal experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0032,"sales, communication, customer service, persuasion, computer literacy",Senior High School,6 months internship,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0033,"photography, photo editing, Photoshop, creativity, bookkeeping",College level,6 months work experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0034,"bookkeeping, Excel, organization, mathematics, programming",BS Information Technology,1 year work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0035,"computer literacy, typing, communication, email, baking",BS Business Administration,1 year internship,"Email handling, encoding documents, file organization",Office Assistant
+PWD0036,"programming, Python, Java, problem solving, customer service",BS Office Administration,2 years work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0037,"customer service, English, communication, patience, writing",BS Accounting Technology,No formal experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0038,"baking, food preparation, teamwork, cleanliness, typing",BA Communication,6 months internship,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0039,"writing, research, Word, proofreading, Excel",BS Multimedia Arts,6 months work experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0040,"Excel, inventory, typing, organization, customer service",BS Education,1 year work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0041,"typing, data entry, Microsoft Office, communication, cooking",Senior High School,1 year internship,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0042,"customer service, communication, computer skills, English, graphic design",Senior High School,2 years work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0043,"graphic design, Canva, Photoshop, creativity, HTML",College level,No formal experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0044,"cooking, food preparation, cleanliness, teamwork, writing",BS Information Technology,6 months internship,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0045,"HTML, CSS, JavaScript, web development, Excel",BS Business Administration,6 months work experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0046,"Excel, bookkeeping, accounting, organization, social media",BS Office Administration,1 year work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0047,"writing, English, research, proofreading, teaching",BS Accounting Technology,1 year internship,"Writing articles, researching, proofreading",Content Writer
+PWD0048,"social media, Canva, communication, creativity, inventory",BA Communication,2 years work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0049,"inventory, Excel, organization, record keeping, typing",BS Multimedia Arts,No formal experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0050,"teaching, communication, patience, English, photography",BS Education,6 months internship,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0051,"typing, Word, Excel, filing, organization, sales",Senior High School,6 months work experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0052,"sales, communication, customer service, persuasion, bookkeeping",Senior High School,1 year work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0053,"photography, photo editing, Photoshop, creativity, programming",College level,1 year internship,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0054,"bookkeeping, Excel, organization, mathematics, computer literacy",BS Information Technology,2 years work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0055,"computer literacy, typing, communication, email, customer service",BS Business Administration,No formal experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0056,"programming, Python, Java, problem solving, writing",BS Office Administration,6 months internship,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0057,"customer service, English, communication, patience, baking",BS Accounting Technology,6 months work experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0058,"baking, food preparation, teamwork, cleanliness, Excel",BA Communication,1 year work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0059,"writing, research, Word, proofreading, customer service",BS Multimedia Arts,1 year internship,"Online research, organizing information, preparing reports",Research Assistant
+PWD0060,"Excel, inventory, typing, organization, typing",BS Education,2 years work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0061,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0062,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0063,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0064,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0065,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0066,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0067,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0068,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0069,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0070,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0071,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0072,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0073,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0074,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0075,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0076,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0077,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0078,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0079,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0080,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0081,"typing, data entry, Microsoft Office, communication, customer service",Senior High School,6 months work experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0082,"customer service, communication, computer skills, English, cooking",Senior High School,1 year work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0083,"graphic design, Canva, Photoshop, creativity, Excel",College level,1 year internship,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0084,"cooking, food preparation, cleanliness, teamwork, HTML",BS Information Technology,2 years work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0085,"HTML, CSS, JavaScript, web development, writing",BS Business Administration,No formal experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0086,"Excel, bookkeeping, accounting, organization, inventory",BS Office Administration,6 months internship,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0087,"writing, English, research, proofreading, social media",BS Accounting Technology,6 months work experience,"Writing articles, researching, proofreading",Content Writer
+PWD0088,"social media, Canva, communication, creativity, teaching",BA Communication,1 year work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0089,"inventory, Excel, organization, record keeping, sales",BS Multimedia Arts,1 year internship,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0090,"teaching, communication, patience, English, typing",BS Education,2 years work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0091,"typing, Word, Excel, filing, organization, photography",Senior High School,No formal experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0092,"sales, communication, customer service, persuasion, computer literacy",Senior High School,6 months internship,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0093,"photography, photo editing, Photoshop, creativity, bookkeeping",College level,6 months work experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0094,"bookkeeping, Excel, organization, mathematics, programming",BS Information Technology,1 year work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0095,"computer literacy, typing, communication, email, baking",BS Business Administration,1 year internship,"Email handling, encoding documents, file organization",Office Assistant
+PWD0096,"programming, Python, Java, problem solving, customer service",BS Office Administration,2 years work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0097,"customer service, English, communication, patience, writing",BS Accounting Technology,No formal experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0098,"baking, food preparation, teamwork, cleanliness, typing",BA Communication,6 months internship,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0099,"writing, research, Word, proofreading, Excel",BS Multimedia Arts,6 months work experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0100,"Excel, inventory, typing, organization, customer service",BS Education,1 year work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0101,"typing, data entry, Microsoft Office, communication, cooking",Senior High School,1 year internship,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0102,"customer service, communication, computer skills, English, graphic design",Senior High School,2 years work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0103,"graphic design, Canva, Photoshop, creativity, HTML",College level,No formal experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0104,"cooking, food preparation, cleanliness, teamwork, writing",BS Information Technology,6 months internship,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0105,"HTML, CSS, JavaScript, web development, Excel",BS Business Administration,6 months work experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0106,"Excel, bookkeeping, accounting, organization, social media",BS Office Administration,1 year work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0107,"writing, English, research, proofreading, teaching",BS Accounting Technology,1 year internship,"Writing articles, researching, proofreading",Content Writer
+PWD0108,"social media, Canva, communication, creativity, inventory",BA Communication,2 years work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0109,"inventory, Excel, organization, record keeping, typing",BS Multimedia Arts,No formal experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0110,"teaching, communication, patience, English, photography",BS Education,6 months internship,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0111,"typing, Word, Excel, filing, organization, sales",Senior High School,6 months work experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0112,"sales, communication, customer service, persuasion, bookkeeping",Senior High School,1 year work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0113,"photography, photo editing, Photoshop, creativity, programming",College level,1 year internship,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0114,"bookkeeping, Excel, organization, mathematics, computer literacy",BS Information Technology,2 years work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0115,"computer literacy, typing, communication, email, customer service",BS Business Administration,No formal experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0116,"programming, Python, Java, problem solving, writing",BS Office Administration,6 months internship,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0117,"customer service, English, communication, patience, baking",BS Accounting Technology,6 months work experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0118,"baking, food preparation, teamwork, cleanliness, Excel",BA Communication,1 year work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0119,"writing, research, Word, proofreading, customer service",BS Multimedia Arts,1 year internship,"Online research, organizing information, preparing reports",Research Assistant
+PWD0120,"Excel, inventory, typing, organization, typing",BS Education,2 years work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0121,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0122,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0123,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0124,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0125,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0126,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0127,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0128,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0129,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0130,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0131,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0132,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0133,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0134,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0135,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0136,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0137,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0138,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0139,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0140,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0141,"typing, data entry, Microsoft Office, communication, customer service",Senior High School,6 months work experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0142,"customer service, communication, computer skills, English, cooking",Senior High School,1 year work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0143,"graphic design, Canva, Photoshop, creativity, Excel",College level,1 year internship,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0144,"cooking, food preparation, cleanliness, teamwork, HTML",BS Information Technology,2 years work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0145,"HTML, CSS, JavaScript, web development, writing",BS Business Administration,No formal experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0146,"Excel, bookkeeping, accounting, organization, inventory",BS Office Administration,6 months internship,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0147,"writing, English, research, proofreading, social media",BS Accounting Technology,6 months work experience,"Writing articles, researching, proofreading",Content Writer
+PWD0148,"social media, Canva, communication, creativity, teaching",BA Communication,1 year work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0149,"inventory, Excel, organization, record keeping, sales",BS Multimedia Arts,1 year internship,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0150,"teaching, communication, patience, English, typing",BS Education,2 years work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0151,"typing, Word, Excel, filing, organization, photography",Senior High School,No formal experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0152,"sales, communication, customer service, persuasion, computer literacy",Senior High School,6 months internship,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0153,"photography, photo editing, Photoshop, creativity, bookkeeping",College level,6 months work experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0154,"bookkeeping, Excel, organization, mathematics, programming",BS Information Technology,1 year work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0155,"computer literacy, typing, communication, email, baking",BS Business Administration,1 year internship,"Email handling, encoding documents, file organization",Office Assistant
+PWD0156,"programming, Python, Java, problem solving, customer service",BS Office Administration,2 years work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0157,"customer service, English, communication, patience, writing",BS Accounting Technology,No formal experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0158,"baking, food preparation, teamwork, cleanliness, typing",BA Communication,6 months internship,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0159,"writing, research, Word, proofreading, Excel",BS Multimedia Arts,6 months work experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0160,"Excel, inventory, typing, organization, customer service",BS Education,1 year work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0161,"typing, data entry, Microsoft Office, communication, cooking",Senior High School,1 year internship,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0162,"customer service, communication, computer skills, English, graphic design",Senior High School,2 years work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0163,"graphic design, Canva, Photoshop, creativity, HTML",College level,No formal experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0164,"cooking, food preparation, cleanliness, teamwork, writing",BS Information Technology,6 months internship,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0165,"HTML, CSS, JavaScript, web development, Excel",BS Business Administration,6 months work experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0166,"Excel, bookkeeping, accounting, organization, social media",BS Office Administration,1 year work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0167,"writing, English, research, proofreading, teaching",BS Accounting Technology,1 year internship,"Writing articles, researching, proofreading",Content Writer
+PWD0168,"social media, Canva, communication, creativity, inventory",BA Communication,2 years work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0169,"inventory, Excel, organization, record keeping, typing",BS Multimedia Arts,No formal experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0170,"teaching, communication, patience, English, photography",BS Education,6 months internship,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0171,"typing, Word, Excel, filing, organization, sales",Senior High School,6 months work experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0172,"sales, communication, customer service, persuasion, bookkeeping",Senior High School,1 year work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0173,"photography, photo editing, Photoshop, creativity, programming",College level,1 year internship,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0174,"bookkeeping, Excel, organization, mathematics, computer literacy",BS Information Technology,2 years work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0175,"computer literacy, typing, communication, email, customer service",BS Business Administration,No formal experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0176,"programming, Python, Java, problem solving, writing",BS Office Administration,6 months internship,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0177,"customer service, English, communication, patience, baking",BS Accounting Technology,6 months work experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0178,"baking, food preparation, teamwork, cleanliness, Excel",BA Communication,1 year work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0179,"writing, research, Word, proofreading, customer service",BS Multimedia Arts,1 year internship,"Online research, organizing information, preparing reports",Research Assistant
+PWD0180,"Excel, inventory, typing, organization, typing",BS Education,2 years work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0181,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0182,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0183,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0184,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0185,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0186,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0187,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0188,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0189,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0190,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0191,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0192,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0193,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0194,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0195,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0196,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0197,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0198,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0199,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0200,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0201,"typing, data entry, Microsoft Office, communication, customer service",Senior High School,6 months work experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0202,"customer service, communication, computer skills, English, cooking",Senior High School,1 year work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0203,"graphic design, Canva, Photoshop, creativity, Excel",College level,1 year internship,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0204,"cooking, food preparation, cleanliness, teamwork, HTML",BS Information Technology,2 years work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0205,"HTML, CSS, JavaScript, web development, writing",BS Business Administration,No formal experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0206,"Excel, bookkeeping, accounting, organization, inventory",BS Office Administration,6 months internship,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0207,"writing, English, research, proofreading, social media",BS Accounting Technology,6 months work experience,"Writing articles, researching, proofreading",Content Writer
+PWD0208,"social media, Canva, communication, creativity, teaching",BA Communication,1 year work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0209,"inventory, Excel, organization, record keeping, sales",BS Multimedia Arts,1 year internship,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0210,"teaching, communication, patience, English, typing",BS Education,2 years work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0211,"typing, Word, Excel, filing, organization, photography",Senior High School,No formal experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0212,"sales, communication, customer service, persuasion, computer literacy",Senior High School,6 months internship,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0213,"photography, photo editing, Photoshop, creativity, bookkeeping",College level,6 months work experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0214,"bookkeeping, Excel, organization, mathematics, programming",BS Information Technology,1 year work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0215,"computer literacy, typing, communication, email, baking",BS Business Administration,1 year internship,"Email handling, encoding documents, file organization",Office Assistant
+PWD0216,"programming, Python, Java, problem solving, customer service",BS Office Administration,2 years work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0217,"customer service, English, communication, patience, writing",BS Accounting Technology,No formal experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0218,"baking, food preparation, teamwork, cleanliness, typing",BA Communication,6 months internship,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0219,"writing, research, Word, proofreading, Excel",BS Multimedia Arts,6 months work experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0220,"Excel, inventory, typing, organization, customer service",BS Education,1 year work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0221,"typing, data entry, Microsoft Office, communication, cooking",Senior High School,1 year internship,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0222,"customer service, communication, computer skills, English, graphic design",Senior High School,2 years work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0223,"graphic design, Canva, Photoshop, creativity, HTML",College level,No formal experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0224,"cooking, food preparation, cleanliness, teamwork, writing",BS Information Technology,6 months internship,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0225,"HTML, CSS, JavaScript, web development, Excel",BS Business Administration,6 months work experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0226,"Excel, bookkeeping, accounting, organization, social media",BS Office Administration,1 year work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0227,"writing, English, research, proofreading, teaching",BS Accounting Technology,1 year internship,"Writing articles, researching, proofreading",Content Writer
+PWD0228,"social media, Canva, communication, creativity, inventory",BA Communication,2 years work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0229,"inventory, Excel, organization, record keeping, typing",BS Multimedia Arts,No formal experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0230,"teaching, communication, patience, English, photography",BS Education,6 months internship,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0231,"typing, Word, Excel, filing, organization, sales",Senior High School,6 months work experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0232,"sales, communication, customer service, persuasion, bookkeeping",Senior High School,1 year work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0233,"photography, photo editing, Photoshop, creativity, programming",College level,1 year internship,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0234,"bookkeeping, Excel, organization, mathematics, computer literacy",BS Information Technology,2 years work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0235,"computer literacy, typing, communication, email, customer service",BS Business Administration,No formal experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0236,"programming, Python, Java, problem solving, writing",BS Office Administration,6 months internship,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0237,"customer service, English, communication, patience, baking",BS Accounting Technology,6 months work experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0238,"baking, food preparation, teamwork, cleanliness, Excel",BA Communication,1 year work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0239,"writing, research, Word, proofreading, customer service",BS Multimedia Arts,1 year internship,"Online research, organizing information, preparing reports",Research Assistant
+PWD0240,"Excel, inventory, typing, organization, typing",BS Education,2 years work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0241,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0242,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0243,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0244,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0245,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0246,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0247,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0248,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0249,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0250,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0251,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0252,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0253,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0254,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0255,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0256,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0257,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0258,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0259,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0260,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0261,"typing, data entry, Microsoft Office, communication, customer service",Senior High School,6 months work experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0262,"customer service, communication, computer skills, English, cooking",Senior High School,1 year work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0263,"graphic design, Canva, Photoshop, creativity, Excel",College level,1 year internship,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0264,"cooking, food preparation, cleanliness, teamwork, HTML",BS Information Technology,2 years work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0265,"HTML, CSS, JavaScript, web development, writing",BS Business Administration,No formal experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0266,"Excel, bookkeeping, accounting, organization, inventory",BS Office Administration,6 months internship,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0267,"writing, English, research, proofreading, social media",BS Accounting Technology,6 months work experience,"Writing articles, researching, proofreading",Content Writer
+PWD0268,"social media, Canva, communication, creativity, teaching",BA Communication,1 year work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0269,"inventory, Excel, organization, record keeping, sales",BS Multimedia Arts,1 year internship,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0270,"teaching, communication, patience, English, typing",BS Education,2 years work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0271,"typing, Word, Excel, filing, organization, photography",Senior High School,No formal experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0272,"sales, communication, customer service, persuasion, computer literacy",Senior High School,6 months internship,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0273,"photography, photo editing, Photoshop, creativity, bookkeeping",College level,6 months work experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0274,"bookkeeping, Excel, organization, mathematics, programming",BS Information Technology,1 year work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0275,"computer literacy, typing, communication, email, baking",BS Business Administration,1 year internship,"Email handling, encoding documents, file organization",Office Assistant
+PWD0276,"programming, Python, Java, problem solving, customer service",BS Office Administration,2 years work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0277,"customer service, English, communication, patience, writing",BS Accounting Technology,No formal experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0278,"baking, food preparation, teamwork, cleanliness, typing",BA Communication,6 months internship,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0279,"writing, research, Word, proofreading, Excel",BS Multimedia Arts,6 months work experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0280,"Excel, inventory, typing, organization, customer service",BS Education,1 year work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0281,"typing, data entry, Microsoft Office, communication, cooking",Senior High School,1 year internship,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0282,"customer service, communication, computer skills, English, graphic design",Senior High School,2 years work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0283,"graphic design, Canva, Photoshop, creativity, HTML",College level,No formal experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0284,"cooking, food preparation, cleanliness, teamwork, writing",BS Information Technology,6 months internship,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0285,"HTML, CSS, JavaScript, web development, Excel",BS Business Administration,6 months work experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0286,"Excel, bookkeeping, accounting, organization, social media",BS Office Administration,1 year work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0287,"writing, English, research, proofreading, teaching",BS Accounting Technology,1 year internship,"Writing articles, researching, proofreading",Content Writer
+PWD0288,"social media, Canva, communication, creativity, inventory",BA Communication,2 years work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0289,"inventory, Excel, organization, record keeping, typing",BS Multimedia Arts,No formal experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0290,"teaching, communication, patience, English, photography",BS Education,6 months internship,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0291,"typing, Word, Excel, filing, organization, sales",Senior High School,6 months work experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0292,"sales, communication, customer service, persuasion, bookkeeping",Senior High School,1 year work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0293,"photography, photo editing, Photoshop, creativity, programming",College level,1 year internship,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0294,"bookkeeping, Excel, organization, mathematics, computer literacy",BS Information Technology,2 years work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0295,"computer literacy, typing, communication, email, customer service",BS Business Administration,No formal experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0296,"programming, Python, Java, problem solving, writing",BS Office Administration,6 months internship,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0297,"customer service, English, communication, patience, baking",BS Accounting Technology,6 months work experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0298,"baking, food preparation, teamwork, cleanliness, Excel",BA Communication,1 year work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0299,"writing, research, Word, proofreading, customer service",BS Multimedia Arts,1 year internship,"Online research, organizing information, preparing reports",Research Assistant
+PWD0300,"Excel, inventory, typing, organization, typing",BS Education,2 years work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0301,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0302,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0303,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0304,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0305,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0306,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0307,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0308,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0309,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0310,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0311,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0312,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0313,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0314,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0315,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0316,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0317,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0318,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0319,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0320,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0321,"typing, data entry, Microsoft Office, communication, customer service",Senior High School,6 months work experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0322,"customer service, communication, computer skills, English, cooking",Senior High School,1 year work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0323,"graphic design, Canva, Photoshop, creativity, Excel",College level,1 year internship,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0324,"cooking, food preparation, cleanliness, teamwork, HTML",BS Information Technology,2 years work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0325,"HTML, CSS, JavaScript, web development, writing",BS Business Administration,No formal experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0326,"Excel, bookkeeping, accounting, organization, inventory",BS Office Administration,6 months internship,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0327,"writing, English, research, proofreading, social media",BS Accounting Technology,6 months work experience,"Writing articles, researching, proofreading",Content Writer
+PWD0328,"social media, Canva, communication, creativity, teaching",BA Communication,1 year work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0329,"inventory, Excel, organization, record keeping, sales",BS Multimedia Arts,1 year internship,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0330,"teaching, communication, patience, English, typing",BS Education,2 years work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0331,"typing, Word, Excel, filing, organization, photography",Senior High School,No formal experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0332,"sales, communication, customer service, persuasion, computer literacy",Senior High School,6 months internship,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0333,"photography, photo editing, Photoshop, creativity, bookkeeping",College level,6 months work experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0334,"bookkeeping, Excel, organization, mathematics, programming",BS Information Technology,1 year work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0335,"computer literacy, typing, communication, email, baking",BS Business Administration,1 year internship,"Email handling, encoding documents, file organization",Office Assistant
+PWD0336,"programming, Python, Java, problem solving, customer service",BS Office Administration,2 years work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0337,"customer service, English, communication, patience, writing",BS Accounting Technology,No formal experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0338,"baking, food preparation, teamwork, cleanliness, typing",BA Communication,6 months internship,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0339,"writing, research, Word, proofreading, Excel",BS Multimedia Arts,6 months work experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0340,"Excel, inventory, typing, organization, customer service",BS Education,1 year work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0341,"typing, data entry, Microsoft Office, communication, cooking",Senior High School,1 year internship,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0342,"customer service, communication, computer skills, English, graphic design",Senior High School,2 years work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0343,"graphic design, Canva, Photoshop, creativity, HTML",College level,No formal experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0344,"cooking, food preparation, cleanliness, teamwork, writing",BS Information Technology,6 months internship,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0345,"HTML, CSS, JavaScript, web development, Excel",BS Business Administration,6 months work experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0346,"Excel, bookkeeping, accounting, organization, social media",BS Office Administration,1 year work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0347,"writing, English, research, proofreading, teaching",BS Accounting Technology,1 year internship,"Writing articles, researching, proofreading",Content Writer
+PWD0348,"social media, Canva, communication, creativity, inventory",BA Communication,2 years work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0349,"inventory, Excel, organization, record keeping, typing",BS Multimedia Arts,No formal experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0350,"teaching, communication, patience, English, photography",BS Education,6 months internship,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0351,"typing, Word, Excel, filing, organization, sales",Senior High School,6 months work experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0352,"sales, communication, customer service, persuasion, bookkeeping",Senior High School,1 year work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0353,"photography, photo editing, Photoshop, creativity, programming",College level,1 year internship,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0354,"bookkeeping, Excel, organization, mathematics, computer literacy",BS Information Technology,2 years work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0355,"computer literacy, typing, communication, email, customer service",BS Business Administration,No formal experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0356,"programming, Python, Java, problem solving, writing",BS Office Administration,6 months internship,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0357,"customer service, English, communication, patience, baking",BS Accounting Technology,6 months work experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0358,"baking, food preparation, teamwork, cleanliness, Excel",BA Communication,1 year work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0359,"writing, research, Word, proofreading, customer service",BS Multimedia Arts,1 year internship,"Online research, organizing information, preparing reports",Research Assistant
+PWD0360,"Excel, inventory, typing, organization, typing",BS Education,2 years work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0361,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0362,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0363,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0364,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0365,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0366,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0367,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0368,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0369,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0370,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0371,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0372,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0373,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0374,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0375,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0376,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0377,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0378,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0379,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0380,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0381,"typing, data entry, Microsoft Office, communication, customer service",Senior High School,6 months work experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0382,"customer service, communication, computer skills, English, cooking",Senior High School,1 year work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0383,"graphic design, Canva, Photoshop, creativity, Excel",College level,1 year internship,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0384,"cooking, food preparation, cleanliness, teamwork, HTML",BS Information Technology,2 years work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0385,"HTML, CSS, JavaScript, web development, writing",BS Business Administration,No formal experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0386,"Excel, bookkeeping, accounting, organization, inventory",BS Office Administration,6 months internship,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0387,"writing, English, research, proofreading, social media",BS Accounting Technology,6 months work experience,"Writing articles, researching, proofreading",Content Writer
+PWD0388,"social media, Canva, communication, creativity, teaching",BA Communication,1 year work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0389,"inventory, Excel, organization, record keeping, sales",BS Multimedia Arts,1 year internship,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0390,"teaching, communication, patience, English, typing",BS Education,2 years work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0391,"typing, Word, Excel, filing, organization, photography",Senior High School,No formal experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0392,"sales, communication, customer service, persuasion, computer literacy",Senior High School,6 months internship,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0393,"photography, photo editing, Photoshop, creativity, bookkeeping",College level,6 months work experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0394,"bookkeeping, Excel, organization, mathematics, programming",BS Information Technology,1 year work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0395,"computer literacy, typing, communication, email, baking",BS Business Administration,1 year internship,"Email handling, encoding documents, file organization",Office Assistant
+PWD0396,"programming, Python, Java, problem solving, customer service",BS Office Administration,2 years work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0397,"customer service, English, communication, patience, writing",BS Accounting Technology,No formal experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0398,"baking, food preparation, teamwork, cleanliness, typing",BA Communication,6 months internship,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0399,"writing, research, Word, proofreading, Excel",BS Multimedia Arts,6 months work experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0400,"Excel, inventory, typing, organization, customer service",BS Education,1 year work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0401,"typing, data entry, Microsoft Office, communication, cooking",Senior High School,1 year internship,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0402,"customer service, communication, computer skills, English, graphic design",Senior High School,2 years work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0403,"graphic design, Canva, Photoshop, creativity, HTML",College level,No formal experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0404,"cooking, food preparation, cleanliness, teamwork, writing",BS Information Technology,6 months internship,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0405,"HTML, CSS, JavaScript, web development, Excel",BS Business Administration,6 months work experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0406,"Excel, bookkeeping, accounting, organization, social media",BS Office Administration,1 year work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0407,"writing, English, research, proofreading, teaching",BS Accounting Technology,1 year internship,"Writing articles, researching, proofreading",Content Writer
+PWD0408,"social media, Canva, communication, creativity, inventory",BA Communication,2 years work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0409,"inventory, Excel, organization, record keeping, typing",BS Multimedia Arts,No formal experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0410,"teaching, communication, patience, English, photography",BS Education,6 months internship,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0411,"typing, Word, Excel, filing, organization, sales",Senior High School,6 months work experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0412,"sales, communication, customer service, persuasion, bookkeeping",Senior High School,1 year work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0413,"photography, photo editing, Photoshop, creativity, programming",College level,1 year internship,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0414,"bookkeeping, Excel, organization, mathematics, computer literacy",BS Information Technology,2 years work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0415,"computer literacy, typing, communication, email, customer service",BS Business Administration,No formal experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0416,"programming, Python, Java, problem solving, writing",BS Office Administration,6 months internship,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0417,"customer service, English, communication, patience, baking",BS Accounting Technology,6 months work experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0418,"baking, food preparation, teamwork, cleanliness, Excel",BA Communication,1 year work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0419,"writing, research, Word, proofreading, customer service",BS Multimedia Arts,1 year internship,"Online research, organizing information, preparing reports",Research Assistant
+PWD0420,"Excel, inventory, typing, organization, typing",BS Education,2 years work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0421,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0422,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0423,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0424,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0425,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0426,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0427,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0428,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0429,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0430,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0431,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0432,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0433,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0434,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0435,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0436,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0437,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0438,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0439,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0440,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0441,"typing, data entry, Microsoft Office, communication, customer service",Senior High School,6 months work experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0442,"customer service, communication, computer skills, English, cooking",Senior High School,1 year work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0443,"graphic design, Canva, Photoshop, creativity, Excel",College level,1 year internship,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0444,"cooking, food preparation, cleanliness, teamwork, HTML",BS Information Technology,2 years work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0445,"HTML, CSS, JavaScript, web development, writing",BS Business Administration,No formal experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0446,"Excel, bookkeeping, accounting, organization, inventory",BS Office Administration,6 months internship,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0447,"writing, English, research, proofreading, social media",BS Accounting Technology,6 months work experience,"Writing articles, researching, proofreading",Content Writer
+PWD0448,"social media, Canva, communication, creativity, teaching",BA Communication,1 year work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0449,"inventory, Excel, organization, record keeping, sales",BS Multimedia Arts,1 year internship,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0450,"teaching, communication, patience, English, typing",BS Education,2 years work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0451,"typing, Word, Excel, filing, organization, photography",Senior High School,No formal experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0452,"sales, communication, customer service, persuasion, computer literacy",Senior High School,6 months internship,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0453,"photography, photo editing, Photoshop, creativity, bookkeeping",College level,6 months work experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0454,"bookkeeping, Excel, organization, mathematics, programming",BS Information Technology,1 year work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0455,"computer literacy, typing, communication, email, baking",BS Business Administration,1 year internship,"Email handling, encoding documents, file organization",Office Assistant
+PWD0456,"programming, Python, Java, problem solving, customer service",BS Office Administration,2 years work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0457,"customer service, English, communication, patience, writing",BS Accounting Technology,No formal experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0458,"baking, food preparation, teamwork, cleanliness, typing",BA Communication,6 months internship,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0459,"writing, research, Word, proofreading, Excel",BS Multimedia Arts,6 months work experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0460,"Excel, inventory, typing, organization, customer service",BS Education,1 year work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0461,"typing, data entry, Microsoft Office, communication, cooking",Senior High School,1 year internship,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0462,"customer service, communication, computer skills, English, graphic design",Senior High School,2 years work experience,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0463,"graphic design, Canva, Photoshop, creativity, HTML",College level,No formal experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0464,"cooking, food preparation, cleanliness, teamwork, writing",BS Information Technology,6 months internship,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0465,"HTML, CSS, JavaScript, web development, Excel",BS Business Administration,6 months work experience,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0466,"Excel, bookkeeping, accounting, organization, social media",BS Office Administration,1 year work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0467,"writing, English, research, proofreading, teaching",BS Accounting Technology,1 year internship,"Writing articles, researching, proofreading",Content Writer
+PWD0468,"social media, Canva, communication, creativity, inventory",BA Communication,2 years work experience,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0469,"inventory, Excel, organization, record keeping, typing",BS Multimedia Arts,No formal experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0470,"teaching, communication, patience, English, photography",BS Education,6 months internship,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0471,"typing, Word, Excel, filing, organization, sales",Senior High School,6 months work experience,"Document preparation, filing, data entry",Administrative Assistant
+PWD0472,"sales, communication, customer service, persuasion, bookkeeping",Senior High School,1 year work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0473,"photography, photo editing, Photoshop, creativity, programming",College level,1 year internship,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0474,"bookkeeping, Excel, organization, mathematics, computer literacy",BS Information Technology,2 years work experience,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0475,"computer literacy, typing, communication, email, customer service",BS Business Administration,No formal experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0476,"programming, Python, Java, problem solving, writing",BS Office Administration,6 months internship,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0477,"customer service, English, communication, patience, baking",BS Accounting Technology,6 months work experience,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0478,"baking, food preparation, teamwork, cleanliness, Excel",BA Communication,1 year work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0479,"writing, research, Word, proofreading, customer service",BS Multimedia Arts,1 year internship,"Online research, organizing information, preparing reports",Research Assistant
+PWD0480,"Excel, inventory, typing, organization, typing",BS Education,2 years work experience,"Recording products, updating inventory databases, stock records",Inventory Clerk
+PWD0481,"typing, data entry, Microsoft Office, communication, graphic design",Senior High School,No formal experience,"Encoding documents, organizing files, spreadsheet use",Data Entry Clerk
+PWD0482,"customer service, communication, computer skills, English, HTML",Senior High School,6 months internship,"Answering inquiries, resolving concerns, assisting customers",Customer Service Representative
+PWD0483,"graphic design, Canva, Photoshop, creativity, cooking",College level,6 months work experience,"Creating posters, editing images, social media graphics",Graphic Designer
+PWD0484,"cooking, food preparation, cleanliness, teamwork, Excel",BS Information Technology,1 year work experience,"Food preparation, cleaning, kitchen assistance",Kitchen Assistant
+PWD0485,"HTML, CSS, JavaScript, web development, social media",BS Business Administration,1 year internship,"Creating webpages, website editing, basic coding",Junior Web Developer
+PWD0486,"Excel, bookkeeping, accounting, organization, writing",BS Office Administration,2 years work experience,"Recording transactions, spreadsheets, filing",Accounting Assistant
+PWD0487,"writing, English, research, proofreading, inventory",BS Accounting Technology,No formal experience,"Writing articles, researching, proofreading",Content Writer
+PWD0488,"social media, Canva, communication, creativity, typing",BA Communication,6 months internship,"Creating posts, managing pages, digital content",Social Media Assistant
+PWD0489,"inventory, Excel, organization, record keeping, teaching",BS Multimedia Arts,6 months work experience,"Recording stocks, checking inventory, updating records",Inventory Assistant
+PWD0490,"teaching, communication, patience, English, sales",BS Education,1 year work experience,"Online lessons, explaining topics, preparing materials",Online Tutor
+PWD0491,"typing, Word, Excel, filing, organization, bookkeeping",Senior High School,1 year internship,"Document preparation, filing, data entry",Administrative Assistant
+PWD0492,"sales, communication, customer service, persuasion, photography",Senior High School,2 years work experience,"Assisting customers, explaining products, processing sales",Sales Assistant
+PWD0493,"photography, photo editing, Photoshop, creativity, computer literacy",College level,No formal experience,"Editing photographs, enhancing images, organizing media",Photo Editor
+PWD0494,"bookkeeping, Excel, organization, mathematics, customer service",BS Information Technology,6 months internship,"Recording transactions, organizing financial records",Bookkeeping Assistant
+PWD0495,"computer literacy, typing, communication, email, programming",BS Business Administration,6 months work experience,"Email handling, encoding documents, file organization",Office Assistant
+PWD0496,"programming, Python, Java, problem solving, baking",BS Office Administration,1 year work experience,"Writing basic programs, debugging, testing applications",Junior Programmer
+PWD0497,"customer service, English, communication, patience, Excel",BS Accounting Technology,1 year internship,"Handling inquiries, providing support, documenting concerns",Customer Support Agent
+PWD0498,"baking, food preparation, teamwork, cleanliness, writing",BA Communication,2 years work experience,"Baking assistance, ingredient preparation, cleaning",Bakery Assistant
+PWD0499,"writing, research, Word, proofreading, typing",BS Multimedia Arts,No formal experience,"Online research, organizing information, preparing reports",Research Assistant
+PWD0500,"Excel, inventory, typing, organization, graphic design",BS Education,6 months internship,"Recording products, updating inventory databases, stock records",Inventory Clerk

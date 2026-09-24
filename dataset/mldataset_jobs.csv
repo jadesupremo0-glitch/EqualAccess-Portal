@@ -1,0 +1,101 @@
+﻿Job_ID,Job_Title,Required_Skills,Qualifications,Job_Description,Location,Employment_Type
+JOB001,Data Entry Clerk,"typing, data entry, Microsoft Office, communication",College level or graduate,"Encoding documents, organizing files, spreadsheet use","Los Baños, Laguna",Full-time
+JOB002,Customer Service Representative,"customer service, communication, computer skills, English",Senior High School graduate,"Answering inquiries, resolving concerns, assisting customers","Calamba, Laguna",Part-time
+JOB003,Graphic Designer,"graphic design, Canva, Photoshop, creativity",Design-related education or portfolio,"Creating posters, editing images, social media graphics","Santa Rosa, Laguna",Contract
+JOB004,Kitchen Assistant,"cooking, food preparation, cleanliness, teamwork",Basic food preparation skills,"Food preparation, cleaning, kitchen assistance","Bay, Laguna",Work-from-home
+JOB005,Junior Web Developer,"HTML, CSS, JavaScript, web development",IT or computer-related education,"Creating webpages, website editing, basic coding","Biñan, Laguna",Full-time
+JOB006,Accounting Assistant,"Excel, bookkeeping, accounting, organization",Accounting or business-related education,"Recording transactions, spreadsheets, filing","Los Baños, Laguna",Part-time
+JOB007,Content Writer,"writing, English, research, proofreading","Communication, English, or related education","Writing articles, researching, proofreading","Calamba, Laguna",Contract
+JOB008,Social Media Assistant,"social media, Canva, communication, creativity",Marketing or related skills preferred,"Creating posts, managing pages, digital content","Santa Rosa, Laguna",Work-from-home
+JOB009,Inventory Assistant,"inventory, Excel, organization, record keeping",Basic computer and inventory skills,"Recording stocks, checking inventory, updating records","Bay, Laguna",Full-time
+JOB010,Online Tutor,"teaching, communication, patience, English",Education or subject-related knowledge,"Online lessons, explaining topics, preparing materials","Biñan, Laguna",Part-time
+JOB011,Administrative Assistant,"typing, Word, Excel, filing, organization",Office administration or equivalent experience,"Document preparation, filing, data entry","Los Baños, Laguna",Contract
+JOB012,Sales Assistant,"sales, communication, customer service, persuasion",Customer service or sales experience preferred,"Assisting customers, explaining products, processing sales","Calamba, Laguna",Work-from-home
+JOB013,Photo Editor,"photography, photo editing, Photoshop, creativity",Portfolio or relevant experience,"Editing photographs, enhancing images, organizing media","Santa Rosa, Laguna",Full-time
+JOB014,Bookkeeping Assistant,"bookkeeping, Excel, organization, mathematics",Accounting or bookkeeping knowledge,"Recording transactions, organizing financial records","Bay, Laguna",Part-time
+JOB015,Office Assistant,"computer literacy, typing, communication, email","Basic computer skills, college level preferred","Email handling, encoding documents, file organization","Biñan, Laguna",Contract
+JOB016,Junior Programmer,"programming, Python, Java, problem solving",IT or computer-related education,"Writing basic programs, debugging, testing applications","Los Baños, Laguna",Work-from-home
+JOB017,Customer Support Agent,"customer service, English, communication, patience",Good communication and basic computer skills,"Handling inquiries, providing support, documenting concerns","Calamba, Laguna",Full-time
+JOB018,Bakery Assistant,"baking, food preparation, teamwork, cleanliness",Basic baking or food preparation skills,"Baking assistance, ingredient preparation, cleaning","Santa Rosa, Laguna",Part-time
+JOB019,Research Assistant,"writing, research, Word, proofreading",Research and documentation skills,"Online research, organizing information, preparing reports","Bay, Laguna",Contract
+JOB020,Inventory Clerk,"Excel, inventory, typing, organization",Basic computer and inventory knowledge,"Recording products, updating inventory databases, stock records","Biñan, Laguna",Work-from-home
+JOB021,Data Entry Clerk,"typing, data entry, Microsoft Office, communication",College level or graduate,"Encoding documents, organizing files, spreadsheet use","Los Baños, Laguna",Full-time
+JOB022,Customer Service Representative,"customer service, communication, computer skills, English",Senior High School graduate,"Answering inquiries, resolving concerns, assisting customers","Calamba, Laguna",Part-time
+JOB023,Graphic Designer,"graphic design, Canva, Photoshop, creativity",Design-related education or portfolio,"Creating posters, editing images, social media graphics","Santa Rosa, Laguna",Contract
+JOB024,Kitchen Assistant,"cooking, food preparation, cleanliness, teamwork",Basic food preparation skills,"Food preparation, cleaning, kitchen assistance","Bay, Laguna",Work-from-home
+JOB025,Junior Web Developer,"HTML, CSS, JavaScript, web development",IT or computer-related education,"Creating webpages, website editing, basic coding","Biñan, Laguna",Full-time
+JOB026,Accounting Assistant,"Excel, bookkeeping, accounting, organization",Accounting or business-related education,"Recording transactions, spreadsheets, filing","Los Baños, Laguna",Part-time
+JOB027,Content Writer,"writing, English, research, proofreading","Communication, English, or related education","Writing articles, researching, proofreading","Calamba, Laguna",Contract
+JOB028,Social Media Assistant,"social media, Canva, communication, creativity",Marketing or related skills preferred,"Creating posts, managing pages, digital content","Santa Rosa, Laguna",Work-from-home
+JOB029,Inventory Assistant,"inventory, Excel, organization, record keeping",Basic computer and inventory skills,"Recording stocks, checking inventory, updating records","Bay, Laguna",Full-time
+JOB030,Online Tutor,"teaching, communication, patience, English",Education or subject-related knowledge,"Online lessons, explaining topics, preparing materials","Biñan, Laguna",Part-time
+JOB031,Administrative Assistant,"typing, Word, Excel, filing, organization",Office administration or equivalent experience,"Document preparation, filing, data entry","Los Baños, Laguna",Contract
+JOB032,Sales Assistant,"sales, communication, customer service, persuasion",Customer service or sales experience preferred,"Assisting customers, explaining products, processing sales","Calamba, Laguna",Work-from-home
+JOB033,Photo Editor,"photography, photo editing, Photoshop, creativity",Portfolio or relevant experience,"Editing photographs, enhancing images, organizing media","Santa Rosa, Laguna",Full-time
+JOB034,Bookkeeping Assistant,"bookkeeping, Excel, organization, mathematics",Accounting or bookkeeping knowledge,"Recording transactions, organizing financial records","Bay, Laguna",Part-time
+JOB035,Office Assistant,"computer literacy, typing, communication, email","Basic computer skills, college level preferred","Email handling, encoding documents, file organization","Biñan, Laguna",Contract
+JOB036,Junior Programmer,"programming, Python, Java, problem solving",IT or computer-related education,"Writing basic programs, debugging, testing applications","Los Baños, Laguna",Work-from-home
+JOB037,Customer Support Agent,"customer service, English, communication, patience",Good communication and basic computer skills,"Handling inquiries, providing support, documenting concerns","Calamba, Laguna",Full-time
+JOB038,Bakery Assistant,"baking, food preparation, teamwork, cleanliness",Basic baking or food preparation skills,"Baking assistance, ingredient preparation, cleaning","Santa Rosa, Laguna",Part-time
+JOB039,Research Assistant,"writing, research, Word, proofreading",Research and documentation skills,"Online research, organizing information, preparing reports","Bay, Laguna",Contract
+JOB040,Inventory Clerk,"Excel, inventory, typing, organization",Basic computer and inventory knowledge,"Recording products, updating inventory databases, stock records","Biñan, Laguna",Work-from-home
+JOB041,Data Entry Clerk,"typing, data entry, Microsoft Office, communication",College level or graduate,"Encoding documents, organizing files, spreadsheet use","Los Baños, Laguna",Full-time
+JOB042,Customer Service Representative,"customer service, communication, computer skills, English",Senior High School graduate,"Answering inquiries, resolving concerns, assisting customers","Calamba, Laguna",Part-time
+JOB043,Graphic Designer,"graphic design, Canva, Photoshop, creativity",Design-related education or portfolio,"Creating posters, editing images, social media graphics","Santa Rosa, Laguna",Contract
+JOB044,Kitchen Assistant,"cooking, food preparation, cleanliness, teamwork",Basic food preparation skills,"Food preparation, cleaning, kitchen assistance","Bay, Laguna",Work-from-home
+JOB045,Junior Web Developer,"HTML, CSS, JavaScript, web development",IT or computer-related education,"Creating webpages, website editing, basic coding","Biñan, Laguna",Full-time
+JOB046,Accounting Assistant,"Excel, bookkeeping, accounting, organization",Accounting or business-related education,"Recording transactions, spreadsheets, filing","Los Baños, Laguna",Part-time
+JOB047,Content Writer,"writing, English, research, proofreading","Communication, English, or related education","Writing articles, researching, proofreading","Calamba, Laguna",Contract
+JOB048,Social Media Assistant,"social media, Canva, communication, creativity",Marketing or related skills preferred,"Creating posts, managing pages, digital content","Santa Rosa, Laguna",Work-from-home
+JOB049,Inventory Assistant,"inventory, Excel, organization, record keeping",Basic computer and inventory skills,"Recording stocks, checking inventory, updating records","Bay, Laguna",Full-time
+JOB050,Online Tutor,"teaching, communication, patience, English",Education or subject-related knowledge,"Online lessons, explaining topics, preparing materials","Biñan, Laguna",Part-time
+JOB051,Administrative Assistant,"typing, Word, Excel, filing, organization",Office administration or equivalent experience,"Document preparation, filing, data entry","Los Baños, Laguna",Contract
+JOB052,Sales Assistant,"sales, communication, customer service, persuasion",Customer service or sales experience preferred,"Assisting customers, explaining products, processing sales","Calamba, Laguna",Work-from-home
+JOB053,Photo Editor,"photography, photo editing, Photoshop, creativity",Portfolio or relevant experience,"Editing photographs, enhancing images, organizing media","Santa Rosa, Laguna",Full-time
+JOB054,Bookkeeping Assistant,"bookkeeping, Excel, organization, mathematics",Accounting or bookkeeping knowledge,"Recording transactions, organizing financial records","Bay, Laguna",Part-time
+JOB055,Office Assistant,"computer literacy, typing, communication, email","Basic computer skills, college level preferred","Email handling, encoding documents, file organization","Biñan, Laguna",Contract
+JOB056,Junior Programmer,"programming, Python, Java, problem solving",IT or computer-related education,"Writing basic programs, debugging, testing applications","Los Baños, Laguna",Work-from-home
+JOB057,Customer Support Agent,"customer service, English, communication, patience",Good communication and basic computer skills,"Handling inquiries, providing support, documenting concerns","Calamba, Laguna",Full-time
+JOB058,Bakery Assistant,"baking, food preparation, teamwork, cleanliness",Basic baking or food preparation skills,"Baking assistance, ingredient preparation, cleaning","Santa Rosa, Laguna",Part-time
+JOB059,Research Assistant,"writing, research, Word, proofreading",Research and documentation skills,"Online research, organizing information, preparing reports","Bay, Laguna",Contract
+JOB060,Inventory Clerk,"Excel, inventory, typing, organization",Basic computer and inventory knowledge,"Recording products, updating inventory databases, stock records","Biñan, Laguna",Work-from-home
+JOB061,Data Entry Clerk,"typing, data entry, Microsoft Office, communication",College level or graduate,"Encoding documents, organizing files, spreadsheet use","Los Baños, Laguna",Full-time
+JOB062,Customer Service Representative,"customer service, communication, computer skills, English",Senior High School graduate,"Answering inquiries, resolving concerns, assisting customers","Calamba, Laguna",Part-time
+JOB063,Graphic Designer,"graphic design, Canva, Photoshop, creativity",Design-related education or portfolio,"Creating posters, editing images, social media graphics","Santa Rosa, Laguna",Contract
+JOB064,Kitchen Assistant,"cooking, food preparation, cleanliness, teamwork",Basic food preparation skills,"Food preparation, cleaning, kitchen assistance","Bay, Laguna",Work-from-home
+JOB065,Junior Web Developer,"HTML, CSS, JavaScript, web development",IT or computer-related education,"Creating webpages, website editing, basic coding","Biñan, Laguna",Full-time
+JOB066,Accounting Assistant,"Excel, bookkeeping, accounting, organization",Accounting or business-related education,"Recording transactions, spreadsheets, filing","Los Baños, Laguna",Part-time
+JOB067,Content Writer,"writing, English, research, proofreading","Communication, English, or related education","Writing articles, researching, proofreading","Calamba, Laguna",Contract
+JOB068,Social Media Assistant,"social media, Canva, communication, creativity",Marketing or related skills preferred,"Creating posts, managing pages, digital content","Santa Rosa, Laguna",Work-from-home
+JOB069,Inventory Assistant,"inventory, Excel, organization, record keeping",Basic computer and inventory skills,"Recording stocks, checking inventory, updating records","Bay, Laguna",Full-time
+JOB070,Online Tutor,"teaching, communication, patience, English",Education or subject-related knowledge,"Online lessons, explaining topics, preparing materials","Biñan, Laguna",Part-time
+JOB071,Administrative Assistant,"typing, Word, Excel, filing, organization",Office administration or equivalent experience,"Document preparation, filing, data entry","Los Baños, Laguna",Contract
+JOB072,Sales Assistant,"sales, communication, customer service, persuasion",Customer service or sales experience preferred,"Assisting customers, explaining products, processing sales","Calamba, Laguna",Work-from-home
+JOB073,Photo Editor,"photography, photo editing, Photoshop, creativity",Portfolio or relevant experience,"Editing photographs, enhancing images, organizing media","Santa Rosa, Laguna",Full-time
+JOB074,Bookkeeping Assistant,"bookkeeping, Excel, organization, mathematics",Accounting or bookkeeping knowledge,"Recording transactions, organizing financial records","Bay, Laguna",Part-time
+JOB075,Office Assistant,"computer literacy, typing, communication, email","Basic computer skills, college level preferred","Email handling, encoding documents, file organization","Biñan, Laguna",Contract
+JOB076,Junior Programmer,"programming, Python, Java, problem solving",IT or computer-related education,"Writing basic programs, debugging, testing applications","Los Baños, Laguna",Work-from-home
+JOB077,Customer Support Agent,"customer service, English, communication, patience",Good communication and basic computer skills,"Handling inquiries, providing support, documenting concerns","Calamba, Laguna",Full-time
+JOB078,Bakery Assistant,"baking, food preparation, teamwork, cleanliness",Basic baking or food preparation skills,"Baking assistance, ingredient preparation, cleaning","Santa Rosa, Laguna",Part-time
+JOB079,Research Assistant,"writing, research, Word, proofreading",Research and documentation skills,"Online research, organizing information, preparing reports","Bay, Laguna",Contract
+JOB080,Inventory Clerk,"Excel, inventory, typing, organization",Basic computer and inventory knowledge,"Recording products, updating inventory databases, stock records","Biñan, Laguna",Work-from-home
+JOB081,Data Entry Clerk,"typing, data entry, Microsoft Office, communication",College level or graduate,"Encoding documents, organizing files, spreadsheet use","Los Baños, Laguna",Full-time
+JOB082,Customer Service Representative,"customer service, communication, computer skills, English",Senior High School graduate,"Answering inquiries, resolving concerns, assisting customers","Calamba, Laguna",Part-time
+JOB083,Graphic Designer,"graphic design, Canva, Photoshop, creativity",Design-related education or portfolio,"Creating posters, editing images, social media graphics","Santa Rosa, Laguna",Contract
+JOB084,Kitchen Assistant,"cooking, food preparation, cleanliness, teamwork",Basic food preparation skills,"Food preparation, cleaning, kitchen assistance","Bay, Laguna",Work-from-home
+JOB085,Junior Web Developer,"HTML, CSS, JavaScript, web development",IT or computer-related education,"Creating webpages, website editing, basic coding","Biñan, Laguna",Full-time
+JOB086,Accounting Assistant,"Excel, bookkeeping, accounting, organization",Accounting or business-related education,"Recording transactions, spreadsheets, filing","Los Baños, Laguna",Part-time
+JOB087,Content Writer,"writing, English, research, proofreading","Communication, English, or related education","Writing articles, researching, proofreading","Calamba, Laguna",Contract
+JOB088,Social Media Assistant,"social media, Canva, communication, creativity",Marketing or related skills preferred,"Creating posts, managing pages, digital content","Santa Rosa, Laguna",Work-from-home
+JOB089,Inventory Assistant,"inventory, Excel, organization, record keeping",Basic computer and inventory skills,"Recording stocks, checking inventory, updating records","Bay, Laguna",Full-time
+JOB090,Online Tutor,"teaching, communication, patience, English",Education or subject-related knowledge,"Online lessons, explaining topics, preparing materials","Biñan, Laguna",Part-time
+JOB091,Administrative Assistant,"typing, Word, Excel, filing, organization",Office administration or equivalent experience,"Document preparation, filing, data entry","Los Baños, Laguna",Contract
+JOB092,Sales Assistant,"sales, communication, customer service, persuasion",Customer service or sales experience preferred,"Assisting customers, explaining products, processing sales","Calamba, Laguna",Work-from-home
+JOB093,Photo Editor,"photography, photo editing, Photoshop, creativity",Portfolio or relevant experience,"Editing photographs, enhancing images, organizing media","Santa Rosa, Laguna",Full-time
+JOB094,Bookkeeping Assistant,"bookkeeping, Excel, organization, mathematics",Accounting or bookkeeping knowledge,"Recording transactions, organizing financial records","Bay, Laguna",Part-time
+JOB095,Office Assistant,"computer literacy, typing, communication, email","Basic computer skills, college level preferred","Email handling, encoding documents, file organization","Biñan, Laguna",Contract
+JOB096,Junior Programmer,"programming, Python, Java, problem solving",IT or computer-related education,"Writing basic programs, debugging, testing applications","Los Baños, Laguna",Work-from-home
+JOB097,Customer Support Agent,"customer service, English, communication, patience",Good communication and basic computer skills,"Handling inquiries, providing support, documenting concerns","Calamba, Laguna",Full-time
+JOB098,Bakery Assistant,"baking, food preparation, teamwork, cleanliness",Basic baking or food preparation skills,"Baking assistance, ingredient preparation, cleaning","Santa Rosa, Laguna",Part-time
+JOB099,Research Assistant,"writing, research, Word, proofreading",Research and documentation skills,"Online research, organizing information, preparing reports","Bay, Laguna",Contract
+JOB100,Inventory Clerk,"Excel, inventory, typing, organization",Basic computer and inventory knowledge,"Recording products, updating inventory databases, stock records","Biñan, Laguna",Work-from-home
