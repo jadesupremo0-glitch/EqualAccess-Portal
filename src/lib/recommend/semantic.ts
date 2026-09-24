@@ -83,6 +83,48 @@ export function cosineSimilarity(a: Map<string, number>, b: Map<string, number>)
 }
 
 /**
+ * getRecommendations calls scoreJob once per candidate job, always passing the SAME `corpusJobs`
+ * array reference for the one applicant being scored. Caching the whole TF-IDF pass per that
+ * reference turns an O(jobs²) recommendation request (rebuild the space and re-scan every other
+ * job, once per job) into O(jobs) — the difference between milliseconds and multiple seconds once
+ * there are 100+ listings. The cache is a WeakMap so it never outlives the array getRecommendations
+ * built it from (a fresh array every call) — nothing to invalidate or leak.
+ */
+const fitCache = new WeakMap<Job[], Map<string, SemanticFit>>()
+
+function computeAllFits(user: PWDUser, allJobs: Job[]): Map<string, SemanticFit> {
+  const applicantDoc = applicantDocument(user)
+  const space = buildTfidfSpace([tokenize(applicantDoc), ...allJobs.map((j) => tokenize(jobDocument(j)))])
+  const applicantVec = tfidfVector(tokenize(applicantDoc), space)
+
+  const jobVecs = new Map<string, Map<string, number>>()
+  const rawSimilarities = new Map<string, number>()
+  let maxSimilarity = 0
+  for (const j of allJobs) {
+    const vec = tfidfVector(tokenize(jobDocument(j)), space)
+    jobVecs.set(j.id, vec)
+    const sim = cosineSimilarity(applicantVec, vec)
+    rawSimilarities.set(j.id, sim)
+    if (sim > maxSimilarity) maxSimilarity = sim
+  }
+
+  const results = new Map<string, SemanticFit>()
+  for (const j of allJobs) {
+    const raw = rawSimilarities.get(j.id) ?? 0
+    const similarity = maxSimilarity > 0 ? raw / maxSimilarity : 0
+    const jobVec = jobVecs.get(j.id)!
+    const sharedTerms = [...applicantVec.entries()]
+      .filter(([term]) => jobVec.has(term))
+      .map(([term, weight]) => [term, weight * (jobVec.get(term) ?? 0)] as const)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 3)
+      .map(([term]) => term)
+    results.set(j.id, { similarity, sharedTerms })
+  }
+  return results
+}
+
+/**
  * Semantic similarity between one applicant and one job. `corpusJobs` — typically every open,
  * current candidate job in the recommendation request — gives the TF-IDF space a richer, more
  * realistic vocabulary; when omitted (e.g. a standalone unit test), the space is fit from just this
@@ -95,33 +137,15 @@ export function cosineSimilarity(a: Map<string, number>, b: Map<string, number>)
  * against this applicant's best match across `corpusJobs` (their top match reaches 1.0).
  */
 export function computeSemanticFit(user: PWDUser, job: Job, corpusJobs?: Job[]): SemanticFit {
-  const applicantDoc = applicantDocument(user)
-  const candidateJobs = corpusJobs && corpusJobs.length > 0 ? corpusJobs : [job]
-  const allJobs = candidateJobs.some((j) => j.id === job.id) ? candidateJobs : [...candidateJobs, job]
-
-  const space = buildTfidfSpace([tokenize(applicantDoc), ...allJobs.map((j) => tokenize(jobDocument(j)))])
-  const applicantVec = tfidfVector(tokenize(applicantDoc), space)
-
-  let rawSimilarity = 0
-  let maxSimilarity = 0
-  let jobVecForTarget = new Map<string, number>()
-  for (const j of allJobs) {
-    const vec = tfidfVector(tokenize(jobDocument(j)), space)
-    const sim = cosineSimilarity(applicantVec, vec)
-    if (sim > maxSimilarity) maxSimilarity = sim
-    if (j.id === job.id) {
-      rawSimilarity = sim
-      jobVecForTarget = vec
+  if (corpusJobs && corpusJobs.length > 0) {
+    let fits = fitCache.get(corpusJobs)
+    if (!fits) {
+      fits = computeAllFits(user, corpusJobs)
+      fitCache.set(corpusJobs, fits)
     }
+    const fit = fits.get(job.id)
+    if (fit) return fit
+    // `job` wasn't actually part of the supplied corpus — fall through to a fresh single-pair fit.
   }
-  const similarity = maxSimilarity > 0 ? rawSimilarity / maxSimilarity : 0
-
-  const sharedTerms = [...applicantVec.entries()]
-    .filter(([term]) => jobVecForTarget.has(term))
-    .map(([term, weight]) => [term, weight * (jobVecForTarget.get(term) ?? 0)] as const)
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 3)
-    .map(([term]) => term)
-
-  return { similarity, sharedTerms }
+  return computeAllFits(user, [job]).get(job.id)!
 }

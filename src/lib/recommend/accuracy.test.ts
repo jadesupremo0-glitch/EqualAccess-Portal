@@ -109,6 +109,8 @@ describe('recommendation accuracy on labelled applicants', () => {
     })
   }
 
+  // These two run getRecommendations once per applicant against the full (113-job, post-mldataset-import)
+  // list rather than once total, so they legitimately take longer than vitest's 5s default.
   it('overall precision and recall stay at or above 90%', () => {
     let tp = 0
     let fp = 0
@@ -120,11 +122,11 @@ describe('recommendation accuracy on labelled applicants', () => {
     }
     expect(tp / (tp + fp)).toBeGreaterThanOrEqual(0.9)
     expect(tp / (tp + fn)).toBeGreaterThanOrEqual(0.9)
-  })
+  }, 20_000)
 
   it('every demo applicant gets at least one recommendation', () => {
     for (const u of pwdUsers) {
       expect(getRecommendations(u, jobs, { now: NOW }).recommendations.length, u.name).toBeGreaterThan(0)
     }
-  })
+  }, 20_000)
 })
