@@ -95,7 +95,11 @@ export default function AdminSettings() {
         <p className="text-sm text-gray-500 mb-4">
           Reset all data back to the original demo dataset. All registered users, requests, feedback, and changes will be lost.
         </p>
-        <Button variant="danger" icon={<RotateCcw size={15} />} onClick={() => setConfirmReset(true)}>Reset Demo Data</Button>
+        {store.canResetData ? (
+          <Button variant="danger" icon={<RotateCcw size={15} />} onClick={() => setConfirmReset(true)}>Reset Demo Data</Button>
+        ) : (
+          <p className="text-sm text-gray-600">The live database cannot be reset from the browser. A developer can reseed it with <code className="font-mono">npm run seed</code>.</p>
+        )}
       </Card>
 
       <Modal open={confirmReset} onClose={() => setConfirmReset(false)} title="Reset Demo Data?" size="sm">

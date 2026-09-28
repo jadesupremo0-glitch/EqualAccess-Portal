@@ -64,10 +64,9 @@ Deno.serve(async (req) => {
       return json({ ok: false, error: 'This code has expired. Please request a new one.' }, 400, headers)
     }
 
-    const { error: updErr } = await supabase
-      .from(table)
-      .update({ password: newPassword })
-      .eq('id', user.id)
+    // Passwords live in Supabase Auth (hashed); the account row only links to it.
+    if (!user.auth_id) return json({ ok: false, error: 'This account has no sign-in yet. Please contact the PDAO.' }, 400, headers)
+    const { error: updErr } = await supabase.auth.admin.updateUserById(user.auth_id, { password: newPassword })
     if (updErr) throw new Error(updErr.message)
 
     await supabase.from('password_resets').update({ used: true }).eq('id', reset.id)

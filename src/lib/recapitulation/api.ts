@@ -12,10 +12,12 @@ import type { RecapInput, RecapReport } from './types'
  * page still works in development.
  */
 
-/** The signed-in admin's id and password, re-verified by the database on every call. */
+/**
+ * The signed-in admin's id. The database checks it against the Supabase Auth session on every
+ * call (recap_assert_admin); the functions' p_secret argument is kept for compatibility only.
+ */
 export interface RecapAuth {
   adminId: string
-  secret: string
 }
 
 /** Another report already uses this as-of date. */
@@ -96,7 +98,7 @@ const byNewest = (a: RecapReport, b: RecapReport) => b.asOfDate.localeCompare(a.
 /** Every snapshot (drafts included), newest first. */
 export async function fetchRecapReports(auth: RecapAuth): Promise<RecapReport[]> {
   if (!supabase) return localLoad().sort(byNewest)
-  const { data, error } = await supabase.rpc('get_recap_reports', { p_admin_id: auth.adminId, p_secret: auth.secret })
+  const { data, error } = await supabase.rpc('get_recap_reports', { p_admin_id: auth.adminId, p_secret: '' })
   if (error) throw toError(error)
   return (data ?? []) as RecapReport[]
 }
@@ -120,7 +122,7 @@ export async function saveRecapReport(auth: RecapAuth, input: RecapInput): Promi
 
   const { data, error } = await supabase.rpc('save_recap_report', {
     p_admin_id: auth.adminId,
-    p_secret: auth.secret,
+    p_secret: '',
     p_report_id: input.id ?? null,
     p_title: input.title,
     p_as_of: input.asOfDate,
@@ -144,7 +146,7 @@ export async function deleteRecapReport(auth: RecapAuth, id: string): Promise<vo
     localPersist(localLoad().filter((r) => r.id !== id))
     return
   }
-  const { error } = await supabase.rpc('delete_recap_report', { p_admin_id: auth.adminId, p_secret: auth.secret, p_report_id: id })
+  const { error } = await supabase.rpc('delete_recap_report', { p_admin_id: auth.adminId, p_secret: '', p_report_id: id })
   if (error) throw toError(error)
 }
 

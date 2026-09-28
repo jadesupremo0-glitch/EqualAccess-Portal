@@ -24,10 +24,12 @@ function AddUserModal({ onClose }: { onClose: () => void }) {
     role: '',
   })
   const [error, setError] = useState('')
+  const [busy, setBusy] = useState(false)
 
   const set = (k: string) => (v: string) => setForm((f) => ({ ...f, [k]: v }))
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (busy) return
     if (!form.fullName || !form.username || !form.contact || !form.password || !form.role) {
       setError('Please fill in all required fields.')
       return
@@ -40,7 +42,8 @@ function AddUserModal({ onClose }: { onClose: () => void }) {
       setError('Password must be at least 8 characters.')
       return
     }
-    const result = addAdminUser({
+    setBusy(true)
+    const result = await addAdminUser({
       name: form.fullName,
       position: form.role,
       username: form.username,
@@ -49,6 +52,7 @@ function AddUserModal({ onClose }: { onClose: () => void }) {
       email: form.email || undefined,
       role: form.role as AdminUser['role'],
     })
+    setBusy(false)
     if (result) {
       setError(result)
       return
@@ -75,7 +79,7 @@ function AddUserModal({ onClose }: { onClose: () => void }) {
         <PasswordInput label="Password" placeholder="Min. 8 characters" value={form.password} onChange={(e) => set('password')(e.target.value)} required />
         <PasswordInput label="Confirm Password" placeholder="Re-enter password" value={form.confirmPassword} onChange={(e) => set('confirmPassword')(e.target.value)} required />
         <div className="flex gap-3 pt-2">
-          <Button fullWidth onClick={handleSubmit}>Create User</Button>
+          <Button fullWidth onClick={handleSubmit} disabled={busy}>{busy ? 'Creating...' : 'Create User'}</Button>
           <Button variant="outline" fullWidth onClick={onClose}>Cancel</Button>
         </div>
       </div>
@@ -148,7 +152,10 @@ function ResetPasswordModal({ user, onClose }: { user: AdminUser; onClose: () =>
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
 
-  const handleSave = () => {
+  const [busy, setBusy] = useState(false)
+
+  const handleSave = async () => {
+    if (busy) return
     if (pw.length < 8) {
       setError('New password must be at least 8 characters.')
       return
@@ -157,7 +164,13 @@ function ResetPasswordModal({ user, onClose }: { user: AdminUser; onClose: () =>
       setError('Passwords do not match.')
       return
     }
-    resetAdminPassword(user.id, pw)
+    setBusy(true)
+    const err = await resetAdminPassword(user.id, pw)
+    setBusy(false)
+    if (err) {
+      setError(err)
+      return
+    }
     onClose()
   }
 
@@ -231,11 +244,16 @@ export default function UserManagement() {
     setConfirming({ user, kind })
   }
 
-  const runConfirm = () => {
+  const runConfirm = async () => {
     if (!confirming) return
-    if (confirming.kind === 'delete') deleteAdminUser(confirming.user.id)
-    else toggleAdminStatus(confirming.user.id)
+    const { user, kind } = confirming
     setConfirming(null)
+    if (kind === 'delete') {
+      const err = await deleteAdminUser(user.id)
+      if (err) setActionError(err)
+    } else {
+      toggleAdminStatus(user.id)
+    }
   }
 
   const confirmCopy = (() => {

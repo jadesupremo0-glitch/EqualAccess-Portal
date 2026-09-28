@@ -14,9 +14,9 @@ import { createClient } from '@supabase/supabase-js'
  */
 async function main() {
   const url = process.env.VITE_SUPABASE_URL
-  const key = process.env.VITE_SUPABASE_ANON_KEY
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY
   if (!url || !key) {
-    console.error('Missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY in environment.')
+    console.error('Missing VITE_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY in environment (scripts need the service-role key since Row Level Security is on).')
     console.error('Make sure .env exists in the project root (see .env.example).')
     process.exit(1)
   }

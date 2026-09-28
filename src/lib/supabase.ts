@@ -10,10 +10,19 @@ function resolveEnv(key: string): string | undefined {
 
 const supabaseUrl = resolveEnv('VITE_SUPABASE_URL')
 const supabaseAnonKey = resolveEnv('VITE_SUPABASE_ANON_KEY')
+// Node scripts (seed, exports) run with the service-role key so Row Level Security does not
+// hide rows from them. It has no VITE_ prefix, so Vite never puts it in the browser bundle.
+const isNode = typeof window === 'undefined'
+const serviceRoleKey = isNode ? resolveEnv('SUPABASE_SERVICE_ROLE_KEY') : undefined
 
 export const supabase: SupabaseClient | null =
-  supabaseUrl && supabaseAnonKey ? createClient(supabaseUrl, supabaseAnonKey) : null
+  supabaseUrl && (serviceRoleKey || supabaseAnonKey)
+    ? createClient(supabaseUrl, (serviceRoleKey || supabaseAnonKey)!, isNode ? { auth: { persistSession: false, autoRefreshToken: false } } : undefined)
+    : null
 
 export function isSupabaseConfigured(): boolean {
   return supabase !== null
 }
+
+/** True for scripts running with the service-role key (bypasses Row Level Security). */
+export const hasServiceRole = Boolean(serviceRoleKey)

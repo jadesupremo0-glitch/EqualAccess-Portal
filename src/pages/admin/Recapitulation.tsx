@@ -49,13 +49,13 @@ export default function Recapitulation({ onNavigate }: { onNavigate: (p: string)
       </Card>
     )
   }
-  return <RecapitulationPage adminId={admin.id} secret={admin.password} username={admin.username} />
+  return <RecapitulationPage adminId={admin.id} username={admin.username} />
 }
 
-function RecapitulationPage({ adminId, secret, username }: { adminId: string; secret: string; username: string }) {
+function RecapitulationPage({ adminId, username }: { adminId: string; username: string }) {
   const { logActivity } = useStore()
   // Stable across renders, so the load effect below only runs once per sign-in.
-  const auth = useMemo<RecapAuth>(() => ({ adminId, secret }), [adminId, secret])
+  const auth = useMemo<RecapAuth>(() => ({ adminId }), [adminId])
 
   const [reports, setReports] = useState<RecapReport[]>([])
   const [loading, setLoading] = useState(true)

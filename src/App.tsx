@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { PWDLayout, AdminLayout } from './components/Layout'
 import { SessionContext, type AppSession } from './context'
 import { StoreProvider, useStore } from './store'
+import { isSupabaseConfigured } from './lib/supabase'
+import { restoredAccount, signIn, signOut, type SignedInAccount } from './lib/auth'
+import type { LoadedState } from './lib/db'
 
 // Public
 import Landing from './pages/Landing'
@@ -50,7 +53,8 @@ const ADMIN_PAGES: Page[] = [
 function AppInner() {
   const [page, setPage] = useState<Page>('landing')
   const [session, setSession] = useState<AppSession>(null)
-  const { pwdUsers, adminUsers, setActor, recordAdminLogin } = useStore()
+  const { pwdUsers, adminUsers, setActor, recordAdminLogin, reloadFromServer, clearData } = useStore()
+  const online = isSupabaseConfigured()
 
   const navigate = (p: string) => setPage(p as Page)
 
@@ -68,49 +72,94 @@ function AppInner() {
   const allowed =
     (!isPWDPage && !isAdminPage) || (sessionValid && (isPWDPage ? session?.type === 'pwd' : session?.type === 'admin'))
 
-  useEffect(() => {
-    if (allowed) return
+  const endSession = (next: Page) => {
     setSession(null)
     setActor(null)
-    setPage('login')
-  }, [allowed, setActor])
+    setPage(next)
+    if (online) {
+      clearData()
+      void signOut()
+    }
+  }
 
-  const validateCredentials = (tab: 'user' | 'admin', rawUsername: string, password: string): AppSession => {
-    const username = rawUsername.trim()
+  useEffect(() => {
+    if (allowed) return
+    endSession('login')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [allowed])
+
+  /** Opens the portal for a signed-in account, if its record is present and active in `data`. */
+  const openSession = (account: SignedInAccount, data: Pick<LoadedState, 'pwdUsers' | 'adminUsers'>): boolean => {
+    if (account.kind === 'pwd') {
+      const user = data.pwdUsers.find((u) => u.id === account.accountId && u.active !== false && !u.deletedAt)
+      if (!user) return false
+      setSession({ type: 'pwd', userId: user.id })
+      setActor(null)
+      setPage('pwd-dashboard')
+    } else {
+      const admin = data.adminUsers.find((a) => a.id === account.accountId && a.status === 'Active')
+      if (!admin) return false
+      setSession({ type: 'admin', adminId: admin.id, role: admin.role })
+      setActor(admin.username)
+      recordAdminLogin(admin.id)
+      setPage('admin-dashboard')
+    }
+    return true
+  }
+
+  // Keep people signed in across page reloads (supabase-js remembers the Auth session).
+  useEffect(() => {
+    if (!online) return
+    let cancelled = false
+    void (async () => {
+      const account = await restoredAccount()
+      if (!account || cancelled) return
+      const data = await reloadFromServer().catch(() => null)
+      if (cancelled) return
+      if (!data || !openSession(account, data)) void signOut()
+    })()
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  /** Offline demo only: passwords are checked against the local demo data. */
+  const validateLocally = (tab: 'user' | 'admin', username: string, password: string): SignedInAccount | null => {
     if (tab === 'user') {
       const user = pwdUsers.find(
         (u) => (u.pwdIdNumber === username || u.username === username || u.id === username) && u.password === password && u.active !== false && !u.deletedAt
       )
-      if (user) return { type: 'pwd', userId: user.id }
-    } else {
-      const admin = adminUsers.find(
-        (a) => a.username === username && a.password === password && a.status === 'Active'
-      )
-      if (admin) return { type: 'admin', adminId: admin.id, role: admin.role }
+      return user ? { kind: 'pwd', accountId: user.id } : null
+    }
+    const admin = adminUsers.find((a) => a.username === username && a.password === password && a.status === 'Active')
+    return admin ? { kind: 'admin', accountId: admin.id } : null
+  }
+
+  const handleLogin = async (tab: 'user' | 'admin', rawUsername: string, password: string): Promise<string | null> => {
+    const invalid = tab === 'user' ? 'Invalid PWD ID No. or password. Please check your credentials.' : 'Invalid username or password. Please check your credentials.'
+    const username = rawUsername.trim()
+    if (!online) {
+      const account = validateLocally(tab, username, password)
+      return account && openSession(account, { pwdUsers, adminUsers }) ? null : invalid
+    }
+    let account: SignedInAccount | null = null
+    try {
+      account = await signIn(tab === 'user' ? 'pwd' : 'admin', username, password)
+    } catch {
+      return 'Could not reach the server. Please check your connection and try again.'
+    }
+    if (!account) return invalid
+    const data = await reloadFromServer().catch(() => null)
+    if (!data || !openSession(account, data)) {
+      await signOut()
+      clearData()
+      return invalid
     }
     return null
   }
 
-  const handleLogin = (tab: 'user' | 'admin', username: string, password: string): string | null => {
-    const newSession = validateCredentials(tab, username, password)
-    if (!newSession) return tab === 'user' ? 'Invalid PWD ID No. or password. Please check your credentials.' : 'Invalid username or password. Please check your credentials.'
-    setSession(newSession)
-    if (newSession.type === 'pwd') {
-      setActor(null)
-      setPage('pwd-dashboard')
-    } else {
-      setActor(adminUsers.find((a) => a.id === newSession.adminId)?.username ?? null)
-      recordAdminLogin(newSession.adminId)
-      setPage('admin-dashboard')
-    }
-    return null
-  }
-
-  const logout = () => {
-    setSession(null)
-    setActor(null)
-    setPage('landing')
-  }
+  const logout = () => endSession('landing')
 
   if (!allowed) return null
 

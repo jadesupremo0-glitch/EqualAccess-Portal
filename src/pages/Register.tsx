@@ -52,11 +52,14 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
     return Object.keys(e).length === 0
   }
 
-  const next = () => {
+  const [submitting, setSubmitting] = useState(false)
+  const next = async () => {
+    if (submitting) return
     if (validateStep()) {
       if (step === 4) {
-        // Persist user to store
-        const result = registerPWD({
+        setSubmitting(true)
+        setSubmitError('')
+        const result = await registerPWD({
           fullName: form.fullName.trim(),
           age: Number(form.age),
           address: form.address.trim(),
@@ -68,8 +71,9 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
           pwdIdNumber: form.pwdIdNumber.trim(),
           password: form.password,
         })
-        if (result.error) {
-          setSubmitError(result.error)
+        setSubmitting(false)
+        if (!result.ok) {
+          setSubmitError(result.error ?? 'Registration failed. Please try again.')
           return
         }
         setDone(true)

@@ -37,8 +37,8 @@ function toRow(job: Job): Record<string, unknown> {
 }
 
 async function main() {
-  if (!process.env.VITE_SUPABASE_URL || !process.env.VITE_SUPABASE_ANON_KEY) {
-    console.error('Missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY in environment.')
+  if (!process.env.VITE_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    console.error('Missing VITE_SUPABASE_URL / SUPABASE_SERVICE_ROLE_KEY in environment (scripts need the service-role key since Row Level Security is on).')
     console.error('Make sure .env exists in the project root (see .env.example).')
     process.exit(1)
   }

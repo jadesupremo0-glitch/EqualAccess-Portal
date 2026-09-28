@@ -27,7 +27,7 @@ export default function Login({
   onLogin,
 }: {
   onNavigate: (p: string) => void
-  onLogin: (tab: 'user' | 'admin', username: string, password: string) => string | null
+  onLogin: (tab: 'user' | 'admin', username: string, password: string) => Promise<string | null>
 }) {
   const [tab, setTab] = useState<'user' | 'admin'>('user')
   const [username, setUsername] = useState('')  // stores PWD ID No. or admin username
@@ -150,9 +150,8 @@ export default function Login({
     if (!username || !password) { setError(tab === 'user' ? 'Please enter your PWD ID No. and password.' : 'Please enter your username and password.'); return }
     setError('')
     setLoading(true)
-    setTimeout(() => {
+    void onLogin(tab, username, password).then((err) => {
       setLoading(false)
-      const err = onLogin(tab, username, password)
       if (err) { setError(err); return }
       try {
         if (remember) {
@@ -163,7 +162,7 @@ export default function Login({
       } catch {
         // storage unavailable — skip
       }
-    }, 600)
+    })
   }
 
   return (

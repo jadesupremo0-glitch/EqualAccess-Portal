@@ -32,3 +32,11 @@ export const json = (payload: unknown, status: number, headers: Record<string, s
     status,
     headers: { 'Content-Type': 'application/json', ...headers },
   })
+
+/**
+ * The Supabase Auth email behind an account. People sign in with their PWD ID / username;
+ * the app resolves it to this address (SQL: public.login_email — keep the two identical).
+ * Built from the permanent record id, so editing a username or PWD ID never breaks sign-in.
+ */
+export const loginEmail = (kind: AccountKind, accountId: string): string =>
+  `${kind}.${accountId.replace(/[^A-Za-z0-9]+/g, '-').toLowerCase()}@accounts.equalaccess.invalid`

@@ -20,7 +20,8 @@ export type BenefitStatus = 'Draft' | 'Pending Approval' | 'Approved' | 'Active'
 export interface PWDUser {
   id: string
   username: string
-  password: string
+  /** Offline demo only; online, passwords live in Supabase Auth and never reach the browser. */
+  password?: string
   name: string
   address: string
   barangay: string
@@ -130,7 +131,8 @@ export interface AdminUser {
   name: string
   position: string
   username: string
-  password: string
+  /** Offline demo only (see PWDUser.password). */
+  password?: string
   contact?: string
   email?: string
   role: 'Administrator' | 'Benefits Officer' | 'Social Worker' | 'Records Officer'

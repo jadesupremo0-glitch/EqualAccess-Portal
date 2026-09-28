@@ -24,7 +24,6 @@ export interface DataActivityEntry {
 const PWD_USER_MAP: Record<string, string> = {
   id: 'id',
   username: 'username',
-  password: 'password',
   name: 'name',
   address: 'address',
   barangay: 'barangay',
@@ -133,7 +132,6 @@ const ADMIN_USER_MAP: Record<string, string> = {
   name: 'name',
   position: 'position',
   username: 'username',
-  password: 'password',
   contact: 'contact',
   email: 'email',
   role: 'role',

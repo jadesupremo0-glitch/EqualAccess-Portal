@@ -22,7 +22,8 @@ import {
   type BenefitStatus,
 } from './data'
 import { isSupabaseConfigured } from './lib/supabase'
-import { loadStateFromSupabase, syncStateToSupabase, resetSupabaseData, EMPTY_STATE, type LoadedState } from './lib/db'
+import { loadStateFromSupabase, syncStateToSupabase, EMPTY_STATE, type LoadedState } from './lib/db'
+import { callFunction, changeOwnPassword } from './lib/auth'
 import { APP_TIME_ZONE, DISABILITY_LABEL_BY_SLUG, OTHER_DISABILITY, manilaDate } from './lib/catalog'
 import { normalizeJob, normalizeUser } from './lib/normalize'
 
@@ -34,6 +35,14 @@ const STORAGE_KEY = 'equalaccess-portal:v2'
 
 /** How often the app re-reads the database in the background (also on window focus). */
 const REFRESH_INTERVAL_MS = 30_000
+
+/**
+ * With a database configured, access is enforced by Supabase Auth + Row Level Security: this
+ * browser only ever holds what the signed-in account may see, and nothing is cached in
+ * localStorage. Without one (local development), the demo data lives in localStorage and
+ * passwords are checked against it.
+ */
+const ONLINE = isSupabaseConfigured()
 
 export interface ActivityEntry {
   user: string
@@ -74,6 +83,16 @@ function nextId(prefix: string, items: { id: string }[]): string {
     if (m) max = Math.max(max, parseInt(m[1], 10))
   }
   return `${prefix}-${String(max + 1).padStart(3, '0')}`
+}
+
+/**
+ * Id for a record many clients create at once (requests, tickets, notifications). A PWD only sees
+ * their own rows, so "highest number + 1" would collide with other people's records.
+ */
+function newId(prefix: string): string {
+  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+  const bytes = crypto.getRandomValues(new Uint8Array(6))
+  return `${prefix}-${Array.from(bytes, (b) => alphabet[b % alphabet.length]).join('')}`
 }
 
 function nextPWDId(items: PWDUser[]): string {
@@ -129,6 +148,11 @@ const seedState = (): AppState => ({
 })
 
 function loadState(): AppState {
+  if (ONLINE) {
+    // Older versions cached the whole database here, for anyone using this browser to read.
+    try { window.localStorage.removeItem(STORAGE_KEY) } catch { /* ignore */ }
+    return { ...EMPTY_STATE }
+  }
   const fallback = seedState()
   if (typeof window === 'undefined') return fallback
   try {
@@ -200,6 +224,10 @@ interface StoreContextValue extends AppState {
   dataVersion: number
   /** Re-reads the database now (no-op offline, or while local changes are still being written). */
   refreshFromServer: () => Promise<void>
+  /** Waits for pending writes, then replaces local data with what the signed-in account may see. */
+  reloadFromServer: () => Promise<LoadedState>
+  /** Drops all loaded data (after sign-out). */
+  clearData: () => void
 
   // navigation / search helpers
   globalSearch: string
@@ -208,9 +236,9 @@ interface StoreContextValue extends AppState {
   setRequestDraft: (draft: { type?: string; title?: string } | null) => void
 
   // PWD
-  registerPWD: (input: RegisterInput) => { ok: boolean; error?: string }
+  registerPWD: (input: RegisterInput) => Promise<{ ok: boolean; error?: string }>
   updateProfile: (userId: string, patch: Partial<PWDUser>) => void
-  changePassword: (userId: string, current: string, next: string) => string | null
+  changePassword: (userId: string, current: string, next: string) => Promise<string | null>
   resetPassword: (kind: 'user' | 'admin', identifier: string, next: string) => { ok: boolean; error?: string }
   addRequest: (userId: string, input: { type: string; title: string; description: string }) => AssistanceRequest
   submitFeedback: (userId: string, input: { category: string; subject: string; message: string; anonymous: boolean }) => FeedbackTicket
@@ -244,12 +272,13 @@ interface StoreContextValue extends AppState {
   setFeedbackStatus: (ticketId: string, status: FeedbackTicket['status']) => void
 
   // Admin — users
-  addAdminUser: (input: AdminUserInput) => string | null
+  addAdminUser: (input: AdminUserInput) => Promise<string | null>
   /** Returns an error message (e.g. username taken) or null when saved. */
   updateAdminUser: (id: string, patch: Partial<AdminUser>) => string | null
   toggleAdminStatus: (id: string) => void
-  resetAdminPassword: (id: string, password?: string) => void
-  deleteAdminUser: (id: string) => void
+  /** Both return an error message or null. */
+  resetAdminPassword: (id: string, password: string) => Promise<string | null>
+  deleteAdminUser: (id: string) => Promise<string | null>
   /** Stamps the admin's "Last Login" with the current Asia/Manila date and time. */
   recordAdminLogin: (id: string) => void
 
@@ -258,7 +287,10 @@ interface StoreContextValue extends AppState {
   logActivity: (action: string, activity: string, user?: string) => void
   /** Username that admin actions are attributed to in the activity log (null when signed out). */
   setActor: (username: string | null) => void
+  /** Offline only: restore the demo data. Online, reseed with `npm run seed` instead. */
   resetData: () => void
+  /** False when the data lives in the shared database (the demo reset is then unavailable). */
+  canResetData: boolean
 }
 
 const StoreContext = createContext<StoreContextValue | null>(null)
@@ -318,7 +350,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     } catch {
       return // offline or schema behind: keep what we have
     }
-    if (!result || !result.seeded) return
+    if (!result) return
     if (inFlight.current > 0 || stateRef.current !== synced.current) return // edited while we were reading
     const remote = result.state
     if (JSON.stringify(remote) === JSON.stringify(stateRef.current)) return
@@ -330,8 +362,26 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const refreshRef = useRef(refreshFromServer)
   refreshRef.current = refreshFromServer
 
-  // Load from Supabase when the app starts. If the remote database has no
-  // rows yet, the local seed data is written to it so it is provisioned on first run.
+  async function reloadFromServer(): Promise<LoadedState> {
+    await queue.current
+    const result = await loadStateFromSupabase()
+    const remote = result?.state ?? EMPTY_STATE
+    synced.current = remote
+    stateRef.current = remote
+    setState(remote)
+    setDataVersion((v) => v + 1)
+    return remote
+  }
+
+  function clearData() {
+    const empty = { ...EMPTY_STATE }
+    synced.current = empty
+    stateRef.current = empty
+    setState(empty)
+  }
+
+  // Load from Supabase when the app starts (only what the current session may see — nothing
+  // for a guest). The database is never provisioned from a browser; use `npm run seed`.
   useEffect(() => {
     let cancelled = false
     async function init() {
@@ -346,12 +396,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         // network/client error: fall back to the local copy
       }
       if (cancelled) return
-      if (result && result.seeded) {
+      if (result) {
         synced.current = result.state
         stateRef.current = result.state
         setState(result.state)
       }
-      // Otherwise `synced` stays empty, so the first flush writes everything we have.
       setDbReady(true)
     }
     void init()
@@ -361,12 +410,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   }, [])
 
   useEffect(() => {
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
-    } catch {
-      // storage unavailable: run in-memory
+    if (!ONLINE) {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state))
+      } catch {
+        // storage unavailable: run in-memory
+      }
     }
-    if (!dbReady || !isSupabaseConfigured()) return
+    if (!dbReady || !ONLINE) return
     flush()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, dbReady])
@@ -395,7 +446,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     ...s,
     notifications: [
       {
-        id: nextId('NOT', s.notifications),
+        id: newId('NOT'),
         type,
         title,
         message,
@@ -417,12 +468,21 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     pwdUsers: visiblePwdUsers,
     dataVersion,
     refreshFromServer,
+    reloadFromServer,
+    clearData,
+    canResetData: !ONLINE,
     globalSearch,
     setGlobalSearch,
     requestDraft,
     setRequestDraft,
 
-    registerPWD(input) {
+    async registerPWD(input) {
+      const disability: DisabilityType = DISABILITY_LABEL_BY_SLUG[input.disabilityType] ?? OTHER_DISABILITY
+      if (ONLINE) {
+        // Guests cannot write to the database; the Edge Function creates the record and its sign-in.
+        const res = await callFunction('register-pwd', { ...input, disabilityType: disability })
+        return res.ok ? { ok: true } : { ok: false, error: res.error ?? 'Registration failed. Please try again.' }
+      }
       // Checked here, not inside the updater: React may run updaters after setState returns,
       // so an error set in one would be read too late and a rejected sign-up reported as a success.
       const pwdIdNumber = input.pwdIdNumber.trim()
@@ -432,7 +492,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }
       setState((s) => {
         if (isTaken(s.pwdUsers)) return s
-        const disability: DisabilityType = DISABILITY_LABEL_BY_SLUG[input.disabilityType] ?? OTHER_DISABILITY
         const user: PWDUser = {
           id: nextPWDId(s.pwdUsers),
           username: input.pwdIdNumber.trim(),
@@ -481,16 +540,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       })
     },
 
-    changePassword(userId, current, next) {
+    async changePassword(userId, current, next) {
+      if (next.length < 8) return 'New password must be at least 8 characters.'
+      if (ONLINE) return changeOwnPassword(current, next)
       const user = state.pwdUsers.find((u) => u.id === userId)
       if (!user) return 'User not found.'
       if (user.password !== current) return 'Current password is incorrect.'
-      if (next.length < 8) return 'New password must be at least 8 characters.'
       setState((s) => ({ ...s, pwdUsers: s.pwdUsers.map((u) => (u.id === userId ? { ...u, password: next } : u)) }))
       return null
     },
 
     resetPassword(kind, identifier, next) {
+      // Online, the reset-password Edge Function already changed the Auth password.
+      if (ONLINE) return { ok: true }
       const id = identifier.trim()
       let ok = false
       if (kind === 'admin') {
@@ -518,7 +580,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     addRequest(userId, input) {
       const user = state.pwdUsers.find((u) => u.id === userId)
       const req: AssistanceRequest = {
-        id: nextId('REQ-LB-' + today().slice(0, 4), stateRef.current.assistanceRequests),
+        id: newId('REQ-LB-' + today().slice(0, 4)),
         pwdName: user?.name ?? 'PWD User',
         pwdId: userId,
         type: input.type,
@@ -543,7 +605,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     submitFeedback(userId, input) {
       const user = state.pwdUsers.find((u) => u.id === userId)
       const ticket: FeedbackTicket = {
-        id: nextId('TKT-LB-' + today().slice(0, 4), stateRef.current.feedbackTickets),
+        id: newId('TKT-LB-' + today().slice(0, 4)),
         pwdName: input.anonymous ? 'Anonymous' : (user?.name ?? 'PWD User'),
         isAnonymous: input.anonymous,
         subject: input.subject,
@@ -788,7 +850,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }))
     },
 
-    addAdminUser(input) {
+    async addAdminUser(input) {
+      if (ONLINE) {
+        const res = await callFunction('admin-users', { action: 'create', ...input })
+        if (!res.ok) return res.error ?? 'Could not create the account.'
+        await reloadFromServer()
+        setState((s) => log(s, actor(), 'Added Admin User', `Created admin account ${input.username.trim()} (${res.id})`))
+        return null
+      }
       // Checked before setState for the same reason as registerPWD.
       const username = input.username.trim()
       const isTaken = (users: AdminUser[]) => users.some((u) => u.username.toLowerCase() === username.toLowerCase())
@@ -836,25 +905,32 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       })
     },
 
-    resetAdminPassword(id, password) {
+    async resetAdminPassword(id, password) {
+      const username = stateRef.current.adminUsers.find((x) => x.id === id)?.username ?? id
+      if (ONLINE) {
+        const res = await callFunction('admin-users', { action: 'set-password', id, password })
+        if (!res.ok) return res.error ?? 'Could not reset the password.'
+      }
       setState((s) => {
-        const u = s.adminUsers.find((x) => x.id === id)
-        let next: AppState = {
-          ...s,
-          adminUsers: s.adminUsers.map((x) => (x.id === id ? { ...x, password: password || 'admin123' } : x)),
-        }
-        next = log(next, actor(), 'Reset Password', `Reset password for admin account ${u?.username ?? id}`)
-        return next
+        const next: AppState = ONLINE
+          ? s
+          : { ...s, adminUsers: s.adminUsers.map((x) => (x.id === id ? { ...x, password } : x)) }
+        return log(next, actor(), 'Reset Password', `Reset password for admin account ${username}`)
       })
+      return null
     },
 
-    deleteAdminUser(id) {
-      setState((s) => {
-        const u = s.adminUsers.find((x) => x.id === id)
-        let next: AppState = { ...s, adminUsers: s.adminUsers.filter((x) => x.id !== id) }
-        next = log(next, actor(), 'Deleted Admin User', `Deleted admin account ${u?.username ?? id}`)
-        return next
-      })
+    async deleteAdminUser(id) {
+      const username = stateRef.current.adminUsers.find((x) => x.id === id)?.username ?? id
+      if (ONLINE) {
+        const res = await callFunction('admin-users', { action: 'delete', id })
+        if (!res.ok) return res.error ?? 'Could not delete the account.'
+        await reloadFromServer()
+      } else {
+        setState((s) => ({ ...s, adminUsers: s.adminUsers.filter((x) => x.id !== id) }))
+      }
+      setState((s) => log(s, actor(), 'Deleted Admin User', `Deleted admin account ${username}`))
+      return null
     },
 
     recordAdminLogin(id) {
@@ -871,6 +947,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
 
     resetData() {
+      // Online this would wipe the shared database from a browser; `npm run seed` does it instead.
+      if (ONLINE) return
       try {
         window.localStorage.removeItem(STORAGE_KEY)
       } catch {
@@ -879,15 +957,6 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       const seed = seedState()
       stateRef.current = seed
       setState(seed)
-      if (isSupabaseConfigured()) {
-        // The reset rewrites the whole database, so the state we set is now the synced state.
-        // It runs on the write queue so a write already in flight cannot land after the wipe.
-        synced.current = seed
-        queue.current = queue.current
-          .then(() => resetSupabaseData(seed))
-          .then(() => setDataVersion((v) => v + 1))
-          .catch((err) => console.warn('[sync] Reset failed:', err))
-      }
     },
   }
 

@@ -11,11 +11,14 @@ export default function ChangePasswordForm({ userId }: { userId: string }) {
   const [confirm, setConfirm] = useState('')
   const [error, setError] = useState('')
   const [done, setDone] = useState(false)
+  const [busy, setBusy] = useState(false)
 
-  const submit = () => {
+  const submit = async () => {
     if (!current || !next) { setError('Please fill in all password fields.'); return }
     if (next !== confirm) { setError('New passwords do not match.'); return }
-    const err = changePassword(userId, current, next)
+    setBusy(true)
+    const err = await changePassword(userId, current, next)
+    setBusy(false)
     if (err) { setError(err); return }
     setError('')
     setCurrent(''); setNext(''); setConfirm('')
@@ -33,7 +36,7 @@ export default function ChangePasswordForm({ userId }: { userId: string }) {
         <PasswordInput label="New Password" placeholder="Min. 8 characters" value={next} onChange={(e) => setNext(e.target.value)} autoComplete="new-password" />
         <PasswordInput label="Confirm New Password" placeholder="Re-enter new password" value={confirm} onChange={(e) => setConfirm(e.target.value)} autoComplete="new-password" />
       </div>
-      <Button onClick={submit} icon={<CheckCircle size={15} />}>Update Password</Button>
+      <Button onClick={submit} disabled={busy} icon={<CheckCircle size={15} />}>{busy ? 'Updating...' : 'Update Password'}</Button>
     </div>
   )
 }
