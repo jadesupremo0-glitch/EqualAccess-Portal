@@ -150,9 +150,29 @@ const FEEDBACK_MAP: Record<string, string> = {
   dateSubmitted: 'date_submitted',
   status: 'status',
   assignedStaff: 'assigned_staff',
-  responses: 'responses',
   userId: 'user_id',
 }
+
+// Replies / internal notes live in `feedback_responses` (one row each, so Row Level Security can
+// hide internal notes from PWDs). In memory they stay on the ticket as `responses`, in order.
+type TicketResponse = FeedbackTicket['responses'][number]
+
+const responseFromRow = (r: Record<string, unknown>): TicketResponse => ({
+  author: (r.author as string) ?? '',
+  date: (r.date as string) ?? '',
+  message: (r.message as string) ?? '',
+  ...(r.is_internal ? { isInternal: true } : {}),
+  ...(r.from_user ? { fromUser: true } : {}),
+})
+
+const responseToRow = (ticketId: string, r: TicketResponse): Record<string, unknown> => ({
+  ticket_id: ticketId,
+  author: r.author,
+  date: r.date,
+  message: r.message,
+  is_internal: Boolean(r.isInternal),
+  from_user: Boolean(r.fromUser),
+})
 
 // ── Generic converters ─────────────────────────────────────────────
 
@@ -222,7 +242,7 @@ const activityFromRow = (r: Record<string, unknown>): DataActivityEntry => ({
 export async function loadStateFromSupabase(): Promise<{ state: LoadedState; seeded: boolean } | null> {
   if (!supabase) return null
 
-  const [pwds, benefits, requests, notifications, jobs, admins, feedback, activity] =
+  const [pwds, benefits, requests, notifications, jobs, admins, feedback, activity, responses] =
     await Promise.all([
       supabase.from('pwd_users').select('*'),
       supabase.from('benefits').select('*'),
@@ -232,11 +252,18 @@ export async function loadStateFromSupabase(): Promise<{ state: LoadedState; see
       supabase.from('admin_users').select('*'),
       supabase.from('feedback_tickets').select('*'),
       supabase.from('activity_log').select('*').order('id', { ascending: false }),
+      supabase.from('feedback_responses').select('*').order('id', { ascending: true }),
     ])
 
   // A failed read must never look like "the database is empty" — that would trigger a re-seed.
-  const failed = [pwds, benefits, requests, notifications, jobs, admins, feedback, activity].find((r) => r.error)
+  const failed = [pwds, benefits, requests, notifications, jobs, admins, feedback, activity, responses].find((r) => r.error)
   if (failed?.error) throw new Error(failed.error.message)
+
+  const responsesByTicket = new Map<string, TicketResponse[]>()
+  for (const r of responses.data ?? []) {
+    const id = r.ticket_id as string
+    responsesByTicket.set(id, [...(responsesByTicket.get(id) ?? []), responseFromRow(r)])
+  }
 
   const seeded =
     (pwds.data?.length ?? 0) > 0 && (benefits.data?.length ?? 0) > 0 && (jobs.data?.length ?? 0) > 0
@@ -249,7 +276,10 @@ export async function loadStateFromSupabase(): Promise<{ state: LoadedState; see
       notifications: (notifications.data ?? []).map((r) => fromRow(r, NOTIFICATION_MAP) as unknown as Notification),
       jobs: (jobs.data ?? []).map((r) => normalizeJob({ ...fromRow(r, JOB_LEGACY_READ_MAP), ...fromRow(r, JOB_MAP) })),
       adminUsers: (admins.data ?? []).map((r) => fromRow(r, ADMIN_USER_MAP) as unknown as AdminUser),
-      feedbackTickets: (feedback.data ?? []).map((r) => fromRow(r, FEEDBACK_MAP) as unknown as FeedbackTicket),
+      feedbackTickets: (feedback.data ?? []).map((r) => ({
+        ...(fromRow(r, FEEDBACK_MAP) as unknown as FeedbackTicket),
+        responses: responsesByTicket.get(r.id as string) ?? [],
+      })),
       activityLog: (activity.data ?? []).map(activityFromRow),
     },
     seeded,
@@ -328,6 +358,23 @@ export async function syncStateToSupabase(prev: LoadedState, next: LoadedState):
 
   const results = await Promise.all(tasks)
   const errors = results.map((r) => r.error?.message).filter((m): m is string => Boolean(m))
+
+  // Replies are append-only: insert the ones added since `prev`, after their tickets exist.
+  if (errors.length === 0) {
+    const before = new Map(prev.feedbackTickets.map((t) => [t.id, t]))
+    const newResponses: Record<string, unknown>[] = []
+    for (const t of next.feedbackTickets) {
+      const old = before.get(t.id)
+      if (old === t) continue
+      const had = old?.responses ?? []
+      if (!had.every((r, i) => t.responses[i] === r)) continue // history is never rewritten
+      for (const r of t.responses.slice(had.length)) newResponses.push(responseToRow(t.id, r))
+    }
+    if (newResponses.length > 0) {
+      const inserted = await client.from('feedback_responses').insert(newResponses)
+      if (inserted.error) errors.push(inserted.error.message)
+    }
+  }
 
   // The activity log is newest-first in memory and read back `order by id desc`, so rows must be
   // inserted oldest-first. Entries are only ever prepended: when `prev` is still the tail of `next`,
