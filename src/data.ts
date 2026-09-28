@@ -718,6 +718,7 @@ export const notifications: Notification[] = [
     message: 'Your EqualAccess Portal account has been verified. You now have full access to all benefits and programs.',
     date: '2024-01-16',
     read: false,
+    userId: 'PWD-LB-2024-0042',
   },
   {
     id: 'NOT-002',
@@ -734,6 +735,7 @@ export const notifications: Notification[] = [
     message: 'Your request REQ-LB-2024-002 for Eye Examination and Eyeglasses Assistance has been approved.',
     date: '2024-01-25',
     read: true,
+    userId: 'PWD-LB-2024-0042',
   },
   {
     id: 'NOT-004',
@@ -742,6 +744,7 @@ export const notifications: Notification[] = [
     message: 'Request REQ-LB-2024-001 requires a Barangay Certificate. Please submit within 7 days.',
     date: '2024-02-16',
     read: false,
+    userId: 'PWD-LB-2024-0042',
   },
   {
     id: 'NOT-005',
@@ -758,6 +761,7 @@ export const notifications: Notification[] = [
     message: 'Based on your profile skills, 3 new PWD-friendly job opportunities match your qualifications.',
     date: '2024-03-01',
     read: false,
+    userId: 'PWD-LB-2024-0042',
   },
 ]
 

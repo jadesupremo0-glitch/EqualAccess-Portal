@@ -38,6 +38,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
       if (!form.address) e.address = 'Address is required'
       if (!form.barangay) e.barangay = 'Please select your barangay'
       if (!form.contact) e.contact = 'Contact number is required'
+      if (form.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) e.email = 'Please enter a valid email address'
     }
     if (step === 2) {
       if (!form.disabilityType) e.disabilityType = 'Please select a disability type'
@@ -185,7 +186,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
                   <Input label="Home Address" placeholder="House No., Street Name" value={form.address} onChange={(e) => set('address', e.target.value)} error={errors.address} required />
                   <Select label="Barangay (Los Baños)" options={barangayOptions} value={form.barangay} onChange={(v) => set('barangay', v)} placeholder="Select your barangay" error={errors.barangay} required />
                   <Input label="Contact Number" type="tel" placeholder="+63 9XX XXX XXXX" value={form.contact} onChange={(e) => set('contact', e.target.value)} error={errors.contact} required />
-                  <Input label="Email Address (optional)" type="email" placeholder="your.email@example.com" value={form.email} onChange={(e) => set('email', e.target.value)} />
+                  <Input label="Email Address (recommended)" type="email" placeholder="your.email@example.com" value={form.email} onChange={(e) => set('email', e.target.value)} error={errors.email} helperText="Needed to reset your password yourself. Without one, ask the PDAO office for help." />
                 </>
               )}
               {step === 2 && (

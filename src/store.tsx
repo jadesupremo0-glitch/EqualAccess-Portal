@@ -125,10 +125,13 @@ const TIMELINE_PROGRESS: Record<RequestStatus, { done: number; active: number | 
 function buildTimeline(status: RequestStatus, date: string, prev: AssistanceRequest['timeline'] = []) {
   const { done, active } = TIMELINE_PROGRESS[status] ?? TIMELINE_PROGRESS.Pending
   return TIMELINE_STEPS.map((step, i) => {
-    const completed = i <= done
+    const before = prev.find((s) => s.step === step)
+    // "Requirements Needed" is optional: it only counts as done if documents were actually requested.
+    const skipped = step === 'Requirements Needed' && status !== 'Requirements Needed' && !before?.completed
+    const completed = i <= done && !skipped
     return {
       step,
-      date: completed ? (prev.find((s) => s.step === step)?.date || date) : '',
+      date: completed ? (before?.date || date) : '',
       completed,
       active: i === active,
     }

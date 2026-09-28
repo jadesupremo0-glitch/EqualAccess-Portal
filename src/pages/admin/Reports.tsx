@@ -10,6 +10,7 @@ import { useStore } from '../../store'
 import { BARANGAYS, DISABILITY_TYPES, ALL_BARANGAYS_LABEL, manilaDate, barangayLabel } from '../../lib/catalog'
 import { computeStats, type StatsFilter } from '../../lib/stats'
 import { CSV_MIME, csvLine, downloadBlob } from '../../lib/recapitulation/export'
+import { isOpenForApplication } from '../../lib/programs'
 
 const COLORS = ['#2563eb', '#16a34a', '#d97706', '#dc2626', '#8b5cf6', '#0891b2']
 
@@ -57,7 +58,8 @@ export default function Reports() {
     return { rows, other: other.pwds > 0 || other.requests > 0 ? other : null }
   }, [pwdUsers, assistanceRequests, filter, stats])
 
-  const activePrograms = benefits.filter((b) => b.status === 'Active').length
+  // "Currently open to applicants": published and the application deadline has not passed.
+  const activePrograms = benefits.filter((b) => isOpenForApplication(b)).length
 
   const tableRows = [...barangayRows.rows, ...(barangayRows.other ? [barangayRows.other] : [])]
   const rowLabel = (name: string) => (name.startsWith('Other') ? name : barangayLabel(name))

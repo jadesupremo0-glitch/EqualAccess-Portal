@@ -1,9 +1,10 @@
 import { useState } from 'react'
 import { Filter, Calendar, MapPin, Clock, Users, CheckCircle } from 'lucide-react'
 import { type Benefit, type BenefitCategory } from '../../data'
-import { Card, Button, SearchBar, statusBadge, Modal, Select } from '../../components/ui'
+import { Badge, Card, Button, SearchBar, statusBadge, Modal, Select } from '../../components/ui'
 import { useStore } from '../../store'
 import { ASSISTANCE_TYPES } from '../../lib/catalog'
+import { deadlinePassed, isOpenForApplication, isPublished } from '../../lib/programs'
 
 /**
  * A program's category → the assistance-request type it is applied for under. Program categories
@@ -45,7 +46,7 @@ function BenefitCard({ benefit, onView }: { benefit: Benefit; onView: () => void
           </span>
           <h3 className="font-semibold text-gray-900 text-sm leading-snug">{benefit.name}</h3>
         </div>
-        {statusBadge(benefit.status)}
+        {deadlinePassed(benefit) ? <Badge variant="neutral">Deadline passed</Badge> : statusBadge(benefit.status)}
       </div>
       <p className="text-xs text-gray-500 leading-relaxed mb-4 flex-1 line-clamp-3">{benefit.description}</p>
       <div className="space-y-1.5 mb-4">
@@ -131,7 +132,11 @@ function BenefitDetail({ benefit, onClose, onApply }: { benefit: Benefit; onClos
         </div>
 
         <div className="flex gap-3 pt-2">
-          <Button size="lg" onClick={onApply} fullWidth>Apply for This Program</Button>
+          {deadlinePassed(benefit) ? (
+            <Button size="lg" fullWidth disabled>Applications closed ({benefit.applicationDeadline})</Button>
+          ) : (
+            <Button size="lg" onClick={onApply} fullWidth>Apply for This Program</Button>
+          )}
           <Button size="lg" variant="outline" onClick={onClose}>Close</Button>
         </div>
       </div>
@@ -146,15 +151,16 @@ export default function Benefits({ onNavigate }: { onNavigate: (p: string) => vo
   const [selected, setSelected] = useState<Benefit | null>(null)
   const [showFilters, setShowFilters] = useState(false)
 
+  // Open programs first; ones whose deadline has passed are still listed (marked) for reference.
   const filtered = benefits.filter((b) => {
     // PWDs only see Approved and Active programs
-    if (b.status !== 'Approved' && b.status !== 'Active') return false
+    if (!isPublished(b)) return false
     const q = globalSearch.toLowerCase()
     const matchSearch = !globalSearch || b.name.toLowerCase().includes(q) || b.description.toLowerCase().includes(q) || b.category.toLowerCase().includes(q)
     const matchCat = !category || b.category === category
     const matchStatus = !statusFilter || b.status === statusFilter
     return matchSearch && matchCat && matchStatus
-  })
+  }).sort((a, b) => Number(isOpenForApplication(b)) - Number(isOpenForApplication(a)))
 
   const handleApply = (benefit: Benefit) => {
     setRequestDraft({ type: REQUEST_TYPE_FOR_CATEGORY[benefit.category] ?? 'Other Service Assistance', title: benefit.name })

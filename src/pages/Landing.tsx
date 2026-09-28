@@ -6,6 +6,7 @@ import {
 } from 'lucide-react'
 import { Button } from '../components/ui'
 import PublicRecap from '../components/recapitulation/PublicRecap'
+import { BARANGAYS } from '../lib/catalog'
 import logoUrl from '../assets/logo.png'
 import heroIllustrationUrl from '../assets/hero-pwd-illustration.png'
 
@@ -155,8 +156,9 @@ export default function Landing({ onNavigate }: { onNavigate: (p: string) => voi
                 />
               </div>
               <div className="absolute -top-6 -right-6 glass-strong rounded-2xl p-4 shadow-xl animate-blob-delayed">
-                <p className="font-display text-2xl font-extrabold text-gradient">71%</p>
-                <p className="text-xs text-slate-500 font-semibold">Approval Rate</p>
+                {/* A fact, not a statistic: the portal cannot show live figures to guests. */}
+                <p className="font-display text-2xl font-extrabold text-gradient">{BARANGAYS.length}</p>
+                <p className="text-xs text-slate-500 font-semibold">Barangays served</p>
               </div>
               <div className="absolute -bottom-3 right-6 bg-gradient-to-r from-ea-teal-500 to-ea-blue-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-lg shadow-black/20">
                 ✓ PDAO Official

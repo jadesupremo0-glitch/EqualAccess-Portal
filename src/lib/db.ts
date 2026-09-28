@@ -1,4 +1,4 @@
-import { supabase } from './supabase'
+import { supabase, hasServiceRole } from './supabase'
 import { normalizeJob, normalizeUser } from './normalize'
 import type { RawStats } from './stats'
 import type {
@@ -241,6 +241,13 @@ const activityFromRow = (r: Record<string, unknown>): DataActivityEntry => ({
 
 export async function loadStateFromSupabase(): Promise<{ state: LoadedState; seeded: boolean } | null> {
   if (!supabase) return null
+
+  // Row Level Security gives a signed-out visitor nothing, so don't ask (this also runs every 30 s).
+  // Scripts use the service-role key and have no Auth session, so they always read.
+  if (!hasServiceRole) {
+    const { data } = await supabase.auth.getSession()
+    if (!data.session) return { state: EMPTY_STATE, seeded: false }
+  }
 
   const [pwds, benefits, requests, notifications, jobs, admins, feedback, activity, responses] =
     await Promise.all([
