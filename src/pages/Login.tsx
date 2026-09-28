@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { ArrowLeft, AlertCircle, Accessibility, ChevronDown, ChevronUp, KeyRound } from 'lucide-react'
 import { Input, PasswordInput, Alert, Button } from '../components/ui'
 import { useStore } from '../store'
+import { isSupabaseConfigured } from '../lib/supabase'
 import { requestResetCode, completePasswordReset } from '../lib/passwordReset'
 import logoUrl from '../assets/logo.png'
 
@@ -14,6 +15,13 @@ const PWD_DEMO_ACCOUNTS = [
   { pwdId: 'LB-LEA-2024-00043', password: 'pwd123', name: 'Felix Abad', id: 'PWD-LB-2024-0047', type: 'Learning Disability', status: 'Pending' },
   { pwdId: 'LB-PSY-2024-00029', password: 'pwd123', name: 'Carmelita Flores', id: 'PWD-LB-2024-0048', type: 'Psychosocial Disability', status: 'Verified' },
 ]
+
+/**
+ * The demo panel and quick-fill buttons exist only in the offline demo (no database configured),
+ * where these well-known passwords are checked locally. The live site's accounts use private
+ * passwords (DEMO_PWD_PASSWORD / DEMO_ADMIN_PASSWORD in .env) and never show them.
+ */
+const SHOW_DEMO_ACCOUNTS = !isSupabaseConfigured()
 
 const ADMIN_DEMO_ACCOUNTS = [
   { username: 'pdao.admin', password: 'admin123', name: 'Engr. Mario dela Vega', role: 'Administrator' },
@@ -317,7 +325,7 @@ export default function Login({
                   </p>
                 )}
 
-                <div className="pt-3 border-t border-white/60">
+                {SHOW_DEMO_ACCOUNTS && <div className="pt-3 border-t border-white/60">
                   <p className="text-xs font-semibold text-slate-500 mb-2.5">Quick demo sign-in</p>
                   <div className="grid grid-cols-2 gap-2">
                     <button onClick={() => tab === 'user' ? fillDemo('LB-VIS-2023-00421', 'pwd123') : fillDemo('pdao.admin', 'admin123')}
@@ -329,7 +337,7 @@ export default function Login({
                       {tab === 'user' ? '👤 Juan dela Cruz' : '🛡️ Benefits Officer'}
                     </button>
                   </div>
-                </div>
+                </div>}
               </>
             ) : (
               <>
@@ -403,7 +411,7 @@ export default function Login({
             )}
           </div>
 
-          {mode === 'login' && (
+          {mode === 'login' && SHOW_DEMO_ACCOUNTS && (
             <>
               {/* Demo accounts panel */}
               <div className="mt-5 border border-amber-200/80 bg-amber-50/60 rounded-2xl overflow-hidden backdrop-blur">

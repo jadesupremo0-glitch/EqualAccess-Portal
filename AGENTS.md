@@ -50,7 +50,7 @@ Commands (requires `.env`, see `.env.example`):
 
 Scripts use `SUPABASE_SERVICE_ROLE_KEY` (in `.env`, never `VITE_`-prefixed) because Row Level Security hides everything from the anon key.
 
-Demo logins: PWD users use their PWD ID No. (e.g. `LB-VIS-2023-00421`) with password `pwd123`; admin staff use their username (e.g. `pdao.admin`) with password `admin123`.
+Demo logins: PWD users use their PWD ID No. (e.g. `LB-VIS-2023-00421`); admin staff use their username (e.g. `pdao.admin`). On the live database the passwords are private — `DEMO_PWD_PASSWORD` / `DEMO_ADMIN_PASSWORD` in `.env` (never commit them; `npm run seed` uses them, and `npm run demo:passwords` moves any account still on an old public demo password onto them). Only the offline demo (no `.env`) uses `pwd123` / `admin123`, and only there does the login page show the demo-account panel.
 
 Password reset sends a 6-digit code by email (valid 15 minutes) via the Edge Functions above.
 
