@@ -1,6 +1,6 @@
 import { Bell, CheckCheck, CheckCircle, AlertCircle, Info } from 'lucide-react'
 import { Button } from '../../components/ui'
-import { usePWDSession } from '../../context'
+import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 
 const iconMap = {
@@ -18,9 +18,8 @@ const bgMap = {
 }
 
 export default function Notifications() {
-  const session = usePWDSession()
-  const { pwdUsers, notifications, markNotificationRead, markAllNotificationsRead } = useStore()
-  const currentUserId = (session ? pwdUsers.find((u) => u.id === session.userId) ?? pwdUsers[0] : pwdUsers[0])?.id ?? ''
+  const currentUserId = useCurrentPWD().id
+  const { notifications, markNotificationRead, markAllNotificationsRead } = useStore()
   const items = notifications.filter((n) => !n.userId || n.userId === currentUserId)
   const unread = items.filter((n) => !n.read).length
 
@@ -34,7 +33,7 @@ export default function Notifications() {
           </p>
         </div>
         {unread > 0 && (
-          <Button variant="outline" size="sm" icon={<CheckCheck size={15} />} onClick={markAllNotificationsRead}>
+          <Button variant="outline" size="sm" icon={<CheckCheck size={15} />} onClick={() => markAllNotificationsRead(currentUserId)}>
             Mark All Read
           </Button>
         )}

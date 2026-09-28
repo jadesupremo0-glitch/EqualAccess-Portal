@@ -5,7 +5,7 @@ import {
 } from 'recharts'
 import { Card, StatsCard, statusBadge } from '../../components/ui'
 import { ChartCard, DashboardSkeleton, LiveStatusBar } from '../../components/charts'
-import { useAdminSession } from '../../context'
+import { useCurrentAdmin } from '../../context'
 import { useStore } from '../../store'
 import { useDashboardStats } from '../../lib/useDashboardStats'
 import type { DashboardStats } from '../../lib/stats'
@@ -413,17 +413,13 @@ function SharedBottomTables() {
 }
 
 export default function AdminDashboard() {
-  const session = useAdminSession()
-  const { adminUsers } = useStore()
+  const currentAdmin = useCurrentAdmin()
   const live = useDashboardStats()
-
-  const admin = session ? adminUsers.find((a) => a.id === session.adminId) : adminUsers[0]
-  const currentAdmin = admin ?? adminUsers[0]
-  const role = currentAdmin?.role ?? 'Administrator'
+  const role = currentAdmin.role
 
   return (
     <div className="space-y-6">
-      <AdminBanner name={currentAdmin?.name ?? 'Administrator'} role={role} />
+      <AdminBanner name={currentAdmin.name} role={role} />
 
       <LiveStatusBar live={live} />
 

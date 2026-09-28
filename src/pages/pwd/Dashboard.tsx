@@ -1,15 +1,14 @@
 import { Gift, FileText, ClipboardList, MessageSquare, CheckCircle, Clock, Briefcase, ArrowRight, Sparkles } from 'lucide-react'
 import { Card, StatsCard, statusBadge, Button } from '../../components/ui'
-import { usePWDSession } from '../../context'
+import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 import { useMemo } from 'react'
 import { getRecommendations } from '../../lib/recommend/score'
+import { requestBucket } from '../../lib/stats'
 
 export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) => void }) {
-  const session = usePWDSession()
-  const { pwdUsers, benefits, assistanceRequests, notifications, jobs } = useStore()
-  const user = session ? pwdUsers.find((u) => u.id === session.userId) : pwdUsers[0]
-  const currentUser = user ?? pwdUsers[0]
+  const currentUser = useCurrentPWD()
+  const { benefits, assistanceRequests, notifications, jobs } = useStore()
 
   const userRequests = assistanceRequests.filter((r) => r.pwdId === currentUser.id)
   const unread = notifications.filter((n) => !n.read && (!n.userId || n.userId === currentUser.id))
@@ -75,8 +74,8 @@ export default function PWDDashboard({ onNavigate }: { onNavigate: (p: string) =
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <StatsCard label="Available Programs" value={benefits.filter((b) => b.status === 'Active' || b.status === 'Approved').length} icon={<Gift size={20} className="text-teal-600" />} color="bg-teal-50" />
-        <StatsCard label="Pending Requests" value={userRequests.filter((r) => r.status === 'Pending' || r.status === 'Under Review').length} icon={<Clock size={20} className="text-amber-600" />} color="bg-amber-50" />
-        <StatsCard label="Approved Requests" value={userRequests.filter((r) => r.status === 'Approved' || r.status === 'Completed').length} icon={<CheckCircle size={20} className="text-green-600" />} color="bg-green-50" />
+        <StatsCard label="Pending Requests" value={userRequests.filter((r) => requestBucket(r.status) === 'pending').length} icon={<Clock size={20} className="text-amber-600" />} color="bg-amber-50" />
+        <StatsCard label="Approved Requests" value={userRequests.filter((r) => requestBucket(r.status) === 'approved').length} icon={<CheckCircle size={20} className="text-green-600" />} color="bg-green-50" />
         <StatsCard label="Job Matches" value={matchResult.locked ? '—' : matchResult.recommendations.filter((r) => r.score >= 70).length} note={matchResult.locked ? 'Add your skills first' : undefined} icon={<Briefcase size={20} className="text-blue-600" />} color="bg-blue-50" />
       </div>
 

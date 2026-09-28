@@ -1,60 +1,53 @@
 import { useState } from 'react'
 import { User, Shield, FileText, Camera, Edit2, CheckCircle, Upload } from 'lucide-react'
-import { Card, Button, Input, PasswordInput, Select, Alert, statusBadge, Modal, FileUpload } from '../../components/ui'
-import { usePWDSession } from '../../context'
+import { Card, Button, Input, Select, Alert, statusBadge, Modal, FileUpload } from '../../components/ui'
+import ChangePasswordForm from '../../components/ChangePasswordForm'
+import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 import EmploymentProfile from './EmploymentProfile'
 import { BARANGAY_OPTIONS, normalizeDisability, officialBarangay } from '../../lib/catalog'
 
 export default function Profile() {
-  const session = usePWDSession()
-  const { pwdUsers, updateProfile, changePassword } = useStore()
-  const user = session ? pwdUsers.find((u) => u.id === session.userId) : pwdUsers[0]
-  const currentUser = user ?? pwdUsers[0]
+  const currentUser = useCurrentPWD()
+  const { updateProfile } = useStore()
 
-  const [editing, setEditing] = useState(false)
-  const [form, setForm] = useState({
+  // The form is a draft: it is filled from the saved record whenever editing starts, so Cancel
+  // discards it and the read-only view always shows what is actually stored.
+  const formFromUser = () => ({
     fullName: currentUser.name,
     address: currentUser.address,
     barangay: currentUser.barangay,
     contact: currentUser.contact,
     email: currentUser.email,
   })
+  const [editing, setEditing] = useState(false)
+  const [form, setForm] = useState(formFromUser)
+  const [formError, setFormError] = useState('')
   const [saved, setSaved] = useState(false)
-
-  // password
-  const [currentPw, setCurrentPw] = useState('')
-  const [newPw, setNewPw] = useState('')
-  const [confirmPw, setConfirmPw] = useState('')
-  const [pwError, setPwError] = useState('')
-  const [pwSaved, setPwSaved] = useState(false)
 
   // document upload
   const [docModal, setDocModal] = useState(false)
   const [docSent, setDocSent] = useState(false)
 
-  const handleSave = () => {
-    updateProfile(currentUser.id, {
-      name: form.fullName,
-      address: form.address,
-      barangay: form.barangay,
-      contact: form.contact,
-      email: form.email,
-    })
-    setEditing(false)
-    setSaved(true)
-    setTimeout(() => setSaved(false), 3000)
+  const startEditing = () => {
+    setForm(formFromUser())
+    setFormError('')
+    setEditing(true)
   }
 
-  const handlePassword = () => {
-    if (!currentPw || !newPw) { setPwError('Please fill in all password fields.'); return }
-    if (newPw !== confirmPw) { setPwError('New passwords do not match.'); return }
-    const err = changePassword(currentUser.id, currentPw, newPw)
-    if (err) { setPwError(err); return }
-    setPwError('')
-    setCurrentPw(''); setNewPw(''); setConfirmPw('')
-    setPwSaved(true)
-    setTimeout(() => setPwSaved(false), 3000)
+  const handleSave = () => {
+    if (!form.fullName.trim()) { setFormError('Full name is required.'); return }
+    updateProfile(currentUser.id, {
+      name: form.fullName.trim(),
+      address: form.address.trim(),
+      barangay: form.barangay,
+      contact: form.contact.trim(),
+      email: form.email.trim(),
+    })
+    setEditing(false)
+    setFormError('')
+    setSaved(true)
+    setTimeout(() => setSaved(false), 3000)
   }
 
   return (
@@ -65,7 +58,7 @@ export default function Profile() {
           <p className="text-gray-500 text-sm mt-0.5">Manage your personal information and account settings</p>
         </div>
         {!editing && (
-          <Button variant="outline" icon={<Edit2 size={15} />} onClick={() => setEditing(true)}>
+          <Button variant="outline" icon={<Edit2 size={15} />} onClick={startEditing}>
             Edit Profile
           </Button>
         )}
@@ -108,6 +101,7 @@ export default function Profile() {
         <div className="p-5 grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
           {editing ? (
             <>
+              {formError && <div className="sm:col-span-2 xl:col-span-3"><Alert type="error" message={formError} /></div>}
               <Input label="Full Name" value={form.fullName} onChange={(e) => setForm((f) => ({ ...f, fullName: e.target.value }))} />
               <Input label="Contact Number" value={form.contact} onChange={(e) => setForm((f) => ({ ...f, contact: e.target.value }))} />
               <Input label="Email Address" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} className="sm:col-span-2" />
@@ -123,11 +117,11 @@ export default function Profile() {
           ) : (
             <>
               {[
-                { label: 'Full Name', value: form.fullName },
-                { label: 'Contact Number', value: form.contact },
-                { label: 'Email Address', value: form.email },
-                { label: 'Address', value: form.address },
-                { label: 'Barangay', value: form.barangay },
+                { label: 'Full Name', value: currentUser.name },
+                { label: 'Contact Number', value: currentUser.contact },
+                { label: 'Email Address', value: currentUser.email },
+                { label: 'Address', value: currentUser.address },
+                { label: 'Barangay', value: currentUser.barangay },
               ].map((f) => (
                 <div key={f.label} className={f.label === 'Email Address' || f.label === 'Address' ? 'sm:col-span-2' : ''}>
                   <p className="text-xs font-medium text-gray-500 mb-0.5">{f.label}</p>
@@ -182,16 +176,8 @@ export default function Profile() {
           <Shield size={18} className="text-blue-700" />
           <h3 className="font-semibold text-gray-900">Account Security</h3>
         </div>
-        <div className="p-5 space-y-4">
-          {pwError && <Alert type="error" message={pwError} />}
-          {pwSaved && <Alert type="success" title="Password Changed" message="Your password has been updated successfully." />}
-          <div className="grid sm:grid-cols-2 gap-4">
-            <PasswordInput label="Current Password" placeholder="Enter current password" value={currentPw} onChange={(e) => setCurrentPw(e.target.value)} />
-            <div />
-            <PasswordInput label="New Password" placeholder="Enter new password" value={newPw} onChange={(e) => setNewPw(e.target.value)} />
-            <PasswordInput label="Confirm New Password" placeholder="Re-enter new password" value={confirmPw} onChange={(e) => setConfirmPw(e.target.value)} />
-          </div>
-          <Button variant="outline" icon={<Shield size={15} />} onClick={handlePassword}>Change Password</Button>
+        <div className="p-5">
+          <ChangePasswordForm userId={currentUser.id} />
         </div>
       </Card>
 

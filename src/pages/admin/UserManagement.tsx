@@ -84,7 +84,7 @@ function AddUserModal({ onClose }: { onClose: () => void }) {
 }
 
 function EditUserModal({ user, onClose }: { user: AdminUser; onClose: () => void }) {
-  const { updateAdminUser, logActivity } = useStore()
+  const { adminUsers, updateAdminUser, logActivity } = useStore()
   const [form, setForm] = useState({
     name: user.name,
     position: user.position,
@@ -102,7 +102,12 @@ function EditUserModal({ user, onClose }: { user: AdminUser; onClose: () => void
       setError('Name, username, and role are required.')
       return
     }
-    updateAdminUser(user.id, {
+    const otherActiveAdmins = adminUsers.filter((a) => a.id !== user.id && a.role === 'Administrator' && a.status === 'Active').length
+    if (user.role === 'Administrator' && form.role !== 'Administrator' && user.status === 'Active' && otherActiveAdmins === 0) {
+      setError('The last active Administrator cannot be given another role.')
+      return
+    }
+    const err = updateAdminUser(user.id, {
       name: form.name.trim(),
       position: form.position.trim() || form.role,
       username: form.username.trim(),
@@ -110,6 +115,10 @@ function EditUserModal({ user, onClose }: { user: AdminUser; onClose: () => void
       email: form.email.trim() || undefined,
       role: form.role,
     })
+    if (err) {
+      setError(err)
+      return
+    }
     logActivity('Updated Admin User', `Updated admin account ${form.username.trim()} (${user.id})`)
     onClose()
   }

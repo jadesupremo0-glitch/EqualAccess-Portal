@@ -3,11 +3,13 @@ import { Eye, CheckCircle, XCircle, MessageSquare, FileText } from 'lucide-react
 import { type AssistanceRequest, type RequestStatus } from '../../data'
 import { Card, Button, Tabs, SearchBar, statusBadge, Modal, Timeline, Textarea, Alert } from '../../components/ui'
 import { useStore } from '../../store'
+import { useCurrentAdmin } from '../../context'
 
 const ALL_TABS = ['All', 'Pending', 'Under Review', 'Requirements Needed', 'Approved', 'Available', 'Claimed', 'Rejected', 'Completed']
 
 function RequestDetailModal({ req, onClose }: { req: AssistanceRequest; onClose: () => void }) {
   const { updateRequestStatus, addRequestComment } = useStore()
+  const admin = useCurrentAdmin()
   const [comment, setComment] = useState('')
   const [updated, setUpdated] = useState(false)
 
@@ -19,7 +21,7 @@ function RequestDetailModal({ req, onClose }: { req: AssistanceRequest; onClose:
 
   const handleComment = () => {
     if (!comment.trim()) return
-    addRequestComment(req.id, 'Admin', comment.trim())
+    addRequestComment(req.id, admin.name, comment.trim())
     setComment('')
     setUpdated(true)
     setTimeout(() => setUpdated(false), 3000)
@@ -71,11 +73,17 @@ function RequestDetailModal({ req, onClose }: { req: AssistanceRequest; onClose:
           <div className="border-t border-gray-100 pt-4 space-y-3">
             <p className="text-xs uppercase tracking-wide font-semibold text-gray-500">Admin Actions</p>
             {updated && <Alert type="success" message="Action performed successfully." />}
+            {/* Every status the request lifecycle (and its timeline) knows about is reachable from here. */}
             <div className="flex flex-wrap gap-2">
-              <Button size="sm" icon={<CheckCircle size={14} />} onClick={() => handleAction('Approved')}>Approve</Button>
-              <Button size="sm" variant="danger" icon={<XCircle size={14} />} onClick={() => handleAction('Rejected')}>Reject</Button>
-              <Button size="sm" variant="outline" icon={<FileText size={14} />} onClick={() => handleAction('Requirements Needed')}>Request Documents</Button>
-              <Button size="sm" variant="secondary" onClick={() => handleAction('Available')}>Mark Available</Button>
+              <Button size="sm" variant="outline" disabled={req.status === 'Under Review'} onClick={() => handleAction('Under Review')}>Mark Under Review</Button>
+              <Button size="sm" variant="outline" icon={<FileText size={14} />} disabled={req.status === 'Requirements Needed'} onClick={() => handleAction('Requirements Needed')}>Request Documents</Button>
+              <Button size="sm" icon={<CheckCircle size={14} />} disabled={req.status === 'Approved'} onClick={() => handleAction('Approved')}>Approve</Button>
+              <Button size="sm" variant="danger" icon={<XCircle size={14} />} disabled={req.status === 'Rejected'} onClick={() => handleAction('Rejected')}>Reject</Button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              <Button size="sm" variant="secondary" disabled={req.status === 'Available'} onClick={() => handleAction('Available')}>Mark Available</Button>
+              <Button size="sm" variant="secondary" disabled={req.status === 'Claimed'} onClick={() => handleAction('Claimed')}>Mark Claimed</Button>
+              <Button size="sm" variant="secondary" disabled={req.status === 'Completed'} onClick={() => handleAction('Completed')}>Mark Completed</Button>
             </div>
             <Textarea label="Add Comment" value={comment} onChange={setComment} placeholder="Write a comment for the PWD user..." rows={3} />
             <Button size="sm" variant="secondary" icon={<MessageSquare size={14} />} disabled={!comment.trim()} onClick={handleComment}>
@@ -96,7 +104,9 @@ export default function RequestManagement() {
   const { assistanceRequests } = useStore()
   const [tab, setTab] = useState('All')
   const [search, setSearch] = useState('')
-  const [selected, setSelected] = useState<AssistanceRequest | null>(null)
+  // By id, so the open modal shows the request as it is now (status, timeline, comments).
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const selected = assistanceRequests.find((r) => r.id === selectedId)
 
   const filtered = assistanceRequests.filter((r) => {
     const q = search.toLowerCase()
@@ -138,7 +148,7 @@ export default function RequestManagement() {
                   <td className="px-4 py-3">{statusBadge(r.status)}</td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{r.assignedStaff}</td>
                   <td className="px-4 py-3">
-                    <button onClick={() => setSelected(r)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg" aria-label={`View request ${r.id}`}>
+                    <button onClick={() => setSelectedId(r.id)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg" aria-label={`View request ${r.id}`}>
                       <Eye size={15} />
                     </button>
                   </td>
@@ -152,7 +162,7 @@ export default function RequestManagement() {
         </div>
       </Card>
 
-      {selected && <RequestDetailModal req={selected} onClose={() => setSelected(null)} />}
+      {selected && <RequestDetailModal req={selected} onClose={() => setSelectedId(null)} />}
     </div>
   )
 }

@@ -3,6 +3,9 @@ import { Database, Download, RotateCcw, Server, ShieldCheck, Trash2 } from 'luci
 import { Card, Button, Alert, Modal } from '../../components/ui'
 import { useStore } from '../../store'
 import { useAdminSession } from '../../context'
+import { isSupabaseConfigured } from '../../lib/supabase'
+import { downloadBlob } from '../../lib/recapitulation/export'
+import { manilaDate } from '../../lib/catalog'
 
 export default function AdminSettings() {
   const session = useAdminSession()
@@ -21,7 +24,7 @@ export default function AdminSettings() {
   const handleExport = () => {
     const data = {
       exportedAt: new Date().toISOString(),
-      pwdUsers: store.pwdUsers,
+      pwdUsers: store.pwdUsers.map((u) => ({ ...u, password: '••••••••' })),
       benefits: store.benefits,
       assistanceRequests: store.assistanceRequests,
       notifications: store.notifications,
@@ -31,12 +34,7 @@ export default function AdminSettings() {
       activityLog: store.activityLog,
     }
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `equalaccess-backup-${new Date().toISOString().slice(0, 10)}.json`
-    a.click()
-    URL.revokeObjectURL(url)
+    downloadBlob(blob, `equalaccess-backup-${manilaDate()}.json`)
     setExported(true)
     setTimeout(() => setExported(false), 3000)
   }
@@ -57,7 +55,7 @@ export default function AdminSettings() {
         </div>
         <div className="space-y-2 text-sm">
           <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500">Platform</span><span className="font-medium">EqualAccess Portal v1.0</span></div>
-          <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500">Data Storage</span><span className="font-medium">Local browser storage (demo)</span></div>
+          <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500">Data Storage</span><span className="font-medium">{isSupabaseConfigured() ? 'Supabase database' : 'Local browser storage (offline)'}</span></div>
           <div className="flex justify-between py-2 border-b border-gray-50"><span className="text-gray-500">Your Role</span><span className="font-medium">{role}</span></div>
           <div className="flex justify-between py-2"><span className="text-gray-500">Accessibility</span><span className="font-medium flex items-center gap-1"><ShieldCheck size={14} className="text-teal-600" />WCAG 2.1 AA</span></div>
         </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { PWDLayout, AdminLayout } from './components/Layout'
 import { SessionContext, type AppSession } from './context'
 import { StoreProvider, useStore } from './store'
@@ -50,11 +50,33 @@ const ADMIN_PAGES: Page[] = [
 function AppInner() {
   const [page, setPage] = useState<Page>('landing')
   const [session, setSession] = useState<AppSession>(null)
-  const { pwdUsers, adminUsers } = useStore()
+  const { pwdUsers, adminUsers, setActor, recordAdminLogin } = useStore()
 
   const navigate = (p: string) => setPage(p as Page)
 
-  const validateCredentials = (tab: 'user' | 'admin', username: string, password: string): AppSession => {
+  // A portal page is only shown while its session still points at an active account. If the
+  // account is deactivated, deleted or removed mid-session (here or by another admin), the user
+  // is signed out instead of the page silently showing another person's record.
+  const sessionValid =
+    session?.type === 'pwd'
+      ? pwdUsers.some((u) => u.id === session.userId && u.active !== false)
+      : session?.type === 'admin'
+        ? adminUsers.some((a) => a.id === session.adminId && a.status === 'Active')
+        : false
+  const isPWDPage = PWD_PAGES.includes(page)
+  const isAdminPage = ADMIN_PAGES.includes(page)
+  const allowed =
+    (!isPWDPage && !isAdminPage) || (sessionValid && (isPWDPage ? session?.type === 'pwd' : session?.type === 'admin'))
+
+  useEffect(() => {
+    if (allowed) return
+    setSession(null)
+    setActor(null)
+    setPage('login')
+  }, [allowed, setActor])
+
+  const validateCredentials = (tab: 'user' | 'admin', rawUsername: string, password: string): AppSession => {
+    const username = rawUsername.trim()
     if (tab === 'user') {
       const user = pwdUsers.find(
         (u) => (u.pwdIdNumber === username || u.username === username || u.id === username) && u.password === password && u.active !== false && !u.deletedAt
@@ -73,15 +95,24 @@ function AppInner() {
     const newSession = validateCredentials(tab, username, password)
     if (!newSession) return tab === 'user' ? 'Invalid PWD ID No. or password. Please check your credentials.' : 'Invalid username or password. Please check your credentials.'
     setSession(newSession)
-    if (newSession.type === 'pwd') setPage('pwd-dashboard')
-    else setPage('admin-dashboard')
+    if (newSession.type === 'pwd') {
+      setActor(null)
+      setPage('pwd-dashboard')
+    } else {
+      setActor(adminUsers.find((a) => a.id === newSession.adminId)?.username ?? null)
+      recordAdminLogin(newSession.adminId)
+      setPage('admin-dashboard')
+    }
     return null
   }
 
   const logout = () => {
     setSession(null)
+    setActor(null)
     setPage('landing')
   }
+
+  if (!allowed) return null
 
   if (page === 'landing') return (
     <SessionContext.Provider value={session}>

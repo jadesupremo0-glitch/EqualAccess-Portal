@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Download, FileText, Table2 } from 'lucide-react'
+import { Download, Printer } from 'lucide-react'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   LineChart, Line, Cell,
@@ -9,6 +9,7 @@ import { ChartCard } from '../../components/charts'
 import { useStore } from '../../store'
 import { BARANGAYS, DISABILITY_TYPES, ALL_BARANGAYS_LABEL, manilaDate, barangayLabel } from '../../lib/catalog'
 import { computeStats, type StatsFilter } from '../../lib/stats'
+import { CSV_MIME, csvLine, downloadBlob } from '../../lib/recapitulation/export'
 
 const COLORS = ['#2563eb', '#16a34a', '#d97706', '#dc2626', '#8b5cf6', '#0891b2']
 
@@ -58,6 +59,26 @@ export default function Reports() {
 
   const activePrograms = benefits.filter((b) => b.status === 'Active').length
 
+  const tableRows = [...barangayRows.rows, ...(barangayRows.other ? [barangayRows.other] : [])]
+  const rowLabel = (name: string) => (name.startsWith('Other') ? name : barangayLabel(name))
+
+  /** The barangay table (with the active filters noted) as a UTF-8 CSV that Excel opens directly. */
+  const exportCsv = () => {
+    const lines = [
+      csvLine(['EqualAccess Portal — Assistance Requests by Barangay']),
+      csvLine(['Generated', manilaDate()]),
+      csvLine(['Date range', DATE_RANGES.find((r) => r.value === dateRange)?.label ?? 'All Time']),
+      csvLine(['Barangay filter', barangay ? barangayLabel(barangay) : ALL_BARANGAYS_LABEL]),
+      csvLine(['Disability type filter', disabilityType || 'All Types']),
+      '',
+      csvLine(['Barangay', 'Total PWDs', 'Total Requests', 'Approved', 'Pending', 'Rejected', 'Approval Rate']),
+      ...tableRows.map((b) => csvLine([rowLabel(b.name), b.pwds, b.requests, b.approved, b.pending, b.rejected, pct(b.approved, b.requests)])),
+      csvLine(['All barangays', stats.totalPwds, stats.totalRequests, stats.approvedRequests, stats.pendingRequests, stats.rejectedRequests, pct(stats.approvedRequests, stats.totalRequests)]),
+    ]
+    const csv = '\uFEFF' + lines.join('\r\n') + '\r\n'
+    downloadBlob(new Blob([csv], { type: CSV_MIME }), `pwd-report-by-barangay-${manilaDate()}.csv`)
+  }
+
   const summary = [
     { label: 'Total Registered PWDs', value: stats.totalPwds, note: stats.newThisMonth > 0 ? `+${stats.newThisMonth} this month` : 'No new registrations this month' },
     { label: 'Verified PWDs', value: stats.verifiedPwds, note: `${pct(stats.verifiedPwds, stats.totalPwds)} of registered` },
@@ -73,9 +94,9 @@ export default function Reports() {
           <h1 className="text-2xl font-bold text-gray-900">Reports & Analytics</h1>
           <p className="text-gray-500 text-sm mt-0.5">Live data insights and statistics for PWD programs</p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" icon={<FileText size={15} />} size="sm">Export PDF</Button>
-          <Button variant="outline" icon={<Table2 size={15} />} size="sm">Export Excel</Button>
+        <div className="flex gap-2 print:hidden">
+          <Button variant="outline" icon={<Printer size={15} />} size="sm" onClick={() => window.print()} title="Opens the print dialog — choose “Save as PDF” as the destination">Print / Save PDF</Button>
+          <Button variant="outline" icon={<Download size={15} />} size="sm" onClick={exportCsv}>Export CSV (Excel)</Button>
         </div>
       </div>
 
@@ -211,7 +232,7 @@ export default function Reports() {
       <Card>
         <div className="p-5 border-b border-gray-100 flex items-center justify-between">
           <h3 className="font-semibold text-gray-900">Assistance Requests by Barangay</h3>
-          <Button variant="outline" size="sm" icon={<Download size={14} />}>Download</Button>
+          <Button variant="outline" size="sm" icon={<Download size={14} />} onClick={exportCsv} className="print:hidden">Download CSV</Button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm" aria-label="Assistance requests by barangay">
@@ -223,9 +244,9 @@ export default function Reports() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {[...barangayRows.rows, ...(barangayRows.other ? [barangayRows.other] : [])].map((b) => (
+              {tableRows.map((b) => (
                 <tr key={b.name} className="hover:bg-gray-50">
-                  <th scope="row" className="px-4 py-3 font-medium text-gray-900 text-left">{b.name.startsWith('Other') ? b.name : barangayLabel(b.name)}</th>
+                  <th scope="row" className="px-4 py-3 font-medium text-gray-900 text-left">{rowLabel(b.name)}</th>
                   <td className="px-4 py-3 text-gray-700">{b.pwds}</td>
                   <td className="px-4 py-3 text-gray-700">{b.requests}</td>
                   <td className="px-4 py-3 text-green-700 font-medium">{b.approved}</td>

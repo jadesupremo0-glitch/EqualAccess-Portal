@@ -3,11 +3,13 @@ import { Eye, Send } from 'lucide-react'
 import { type FeedbackTicket } from '../../data'
 import { Card, Tabs, statusBadge, Modal, Button, Textarea, Alert } from '../../components/ui'
 import { useStore } from '../../store'
+import { useCurrentAdmin } from '../../context'
 
 const ALL_TABS = ['All', 'Questions', 'Complaints', 'Reports', 'Feedback']
 
 function TicketDetailModal({ ticket, onClose }: { ticket: FeedbackTicket; onClose: () => void }) {
   const { addFeedbackResponse, setFeedbackStatus } = useStore()
+  const admin = useCurrentAdmin()
   const [reply, setReply] = useState('')
   const [internalNote, setInternalNote] = useState('')
   const [ack, setAck] = useState('')
@@ -45,17 +47,22 @@ function TicketDetailModal({ ticket, onClose }: { ticket: FeedbackTicket; onClos
           <div>
             <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Conversation Thread</p>
             <div className="space-y-3">
-              {ticket.responses.map((r, i) => (
-                <div key={i} className={`rounded-xl p-4 border text-sm ${r.isInternal ? 'bg-yellow-50 border-yellow-200' : 'bg-blue-50 border-blue-100 ml-4'}`}>
+              {ticket.responses.map((r, i) => {
+                // Replies from the ticket's owner (older records stored them with the author "You").
+                const fromUser = r.fromUser === true || r.author === 'You'
+                const author = fromUser ? (ticket.isAnonymous ? 'Anonymous User' : ticket.pwdName) : r.author
+                return (
+                <div key={i} className={`rounded-xl p-4 border text-sm ${r.isInternal ? 'bg-yellow-50 border-yellow-200' : fromUser ? 'bg-gray-50 border-gray-200 mr-4' : 'bg-blue-50 border-blue-100 ml-4'}`}>
                   <div className="flex justify-between mb-1">
-                    <p className={`text-xs font-semibold ${r.isInternal ? 'text-yellow-800' : 'text-blue-800'}`}>
-                      {r.author} {r.isInternal ? '(Internal Note)' : '(Admin Reply)'}
+                    <p className={`text-xs font-semibold ${r.isInternal ? 'text-yellow-800' : fromUser ? 'text-gray-700' : 'text-blue-800'}`}>
+                      {author} {r.isInternal ? '(Internal Note)' : fromUser ? '(PWD Reply)' : '(Admin Reply)'}
                     </p>
                     <p className="text-xs text-gray-400">{r.date}</p>
                   </div>
-                  <p className={r.isInternal ? 'text-yellow-900' : 'text-blue-900'}>{r.message}</p>
+                  <p className={r.isInternal ? 'text-yellow-900' : fromUser ? 'text-gray-800' : 'text-blue-900'}>{r.message}</p>
                 </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
@@ -67,10 +74,10 @@ function TicketDetailModal({ ticket, onClose }: { ticket: FeedbackTicket; onClos
           <Textarea label="Reply to User" value={reply} onChange={setReply} placeholder="Type your reply to the user..." rows={3} />
           <Textarea label="Internal Note (not visible to user)" value={internalNote} onChange={setInternalNote} placeholder="Add an internal note for the team..." rows={2} />
           <div className="flex flex-wrap gap-2">
-            <Button size="sm" icon={<Send size={14} />} disabled={!reply.trim()} onClick={() => { addFeedbackResponse(ticket.id, { author: 'PDAO Staff', message: reply.trim() }); setReply(''); setAck('Reply sent successfully.') }}>
+            <Button size="sm" icon={<Send size={14} />} disabled={!reply.trim()} onClick={() => { addFeedbackResponse(ticket.id, { author: admin.name, message: reply.trim() }); setReply(''); setAck('Reply sent successfully.') }}>
               Send Reply
             </Button>
-            <Button size="sm" variant="secondary" disabled={!internalNote.trim()} onClick={() => { addFeedbackResponse(ticket.id, { author: 'PDAO Staff', message: internalNote.trim(), isInternal: true }); setInternalNote(''); setAck('Internal note added.') }}>
+            <Button size="sm" variant="secondary" disabled={!internalNote.trim()} onClick={() => { addFeedbackResponse(ticket.id, { author: admin.name, message: internalNote.trim(), isInternal: true }); setInternalNote(''); setAck('Internal note added.') }}>
               Add Internal Note
             </Button>
           </div>

@@ -1,38 +1,27 @@
 import { createClient } from 'jsr:@supabase/supabase-js@2'
 import nodemailer from 'npm:nodemailer@6.9.16'
+import { accountFilter, accountTable, corsHeaders, isAccountKind, json } from '../_shared/account.ts'
 
 const supabase = createClient(
   Deno.env.get('SUPABASE_URL')!,
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
 )
 
-const json = (payload: unknown, status = 200, headers: Record<string, string>) =>
-  new Response(JSON.stringify(payload), {
-    status,
-    headers: { 'Content-Type': 'application/json', ...headers },
-  })
-
 Deno.serve(async (req) => {
-  const origin = req.headers.get('origin') ?? '*'
-  const headers = {
-    'Access-Control-Allow-Origin': origin,
-    'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Vary': 'Origin',
-  }
+  const headers = corsHeaders(req)
   if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers })
 
   try {
-    const { kind, identifier } = (await req.json()) as { kind?: 'pwd' | 'admin'; identifier?: string }
-    if (!kind || !identifier) return json({ ok: false, error: 'Missing email or ID.' }, 400, headers)
+    const { kind, identifier } = (await req.json()) as { kind?: unknown; identifier?: unknown }
+    if (!isAccountKind(kind) || typeof identifier !== 'string' || !identifier.trim()) {
+      return json({ ok: false, error: 'Missing email or ID.' }, 400, headers)
+    }
 
-    const table = kind === 'pwd' ? 'pwd_users' : 'admin_users'
-    const search =
-      kind === 'pwd'
-        ? `email.eq.${identifier},pwd_id_number.eq.${identifier},username.eq.${identifier},id.eq.${identifier}`
-        : `email.eq.${identifier},username.eq.${identifier}`
-
-    const { data: users, error: userErr } = await supabase.from(table).select('*').or(search).limit(1)
+    const { data: users, error: userErr } = await supabase
+      .from(accountTable(kind))
+      .select('*')
+      .or(accountFilter(kind, identifier))
+      .limit(1)
     if (userErr) throw new Error(userErr.message)
     const user = users?.[0]
     if (!user) return json({ ok: false, error: 'No account found with that email or ID.' }, 404, headers)
@@ -40,7 +29,8 @@ Deno.serve(async (req) => {
     const to = user.email
     if (!to) return json({ ok: false, error: 'This account has no email address on file.' }, 400, headers)
 
-    const code = Math.floor(100000 + Math.random() * 900000).toString()
+    // Cryptographically random (Math.random is predictable).
+    const code = (100000 + (crypto.getRandomValues(new Uint32Array(1))[0] % 900000)).toString()
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000)
 
     await supabase

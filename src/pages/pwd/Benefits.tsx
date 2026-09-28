@@ -3,6 +3,20 @@ import { Filter, Calendar, MapPin, Clock, Users, CheckCircle } from 'lucide-reac
 import { type Benefit, type BenefitCategory } from '../../data'
 import { Card, Button, SearchBar, statusBadge, Modal, Select } from '../../components/ui'
 import { useStore } from '../../store'
+import { ASSISTANCE_TYPES } from '../../lib/catalog'
+
+/**
+ * A program's category → the assistance-request type it is applied for under. Program categories
+ * and request types are different lists; a category that is not a request type would otherwise
+ * leave the request form's type dropdown blank and file the request under an unlisted type.
+ */
+const REQUEST_TYPE_FOR_CATEGORY: Partial<Record<BenefitCategory, (typeof ASSISTANCE_TYPES)[number]>> = {
+  'Financial Assistance': 'Financial Assistance',
+  'Medical Assistance': 'Medical Assistance',
+  'Assistive Devices': 'Assistive Devices',
+  'Educational Assistance': 'Educational Assistance',
+  'Livelihood Programs': 'Livelihood Training',
+}
 
 const categories: BenefitCategory[] = [
   'Financial Assistance', 'Medical Assistance', 'Assistive Devices',
@@ -143,7 +157,7 @@ export default function Benefits({ onNavigate }: { onNavigate: (p: string) => vo
   })
 
   const handleApply = (benefit: Benefit) => {
-    setRequestDraft({ type: benefit.category, title: benefit.name })
+    setRequestDraft({ type: REQUEST_TYPE_FOR_CATEGORY[benefit.category] ?? 'Other Service Assistance', title: benefit.name })
     onNavigate('pwd-requests')
   }
 

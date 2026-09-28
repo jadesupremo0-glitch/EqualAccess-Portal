@@ -149,7 +149,8 @@ export interface FeedbackTicket {
   dateSubmitted: string
   status: 'Open' | 'In Progress' | 'Resolved' | 'Closed'
   assignedStaff: string
-  responses: { author: string; date: string; message: string; isInternal?: boolean }[]
+  // fromUser = written by the PWD who owns the ticket (older records used the author "You")
+  responses: { author: string; date: string; message: string; isInternal?: boolean; fromUser?: boolean }[]
   userId?: string
 }
 

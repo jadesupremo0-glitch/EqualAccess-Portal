@@ -158,11 +158,15 @@ const FEEDBACK_MAP: Record<string, string> = {
 
 // ── Generic converters ─────────────────────────────────────────────
 
+/**
+ * Every mapped column is written, with absent fields as NULL: an upsert only touches the
+ * columns it names, so skipping them would leave a cleared field (e.g. a restored PWD's
+ * `deleted_at`) holding its old value in the database.
+ */
 function toRow(obj: Record<string, unknown>, map: Record<string, string>): Record<string, unknown> {
   const row: Record<string, unknown> = {}
   for (const [key, column] of Object.entries(map)) {
-    const value = obj[key]
-    if (value !== undefined) row[column] = value
+    row[column] = obj[key] ?? null
   }
   return row
 }
@@ -327,12 +331,21 @@ export async function syncStateToSupabase(prev: LoadedState, next: LoadedState):
   const results = await Promise.all(tasks)
   const errors = results.map((r) => r.error?.message).filter((m): m is string => Boolean(m))
 
-  // The activity log has an auto-generated id, so it is replaced wholesale when it changed.
+  // The activity log is newest-first in memory and read back `order by id desc`, so rows must be
+  // inserted oldest-first. Entries are only ever prepended: when `prev` is still the tail of `next`,
+  // just the new head is inserted; anything else (e.g. a reset) replaces the table.
   if (prev.activityLog !== next.activityLog) {
-    const cleared = await client.from('activity_log').delete().neq('id', 0)
-    if (cleared.error) errors.push(cleared.error.message)
-    else if (next.activityLog.length > 0) {
-      const inserted = await client.from('activity_log').insert(next.activityLog.map(activityToRow))
+    const added = next.activityLog.length - prev.activityLog.length
+    const appendOnly = added > 0 && prev.activityLog.every((entry, i) => next.activityLog[added + i] === entry)
+    let rows = next.activityLog
+    if (appendOnly) {
+      rows = next.activityLog.slice(0, added)
+    } else {
+      const cleared = await client.from('activity_log').delete().neq('id', 0)
+      if (cleared.error) errors.push(cleared.error.message)
+    }
+    if (errors.length === 0 && rows.length > 0) {
+      const inserted = await client.from('activity_log').insert([...rows].reverse().map(activityToRow))
       if (inserted.error) errors.push(inserted.error.message)
     }
   }

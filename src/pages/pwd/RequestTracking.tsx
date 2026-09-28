@@ -1,14 +1,18 @@
 import { useState } from 'react'
 import { ClipboardList, ChevronRight } from 'lucide-react'
-import { type AssistanceRequest } from '../../data'
+import { type AssistanceRequest, type RequestStatus } from '../../data'
+
+const REQUEST_STATUSES: RequestStatus[] = ['Pending', 'Under Review', 'Requirements Needed', 'Approved', 'Available', 'Claimed', 'Rejected', 'Completed']
+/** Always offered as filters; the others appear once a request reaches them. */
+const MAIN_STATUSES: RequestStatus[] = ['Pending', 'Under Review', 'Approved', 'Rejected', 'Completed']
 import { Card, Timeline, statusBadge, Modal } from '../../components/ui'
-import { usePWDSession } from '../../context'
+import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 
 function TrackingCard({ req, onSelect }: { req: AssistanceRequest; onSelect: () => void }) {
   const completedSteps = req.timeline.filter((s) => s.completed).length
   const totalSteps = req.timeline.length
-  const pct = Math.round((completedSteps / totalSteps) * 100)
+  const pct = totalSteps > 0 ? Math.round((completedSteps / totalSteps) * 100) : 0
 
   const barColor: Record<string, string> = {
     Pending: 'bg-amber-400',
@@ -17,6 +21,8 @@ function TrackingCard({ req, onSelect }: { req: AssistanceRequest; onSelect: () 
     Rejected: 'bg-red-500',
     Completed: 'bg-teal-500',
     'Requirements Needed': 'bg-orange-400',
+    Available: 'bg-green-500',
+    Claimed: 'bg-teal-500',
   }
 
   return (
@@ -148,14 +154,15 @@ function TrackingDetail({ req, onClose }: { req: AssistanceRequest; onClose: () 
 }
 
 export default function RequestTracking() {
-  const session = usePWDSession()
-  const { pwdUsers, assistanceRequests } = useStore()
-  const userId = session?.userId ?? (pwdUsers[0]?.id ?? '')
+  const userId = useCurrentPWD().id
+  const { assistanceRequests } = useStore()
   const userRequests = assistanceRequests.filter((r) => r.pwdId === userId)
-  const [selected, setSelected] = useState<AssistanceRequest | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const selected = userRequests.find((r) => r.id === selectedId) ?? null
   const [filter, setFilter] = useState('All')
 
-  const statusFilters = ['All', 'Pending', 'Under Review', 'Approved', 'Rejected', 'Completed']
+  // Every status is reachable, not just the common ones, so no request is only findable under "All".
+  const statusFilters: string[] = ['All', ...REQUEST_STATUSES.filter((s) => MAIN_STATUSES.includes(s) || userRequests.some((r) => r.status === s))]
   const filtered = filter === 'All' ? userRequests : userRequests.filter((r) => r.status === filter)
 
   return (
@@ -190,12 +197,12 @@ export default function RequestTracking() {
       ) : (
         <div className="grid gap-4 lg:grid-cols-2 items-start">
           {filtered.map((r) => (
-            <TrackingCard key={r.id} req={r} onSelect={() => setSelected(r)} />
+            <TrackingCard key={r.id} req={r} onSelect={() => setSelectedId(r.id)} />
           ))}
         </div>
       )}
 
-      {selected && <TrackingDetail req={selected} onClose={() => setSelected(null)} />}
+      {selected && <TrackingDetail req={selected} onClose={() => setSelectedId(null)} />}
     </div>
   )
 }

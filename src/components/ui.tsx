@@ -100,19 +100,7 @@ export function Card({ children, className = '' }: { children: ReactNode; classN
   )
 }
 
-export function CardHeader({ title, subtitle, action }: { title: string; subtitle?: string; action?: ReactNode }) {
-  return (
-    <div className="flex items-start justify-between p-6 pb-2">
-      <div>
-        <h3 className="font-display text-base font-bold text-slate-900">{title}</h3>
-        {subtitle && <p className="text-sm text-slate-500 mt-0.5">{subtitle}</p>}
-      </div>
-      {action && <div className="ml-4">{action}</div>}
-    </div>
-  )
-}
-
-// --- PageHeader (new) ---
+// --- PageHeader ---
 export function PageHeader({ title, subtitle, actions, gradient = false }: {
   title: string
   subtitle?: string
@@ -572,30 +560,5 @@ export function Timeline({ steps }: { steps: { step: string; date: string; compl
         </li>
       ))}
     </ol>
-  )
-}
-
-// --- Pagination ---
-export function Pagination({ page, total, perPage, onChange }: {
-  page: number
-  total: number
-  perPage: number
-  onChange: (p: number) => void
-}) {
-  const pages = Math.ceil(total / perPage)
-  if (pages <= 1) return null
-  const start = Math.max(1, Math.min(page - 2, pages - 4))
-  const end = Math.min(pages, start + 4)
-  return (
-    <div className="flex items-center justify-between px-2 py-3">
-      <p className="text-sm text-slate-500">Showing {(page - 1) * perPage + 1}–{Math.min(page * perPage, total)} of {total}</p>
-      <div className="flex gap-1">
-        <Button variant="outline" size="sm" disabled={page === 1} onClick={() => onChange(page - 1)}>Previous</Button>
-        {Array.from({ length: end - start + 1 }, (_, i) => start + i).map((p) => (
-          <Button key={p} variant={p === page ? 'primary' : 'outline'} size="sm" onClick={() => onChange(p)}>{p}</Button>
-        ))}
-        <Button variant="outline" size="sm" disabled={page === pages} onClick={() => onChange(page + 1)}>Next</Button>
-      </div>
-    </div>
   )
 }

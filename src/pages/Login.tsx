@@ -45,6 +45,7 @@ export default function Login({
         if (parsed.username && (parsed.tab === 'user' || parsed.tab === 'admin')) {
           setTab(parsed.tab)
           setUsername(parsed.username)
+          setRemember(true)
         }
       }
     } catch {
@@ -68,7 +69,7 @@ export default function Login({
   const openReset = () => {
     setMode('reset')
     setResetStep(1)
-    setResetIdentifier(tab === 'user' ? username : username)
+    setResetIdentifier(username)
     setResetCode('')
     setResetNewPw('')
     setResetConfirmPw('')

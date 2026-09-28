@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Plus, Eye } from 'lucide-react'
 import { type AssistanceRequest } from '../../data'
 import { Card, Button, statusBadge, Modal, Timeline, Alert, Textarea, Select, FileUpload, Input } from '../../components/ui'
-import { usePWDSession } from '../../context'
+import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 import { ASSISTANCE_TYPES } from '../../lib/catalog'
 
@@ -79,7 +79,7 @@ function RequestDetail({ req, onClose }: { req: AssistanceRequest; onClose: () =
 function NewRequestForm({ onClose, onSaveDraft, onSubmit, initialType, initialTitle }: {
   onClose: () => void
   onSaveDraft: (draft: { type?: string; title?: string }) => void
-  onSubmit: (data: { type: string; title: string; description: string; device?: string }) => void
+  onSubmit: (data: { type: string; title: string; description: string; reason: string; device?: string }) => void
   initialType?: string
   initialTitle?: string
 }) {
@@ -91,7 +91,7 @@ function NewRequestForm({ onClose, onSaveDraft, onSubmit, initialType, initialTi
   const [error, setError] = useState('')
 
   const handleSubmit = () => {
-    if (!type || !title || !description) {
+    if (!type || !title.trim() || !description.trim()) {
       setError('Please complete the assistance type, title, and description.')
       return
     }
@@ -100,7 +100,7 @@ function NewRequestForm({ onClose, onSaveDraft, onSubmit, initialType, initialTi
       return
     }
     setError('')
-    onSubmit({ type, title, description, device: type === 'Assistive Devices' ? device : undefined })
+    onSubmit({ type, title: title.trim(), description: description.trim(), reason: reason.trim(), device: type === 'Assistive Devices' ? device : undefined })
   }
 
   return (
@@ -146,11 +146,12 @@ function SubmittedModal({ req, onClose }: { req: AssistanceRequest; onClose: () 
 }
 
 export default function Requests() {
-  const session = usePWDSession()
-  const { pwdUsers, assistanceRequests, addRequest, requestDraft, setRequestDraft } = useStore()
-  const userId = session?.userId ?? (pwdUsers[0]?.id ?? '')
+  const userId = useCurrentPWD().id
+  const { assistanceRequests, addRequest, requestDraft, setRequestDraft } = useStore()
   const userRequests = assistanceRequests.filter((r) => r.pwdId === userId)
-  const [selected, setSelected] = useState<AssistanceRequest | null>(null)
+  // Stored by id so an open detail view reflects status changes and new staff comments.
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const selected = userRequests.find((r) => r.id === selectedId) ?? null
   const [newRequest, setNewRequest] = useState(false)
   const [justSubmitted, setJustSubmitted] = useState<AssistanceRequest | null>(null)
 
@@ -158,10 +159,13 @@ export default function Requests() {
     setNewRequest(true)
   }
 
-  const handleSubmitted = (data: { type: string; title: string; description: string; device?: string }) => {
-    const description = data.device
-      ? `${data.description}${data.description ? '\n\n' : ''}Assistive device needed: ${data.device}`
-      : data.description
+  const handleSubmitted = (data: { type: string; title: string; description: string; reason: string; device?: string }) => {
+    // The form's optional fields are folded into the description, the only free-text field a request has.
+    const description = [
+      data.description,
+      data.reason && `Reason for request: ${data.reason}`,
+      data.device && `Assistive device needed: ${data.device}`,
+    ].filter(Boolean).join('\n\n')
     const req = addRequest(userId, { type: data.type, title: data.title, description })
     setRequestDraft(null)
     setNewRequest(false)
@@ -178,9 +182,9 @@ export default function Requests() {
         <Button icon={<Plus size={16} />} onClick={openNewRequest}>New Request</Button>
       </div>
 
-      {requestDraft?.type && (
+      {(requestDraft?.type || requestDraft?.title) && (
         <div className="flex items-center justify-between gap-3 p-4 bg-amber-50 border border-amber-200 rounded-xl">
-          <p className="text-sm text-amber-900">You have a draft for <span className="font-semibold">{requestDraft.type}{requestDraft.title ? ` — ${requestDraft.title}` : ''}</span>.</p>
+          <p className="text-sm text-amber-900">You have a draft for <span className="font-semibold">{[requestDraft.type, requestDraft.title].filter(Boolean).join(' — ')}</span>.</p>
           <div className="flex gap-2">
             <Button size="sm" onClick={() => setNewRequest(true)}>Continue Draft</Button>
             <Button size="sm" variant="ghost" onClick={() => setRequestDraft(null)}>Discard</Button>
@@ -213,12 +217,12 @@ export default function Requests() {
           </Card>
         ) : (
           userRequests.map((r) => (
-            <RequestRow key={r.id} req={r} onView={() => setSelected(r)} />
+            <RequestRow key={r.id} req={r} onView={() => setSelectedId(r.id)} />
           ))
         )}
       </div>
 
-      {selected && <RequestDetail req={selected} onClose={() => setSelected(null)} />}
+      {selected && <RequestDetail req={selected} onClose={() => setSelectedId(null)} />}
       {newRequest && (
         <NewRequestForm
           onClose={() => setNewRequest(false)}

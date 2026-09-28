@@ -3,7 +3,7 @@ import {
   Briefcase, CheckCircle, Bookmark, BookmarkCheck, AlertTriangle, Info, Pencil,
 } from 'lucide-react'
 import { Card, Button, SearchBar, Select, Modal, Tabs, EmptyState } from '../../components/ui'
-import { usePWDSession } from '../../context'
+import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 import { EMPLOYMENT_TYPES, WORK_ARRANGEMENTS } from '../../lib/catalog'
 import { DEFAULT_WEIGHTS, MIN_MATCH_SCORE, MIN_SKILL_COVERAGE, getRecommendations, isOpenAndCurrent, scoreJob } from '../../lib/recommend/score'
@@ -258,9 +258,8 @@ function JobDetail({ job, rec, saved, onClose, onToggleSave }: {
 // ── Page ────────────────────────────────────────────────────────────
 
 export default function Jobs({ onNavigate }: { onNavigate: (p: string) => void }) {
-  const session = usePWDSession()
-  const { pwdUsers, jobs, toggleSavedJob } = useStore()
-  const user = (session ? pwdUsers.find((u) => u.id === session.userId) : undefined) ?? pwdUsers[0]
+  const user = useCurrentPWD()
+  const { jobs, toggleSavedJob } = useStore()
 
   const [tab, setTab] = useState<'Recommended' | 'Saved'>('Recommended')
   const [search, setSearch] = useState('')

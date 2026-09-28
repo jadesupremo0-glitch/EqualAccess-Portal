@@ -23,7 +23,7 @@ import {
 } from './data'
 import { isSupabaseConfigured } from './lib/supabase'
 import { loadStateFromSupabase, syncStateToSupabase, resetSupabaseData, EMPTY_STATE, type LoadedState } from './lib/db'
-import { DISABILITY_LABEL_BY_SLUG, OTHER_DISABILITY, manilaDate } from './lib/catalog'
+import { APP_TIME_ZONE, DISABILITY_LABEL_BY_SLUG, OTHER_DISABILITY, manilaDate } from './lib/catalog'
 import { normalizeJob, normalizeUser } from './lib/normalize'
 
 // ── Persistence ────────────────────────────────────────────────────
@@ -59,13 +59,11 @@ function today(): string {
   return manilaDate()
 }
 
+const manilaClock = new Intl.DateTimeFormat('en-US', { timeZone: APP_TIME_ZONE, hour: '2-digit', minute: '2-digit', hour12: true })
+
+/** Current time ("09:05 AM") in Asia/Manila, matching `today()`. */
 function nowTime(): string {
-  const d = new Date()
-  let h = d.getHours()
-  const ampm = h >= 12 ? 'PM' : 'AM'
-  h = h % 12 || 12
-  const m = String(d.getMinutes()).padStart(2, '0')
-  return `${String(h).padStart(2, '0')}:${m} ${ampm}`
+  return manilaClock.format(new Date())
 }
 
 function nextId(prefix: string, items: { id: string }[]): string {
@@ -90,48 +88,28 @@ function nextPWDId(items: PWDUser[]): string {
   return `${prefix}${String(max + 1).padStart(4, '0')}`
 }
 
-function makeTimeline(status: RequestStatus, date: string) {
-  const order = ['Submitted', 'Under Review', 'Requirements Needed', 'Approved / Rejected', 'Processing', 'Completed']
-  let done = 0
-  let active: number | null = 0
-  switch (status) {
-    case 'Pending': done = 0; active = 0; break
-    case 'Under Review': done = 1; active = 1; break
-    case 'Requirements Needed': done = 2; active = 2; break
-    case 'Approved': done = 3; active = 4; break
-    case 'Available': done = 3; active = 4; break
-    case 'Claimed': done = 4; active = 4; break
-    case 'Rejected': done = 3; active = null; break
-    case 'Completed': done = 5; active = null; break
-  }
-  return order.map((step, i) => ({
-    step,
-    date: i <= done ? date : '',
-    completed: i <= done,
-    active: i === active,
-  }))
+const TIMELINE_STEPS = ['Submitted', 'Under Review', 'Requirements Needed', 'Approved / Rejected', 'Processing', 'Completed']
+
+/** Index of the last completed step and of the active step (null = nothing in progress) for a status. */
+const TIMELINE_PROGRESS: Record<RequestStatus, { done: number; active: number | null }> = {
+  Pending: { done: 0, active: 0 },
+  'Under Review': { done: 1, active: 1 },
+  'Requirements Needed': { done: 2, active: 2 },
+  Approved: { done: 3, active: 4 },
+  Available: { done: 3, active: 4 },
+  Claimed: { done: 4, active: 4 },
+  Rejected: { done: 3, active: null },
+  Completed: { done: 5, active: null },
 }
 
-function mergeTimeline(prev: AssistanceRequest['timeline'], status: RequestStatus, date: string) {
-  const order = ['Submitted', 'Under Review', 'Requirements Needed', 'Approved / Rejected', 'Processing', 'Completed']
-  let done = 0
-  let active: number | null = 0
-  switch (status) {
-    case 'Pending': done = 0; active = 0; break
-    case 'Under Review': done = 1; active = 1; break
-    case 'Requirements Needed': done = 2; active = 2; break
-    case 'Approved': done = 3; active = 4; break
-    case 'Available': done = 3; active = 4; break
-    case 'Claimed': done = 4; active = 4; break
-    case 'Rejected': done = 3; active = null; break
-    case 'Completed': done = 5; active = null; break
-  }
-  return order.map((step, i) => {
+/** Timeline for a status; steps already completed in `prev` keep their original dates. */
+function buildTimeline(status: RequestStatus, date: string, prev: AssistanceRequest['timeline'] = []) {
+  const { done, active } = TIMELINE_PROGRESS[status] ?? TIMELINE_PROGRESS.Pending
+  return TIMELINE_STEPS.map((step, i) => {
     const completed = i <= done
-    const prevStep = prev.find((s) => s.step === step)
     return {
       step,
-      date: completed ? (prevStep?.date || date) : '',
+      date: completed ? (prev.find((s) => s.step === step)?.date || date) : '',
       completed,
       active: i === active,
     }
@@ -236,9 +214,11 @@ interface StoreContextValue extends AppState {
   resetPassword: (kind: 'user' | 'admin', identifier: string, next: string) => { ok: boolean; error?: string }
   addRequest: (userId: string, input: { type: string; title: string; description: string }) => AssistanceRequest
   submitFeedback: (userId: string, input: { category: string; subject: string; message: string; anonymous: boolean }) => FeedbackTicket
-  addFeedbackReply: (ticketId: string, author: string, message: string) => void
+  /** A reply from the PWD who owns the ticket (shown under their name, or "Anonymous User"). */
+  addFeedbackReply: (ticketId: string, message: string) => void
   markNotificationRead: (id: string) => void
-  markAllNotificationsRead: () => void
+  /** Marks this PWD's own notifications and the broadcast ones as read — never other users'. */
+  markAllNotificationsRead: (userId: string) => void
   toggleSavedJob: (userId: string, jobId: string) => void
 
   // Admin — PWD
@@ -256,7 +236,7 @@ interface StoreContextValue extends AppState {
   toggleBenefitStatus: (id: string) => void
 
   // Admin — requests
-  updateRequestStatus: (requestId: string, status: RequestStatus, comment?: string) => void
+  updateRequestStatus: (requestId: string, status: RequestStatus) => void
   addRequestComment: (requestId: string, author: string, message: string) => void
 
   // Admin — feedback
@@ -265,14 +245,19 @@ interface StoreContextValue extends AppState {
 
   // Admin — users
   addAdminUser: (input: AdminUserInput) => string | null
-  updateAdminUser: (id: string, patch: Partial<AdminUser>) => void
+  /** Returns an error message (e.g. username taken) or null when saved. */
+  updateAdminUser: (id: string, patch: Partial<AdminUser>) => string | null
   toggleAdminStatus: (id: string) => void
   resetAdminPassword: (id: string, password?: string) => void
   deleteAdminUser: (id: string) => void
+  /** Stamps the admin's "Last Login" with the current Asia/Manila date and time. */
+  recordAdminLogin: (id: string) => void
 
   // Admin — misc
-  /** Append to the admin activity log. `user` defaults to the built-in administrator account. */
+  /** Append to the admin activity log. `user` defaults to the signed-in admin (see setActor). */
   logActivity: (action: string, activity: string, user?: string) => void
+  /** Username that admin actions are attributed to in the activity log (null when signed out). */
+  setActor: (username: string | null) => void
   resetData: () => void
 }
 
@@ -294,6 +279,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const synced = useRef<LoadedState>(EMPTY_STATE)
   const queue = useRef<Promise<void>>(Promise.resolve())
   const inFlight = useRef(0)
+  const actorRef = useRef<string | null>(null)
+  const actor = () => actorRef.current ?? 'pdao.admin'
 
   function flush() {
     inFlight.current += 1
@@ -436,12 +423,15 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setRequestDraft,
 
     registerPWD(input) {
-      let error = ''
+      // Checked here, not inside the updater: React may run updaters after setState returns,
+      // so an error set in one would be read too late and a rejected sign-up reported as a success.
+      const pwdIdNumber = input.pwdIdNumber.trim()
+      const isTaken = (users: PWDUser[]) => users.some((u) => u.pwdIdNumber.toLowerCase() === pwdIdNumber.toLowerCase())
+      if (isTaken(stateRef.current.pwdUsers)) {
+        return { ok: false, error: 'That PWD ID No. is already registered. Please check your ID number.' }
+      }
       setState((s) => {
-        if (s.pwdUsers.some((u) => u.pwdIdNumber === input.pwdIdNumber.trim())) {
-          error = 'That PWD ID No. is already registered. Please check your ID number.'
-          return s
-        }
+        if (isTaken(s.pwdUsers)) return s
         const disability: DisabilityType = DISABILITY_LABEL_BY_SLUG[input.disabilityType] ?? OTHER_DISABILITY
         const user: PWDUser = {
           id: nextPWDId(s.pwdUsers),
@@ -470,7 +460,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         next = log(next, user.username, 'Registered', `New PWD registration submitted for ${user.name} (${user.id})`)
         return next
       })
-      return error ? { ok: false, error } : { ok: true }
+      return { ok: true }
     },
 
     updateProfile(userId, patch) {
@@ -482,8 +472,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           assistanceRequests: name
             ? s.assistanceRequests.map((r) => (r.pwdId === userId ? { ...r, pwdName: name } : r))
             : s.assistanceRequests,
+          // Match by owner id — matching by the old name would also rename other people who share it.
+          // Anonymous tickets keep "Anonymous".
           feedbackTickets: name
-            ? s.feedbackTickets.map((t) => (t.pwdName === s.pwdUsers.find((u) => u.id === userId)?.name ? { ...t, pwdName: name } : t))
+            ? s.feedbackTickets.map((t) => (t.userId === userId && !t.isAnonymous ? { ...t, pwdName: name } : t))
             : s.feedbackTickets,
         }
       })
@@ -524,9 +516,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
 
     addRequest(userId, input) {
-      const user = state.pwdUsers.find((u) => u.id === userId) ?? state.pwdUsers[0]
+      const user = state.pwdUsers.find((u) => u.id === userId)
       const req: AssistanceRequest = {
-        id: nextId('REQ-LB-' + new Date().getFullYear(), state.assistanceRequests),
+        id: nextId('REQ-LB-' + today().slice(0, 4), stateRef.current.assistanceRequests),
         pwdName: user?.name ?? 'PWD User',
         pwdId: userId,
         type: input.type,
@@ -537,7 +529,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         status: 'Pending',
         assignedStaff: 'Unassigned',
         comments: [],
-        timeline: makeTimeline('Pending', today()),
+        timeline: buildTimeline('Pending', today()),
       }
       setState((s) => {
         let next: AppState = { ...s, assistanceRequests: [req, ...s.assistanceRequests] }
@@ -549,9 +541,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
 
     submitFeedback(userId, input) {
-      const user = state.pwdUsers.find((u) => u.id === userId) ?? state.pwdUsers[0]
+      const user = state.pwdUsers.find((u) => u.id === userId)
       const ticket: FeedbackTicket = {
-        id: nextId('TKT-LB-' + new Date().getFullYear(), state.feedbackTickets),
+        id: nextId('TKT-LB-' + today().slice(0, 4), stateRef.current.feedbackTickets),
         pwdName: input.anonymous ? 'Anonymous' : (user?.name ?? 'PWD User'),
         isAnonymous: input.anonymous,
         subject: input.subject,
@@ -561,7 +553,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         status: 'Open',
         assignedStaff: 'Unassigned',
         responses: [],
-        ...(user && !input.anonymous ? { userId: user.id } : {}),
+        // Kept for anonymous tickets too, so the sender can still find their own conversation;
+        // admin screens never show it (they only ever display "Anonymous User").
+        userId,
       }
       setState((s) => ({
         ...s,
@@ -570,7 +564,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       return ticket
     },
 
-    addFeedbackReply(ticketId, author, message) {
+    addFeedbackReply(ticketId, message) {
       setState((s) => ({
         ...s,
         feedbackTickets: s.feedbackTickets.map((t) =>
@@ -578,7 +572,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
             ? {
                 ...t,
                 status: t.status === 'Closed' ? t.status : 'In Progress',
-                responses: [...t.responses, { author, date: today(), message }],
+                responses: [...t.responses, { author: t.isAnonymous ? 'Anonymous User' : t.pwdName, date: today(), message, fromUser: true }],
               }
             : t,
         ),
@@ -589,8 +583,11 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setState((s) => ({ ...s, notifications: s.notifications.map((n) => (n.id === id ? { ...n, read: true } : n)) }))
     },
 
-    markAllNotificationsRead() {
-      setState((s) => ({ ...s, notifications: s.notifications.map((n) => ({ ...n, read: true })) }))
+    markAllNotificationsRead(userId) {
+      setState((s) => ({
+        ...s,
+        notifications: s.notifications.map((n) => (!n.read && (!n.userId || n.userId === userId) ? { ...n, read: true } : n)),
+      }))
     },
 
     toggleSavedJob(userId, jobId) {
@@ -624,7 +621,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         )
         next = log(
           next,
-          'pdao.admin',
+          actor(),
           status === 'Verified' ? 'Verified PWD Account' : 'Rejected PWD Verification',
           `${status === 'Verified' ? 'Verified' : 'Rejected'} account for ${userId} (${user?.name ?? 'Unknown'})`,
         )
@@ -643,7 +640,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setState((s) => {
         const user = s.pwdUsers.find((u) => u.id === userId)
         let next: AppState = { ...s, pwdUsers: s.pwdUsers.map((u) => (u.id === userId ? { ...u, active: false } : u)) }
-        next = log(next, 'pdao.admin', 'Deactivated Account', `Deactivated PWD account ${userId} (${user?.name ?? 'Unknown'})`)
+        next = log(next, actor(), 'Deactivated Account', `Deactivated PWD account ${userId} (${user?.name ?? 'Unknown'})`)
         return next
       })
     },
@@ -653,9 +650,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         const user = s.pwdUsers.find((u) => u.id === userId)
         let next: AppState = {
           ...s,
-          pwdUsers: s.pwdUsers.map((u) => (u.id === userId ? { ...u, active: true, verificationStatus: 'Verified' as VerificationStatus } : u)),
+          // Only lifts the deactivation: a Pending or Rejected record must not become Verified by it.
+          pwdUsers: s.pwdUsers.map((u) => (u.id === userId ? { ...u, active: true } : u)),
         }
-        next = log(next, 'pdao.admin', 'Reactivated Account', `Reactivated PWD account ${userId} (${user?.name ?? 'Unknown'})`)
+        next = log(next, actor(), 'Reactivated Account', `Reactivated PWD account ${userId} (${user?.name ?? 'Unknown'})`)
         return next
       })
     },
@@ -668,7 +666,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ...s,
           pwdUsers: s.pwdUsers.map((u) => (u.id === userId ? { ...u, deletedAt: today(), active: false } : u)),
         }
-        next = log(next, 'pdao.admin', 'Deleted PWD Record', `Deleted PWD record ${userId} (${user.name})`)
+        next = log(next, actor(), 'Deleted PWD Record', `Deleted PWD record ${userId} (${user.name})`)
         return next
       })
     },
@@ -692,23 +690,25 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           contactNumber: input.contactNumber || '+63 49 536 0050',
         }
         let next: AppState = { ...s, benefits: [benefit, ...s.benefits] }
-        next = log(next, 'pdao.admin', 'Added New Program', `Created benefit program ${benefit.name} (${benefit.id})`)
+        next = log(next, actor(), 'Added New Program', `Created benefit program ${benefit.name} (${benefit.id})`)
         return next
       })
     },
 
     updateBenefit(id, patch) {
-      setState((s) => ({
-        ...s,
-        benefits: s.benefits.map((b) => (b.id === id ? { ...b, ...patch } : b)),
-      }))
+      setState((s) => {
+        const b = s.benefits.find((x) => x.id === id)
+        if (!b) return s
+        const next: AppState = { ...s, benefits: s.benefits.map((x) => (x.id === id ? { ...x, ...patch } : x)) }
+        return log(next, actor(), 'Updated Program', `Updated benefit program ${patch.name ?? b.name} (${id})`)
+      })
     },
 
     deleteBenefit(id) {
       setState((s) => {
         const b = s.benefits.find((x) => x.id === id)
         let next: AppState = { ...s, benefits: s.benefits.filter((x) => x.id !== id) }
-        next = log(next, 'pdao.admin', 'Deleted Program', `Deleted benefit program ${b?.name ?? id}`)
+        next = log(next, actor(), 'Deleted Program', `Deleted benefit program ${b?.name ?? id}`)
         return next
       })
     },
@@ -720,7 +720,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       }))
     },
 
-    updateRequestStatus(requestId, status, comment) {
+    updateRequestStatus(requestId, status) {
       setState((s) => {
         const req = s.assistanceRequests.find((r) => r.id === requestId)
         if (!req) return s
@@ -732,8 +732,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
                   ...r,
                   status,
                   lastUpdated: today(),
-                  timeline: mergeTimeline(r.timeline, status, today()),
-                  comments: comment ? [...r.comments, { author: 'PDAO Staff', date: today(), message: comment }] : r.comments,
+                  timeline: buildTimeline(status, today(), r.timeline),
                 }
               : r,
           ),
@@ -745,7 +744,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           status === 'Rejected' ? 'error' : status === 'Approved' || status === 'Completed' ? 'success' : 'info',
           req.pwdId,
         )
-        next = log(next, 'pdao.staff', 'Updated Request Status', `Updated ${requestId} to ${status}`)
+        next = log(next, actor(), 'Updated Request Status', `Updated ${requestId} to ${status}`)
         return next
       })
     },
@@ -790,12 +789,12 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     },
 
     addAdminUser(input) {
-      let error = ''
+      // Checked before setState for the same reason as registerPWD.
+      const username = input.username.trim()
+      const isTaken = (users: AdminUser[]) => users.some((u) => u.username.toLowerCase() === username.toLowerCase())
+      if (isTaken(stateRef.current.adminUsers)) return 'That username is already taken.'
       setState((s) => {
-        if (s.adminUsers.some((u) => u.username === input.username.trim())) {
-          error = 'That username is already taken.'
-          return s
-        }
+        if (isTaken(s.adminUsers)) return s
         const user: AdminUser = {
           id: nextId('ADM', s.adminUsers),
           name: input.name,
@@ -810,14 +809,19 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           dateCreated: today(),
         }
         let next: AppState = { ...s, adminUsers: [...s.adminUsers, user] }
-        next = log(next, 'pdao.admin', 'Added Admin User', `Created admin account ${user.username} (${user.id})`)
+        next = log(next, actor(), 'Added Admin User', `Created admin account ${user.username} (${user.id})`)
         return next
       })
-      return error ? error : null
+      return null
     },
 
     updateAdminUser(id, patch) {
+      const username = patch.username?.trim()
+      if (username && stateRef.current.adminUsers.some((u) => u.id !== id && u.username.toLowerCase() === username.toLowerCase())) {
+        return 'That username is already taken.'
+      }
       setState((s) => ({ ...s, adminUsers: s.adminUsers.map((u) => (u.id === id ? { ...u, ...patch } : u)) }))
+      return null
     },
 
     toggleAdminStatus(id) {
@@ -827,7 +831,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ...s,
           adminUsers: s.adminUsers.map((x) => (x.id === id ? { ...x, status: x.status === 'Active' ? 'Inactive' : 'Active' } : x)),
         }
-        next = log(next, 'pdao.admin', 'Updated Admin Status', `${u?.status === 'Active' ? 'Deactivated' : 'Activated'} admin account ${u?.username ?? id}`)
+        next = log(next, actor(), 'Updated Admin Status', `${u?.status === 'Active' ? 'Deactivated' : 'Activated'} admin account ${u?.username ?? id}`)
         return next
       })
     },
@@ -839,7 +843,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ...s,
           adminUsers: s.adminUsers.map((x) => (x.id === id ? { ...x, password: password || 'admin123' } : x)),
         }
-        next = log(next, 'pdao.admin', 'Reset Password', `Reset password for admin account ${u?.username ?? id}`)
+        next = log(next, actor(), 'Reset Password', `Reset password for admin account ${u?.username ?? id}`)
         return next
       })
     },
@@ -848,13 +852,22 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       setState((s) => {
         const u = s.adminUsers.find((x) => x.id === id)
         let next: AppState = { ...s, adminUsers: s.adminUsers.filter((x) => x.id !== id) }
-        next = log(next, 'pdao.admin', 'Deleted Admin User', `Deleted admin account ${u?.username ?? id}`)
+        next = log(next, actor(), 'Deleted Admin User', `Deleted admin account ${u?.username ?? id}`)
         return next
       })
     },
 
-    logActivity(action, activity, user = 'pdao.admin') {
+    recordAdminLogin(id) {
+      const lastLogin = `${today()} ${nowTime()}`
+      setState((s) => ({ ...s, adminUsers: s.adminUsers.map((u) => (u.id === id ? { ...u, lastLogin } : u)) }))
+    },
+
+    logActivity(action, activity, user = actor()) {
       setState((s) => log(s, user, action, activity))
+    },
+
+    setActor(username) {
+      actorRef.current = username
     },
 
     resetData() {
@@ -864,11 +877,14 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         // ignore
       }
       const seed = seedState()
+      stateRef.current = seed
       setState(seed)
       if (isSupabaseConfigured()) {
         // The reset rewrites the whole database, so the state we set is now the synced state.
+        // It runs on the write queue so a write already in flight cannot land after the wipe.
         synced.current = seed
-        void resetSupabaseData(seed)
+        queue.current = queue.current
+          .then(() => resetSupabaseData(seed))
           .then(() => setDataVersion((v) => v + 1))
           .catch((err) => console.warn('[sync] Reset failed:', err))
       }

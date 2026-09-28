@@ -1,16 +1,13 @@
 import { useEffect, useState } from 'react'
-import { User, Shield, Bell, CheckCircle, AlertCircle, Trash2 } from 'lucide-react'
-import { Card, Button, PasswordInput, Alert } from '../../components/ui'
-import { usePWDSession } from '../../context'
-import { useStore } from '../../store'
+import { User, Shield, Bell, AlertCircle, Trash2 } from 'lucide-react'
+import { Card, Button } from '../../components/ui'
+import ChangePasswordForm from '../../components/ChangePasswordForm'
+import { useCurrentPWD } from '../../context'
 
 const PREFS_KEY = 'equalaccess-portal:prefs:v1'
 
 export default function PWDSettings() {
-  const session = usePWDSession()
-  const { pwdUsers, changePassword } = useStore()
-  const user = session ? pwdUsers.find((u) => u.id === session.userId) : pwdUsers[0]
-  const currentUser = user ?? pwdUsers[0]
+  const currentUser = useCurrentPWD()
 
   const [prefs, setPrefs] = useState(() => {
     try {
@@ -25,23 +22,6 @@ export default function PWDSettings() {
       window.localStorage.setItem(PREFS_KEY, JSON.stringify(prefs))
     } catch { /* ignore */ }
   }, [prefs])
-
-  const [current, setCurrent] = useState('')
-  const [next, setNext] = useState('')
-  const [confirm, setConfirm] = useState('')
-  const [pwError, setPwError] = useState('')
-  const [pwDone, setPwDone] = useState(false)
-
-  const handlePassword = () => {
-    if (!current || !next) { setPwError('Please fill in all password fields.'); return }
-    if (next !== confirm) { setPwError('New passwords do not match.'); return }
-    const err = changePassword(currentUser.id, current, next)
-    if (err) { setPwError(err); return }
-    setPwError('')
-    setCurrent(''); setNext(''); setConfirm('')
-    setPwDone(true)
-    setTimeout(() => setPwDone(false), 3000)
-  }
 
   const toggle = (k: string) => setPrefs((p: Record<string, boolean>) => ({ ...p, [k]: !p[k] }))
 
@@ -81,17 +61,7 @@ export default function PWDSettings() {
           <Shield size={18} className="text-blue-700" />
           <h3 className="font-semibold text-gray-900">Change Password</h3>
         </div>
-        <div className="grid sm:grid-cols-2 gap-4">
-          <PasswordInput label="Current Password" value={current} onChange={(e) => setCurrent(e.target.value)} placeholder="Enter current password" />
-          <div />
-          <PasswordInput label="New Password" value={next} onChange={(e) => setNext(e.target.value)} placeholder="Min. 8 characters" />
-          <PasswordInput label="Confirm New Password" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Re-enter new password" />
-        </div>
-        {pwError && <div className="mt-3"><Alert type="error" message={pwError} /></div>}
-        {pwDone && <div className="mt-3"><Alert type="success" title="Password Changed" message="Your password has been updated successfully." /></div>}
-        <div className="mt-4">
-          <Button onClick={handlePassword} icon={<CheckCircle size={15} />}>Update Password</Button>
-        </div>
+        <ChangePasswordForm userId={currentUser.id} />
       </Card>
 
       {/* Notification preferences */}

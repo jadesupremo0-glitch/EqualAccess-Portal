@@ -34,7 +34,7 @@ function csvField(value: string | number): string {
   return /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s
 }
 
-const csvLine = (cells: (string | number)[]): string => cells.map(csvField).join(',')
+export const csvLine = (cells: (string | number)[]): string => cells.map(csvField).join(',')
 
 /** UTF-8 with a byte-order mark, so Excel shows "Baños" correctly. Lines end in CRLF. */
 export function buildCsv(report: RecapReport, options: ExportOptions = {}): string {

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { MessageSquare, Send, Eye, Lock } from 'lucide-react'
 import { type FeedbackTicket } from '../../data'
 import { Card, Button, Input, Textarea, Select, statusBadge, Modal, FileUpload, Alert } from '../../components/ui'
-import { usePWDSession } from '../../context'
+import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 
 const categories = [
@@ -29,6 +29,9 @@ function TicketCard({ ticket, onView }: { ticket: FeedbackTicket; onView: () => 
   )
 }
 
+/** Replies written by the ticket's owner (older records stored them with the author "You"). */
+const isUserReply = (r: FeedbackTicket['responses'][number]) => r.fromUser === true || r.author === 'You'
+
 function TicketDetail({ ticket, onClose }: { ticket: FeedbackTicket; onClose: () => void }) {
   const { addFeedbackReply } = useStore()
   const [reply, setReply] = useState('')
@@ -50,15 +53,25 @@ function TicketDetail({ ticket, onClose }: { ticket: FeedbackTicket; onClose: ()
           <p className="text-sm text-gray-800 leading-relaxed">{ticket.message}</p>
         </div>
         {/* Responses */}
-        {ticket.responses.filter((r) => !r.isInternal).map((r, i) => (
-          <div key={i} className="bg-blue-50 rounded-xl p-4 border border-blue-100 ml-4">
-            <div className="flex justify-between items-center mb-2">
-              <p className="text-xs font-semibold text-blue-800">{r.author} (Admin)</p>
-              <p className="text-xs text-blue-400">{r.date}</p>
+        {ticket.responses.filter((r) => !r.isInternal).map((r, i) =>
+          isUserReply(r) ? (
+            <div key={i} className="bg-gray-50 rounded-xl p-4 mr-4">
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-xs font-semibold text-gray-600">You</p>
+                <p className="text-xs text-gray-400">{r.date}</p>
+              </div>
+              <p className="text-sm text-gray-800 leading-relaxed">{r.message}</p>
             </div>
-            <p className="text-sm text-blue-900 leading-relaxed">{r.message}</p>
-          </div>
-        ))}
+          ) : (
+            <div key={i} className="bg-blue-50 rounded-xl p-4 border border-blue-100 ml-4">
+              <div className="flex justify-between items-center mb-2">
+                <p className="text-xs font-semibold text-blue-800">{r.author} (PDAO Staff)</p>
+                <p className="text-xs text-blue-400">{r.date}</p>
+              </div>
+              <p className="text-sm text-blue-900 leading-relaxed">{r.message}</p>
+            </div>
+          ),
+        )}
         {/* Reply input */}
         {ticket.status !== 'Closed' && (
           <div className="border-t border-gray-100 pt-4 space-y-3">
@@ -67,7 +80,7 @@ function TicketDetail({ ticket, onClose }: { ticket: FeedbackTicket; onClose: ()
             <Button
               icon={<Send size={15} />}
               disabled={!reply.trim()}
-              onClick={() => { addFeedbackReply(ticket.id, 'You', reply); setReply(''); setSent(true); setTimeout(() => setSent(false), 2500) }}
+              onClick={() => { addFeedbackReply(ticket.id, reply.trim()); setReply(''); setSent(true); setTimeout(() => setSent(false), 2500) }}
             >
               Send Reply
             </Button>
@@ -79,9 +92,8 @@ function TicketDetail({ ticket, onClose }: { ticket: FeedbackTicket; onClose: ()
 }
 
 export default function FeedbackPage() {
-  const session = usePWDSession()
-  const { pwdUsers, feedbackTickets, submitFeedback } = useStore()
-  const me = session ? (pwdUsers.find((u) => u.id === session.userId) ?? pwdUsers[0]) : pwdUsers[0]
+  const me = useCurrentPWD()
+  const { feedbackTickets, submitFeedback } = useStore()
 
   const [view, setView] = useState<'form' | 'list'>('form')
   const [category, setCategory] = useState('')
@@ -89,13 +101,14 @@ export default function FeedbackPage() {
   const [message, setMessage] = useState('')
   const [anonymous, setAnonymous] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [selected, setSelected] = useState<FeedbackTicket | null>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
 
   const myTickets = feedbackTickets.filter((t) => t.userId === me.id || (!t.userId && t.pwdName === me.name))
+  const selectedTicket = myTickets.find((t) => t.id === selectedId)
 
   const handleSubmit = () => {
-    if (!category || !subject || !message) return
-    submitFeedback(me.id, { category, subject, message, anonymous })
+    if (!category || !subject.trim() || !message.trim()) return
+    submitFeedback(me.id, { category, subject: subject.trim(), message: message.trim(), anonymous })
     setSubmitted(true)
     setCategory(''); setSubject(''); setMessage(''); setAnonymous(false)
     setTimeout(() => { setSubmitted(false); setView('list') }, 1500)
@@ -158,14 +171,12 @@ export default function FeedbackPage() {
               <Button className="mt-3" variant="outline" onClick={() => setView('form')}>Start a Conversation</Button>
             </Card>
           ) : (
-            myTickets.map((t) => <TicketCard key={t.id} ticket={t} onView={() => setSelected(t)} />)
+            myTickets.map((t) => <TicketCard key={t.id} ticket={t} onView={() => setSelectedId(t.id)} />)
           )}
         </div>
       )}
 
-      {selected && (
-        <TicketDetail ticket={feedbackTickets.find((t) => t.id === selected.id) ?? selected} onClose={() => setSelected(null)} />
-      )}
+      {selectedTicket && <TicketDetail ticket={selectedTicket} onClose={() => setSelectedId(null)} />}
     </div>
   )
 }

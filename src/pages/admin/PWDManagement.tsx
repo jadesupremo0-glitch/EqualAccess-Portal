@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { UserCheck, Eye, Edit2, UserX, Trash2 } from 'lucide-react'
+import { UserCheck, Eye, Edit2, UserX, Trash2, RotateCcw } from 'lucide-react'
 import { type PWDUser } from '../../data'
-import { Card, Button, SearchBar, Select, Input, statusBadge, Modal, Alert } from '../../components/ui'
+import { Badge, Card, Button, SearchBar, Select, Input, statusBadge, Modal, Alert } from '../../components/ui'
 import { useStore } from '../../store'
 import {
   ALL_BARANGAYS_LABEL,
@@ -15,7 +15,8 @@ import {
 } from '../../lib/catalog'
 
 function PWDDetailModal({ user, onClose, onEdit, onDelete }: { user: PWDUser; onClose: () => void; onEdit: () => void; onDelete: () => void }) {
-  const { verifyPWD, deactivatePWD } = useStore()
+  const { verifyPWD, deactivatePWD, reactivatePWD } = useStore()
+  const deactivated = user.active === false
   return (
     <Modal open title={`PWD Profile — ${user.id}`} onClose={onClose} size="lg">
       <div className="space-y-5">
@@ -26,7 +27,7 @@ function PWDDetailModal({ user, onClose, onEdit, onDelete }: { user: PWDUser; on
           <div>
             <h3 className="text-lg font-bold text-gray-900">{user.name}</h3>
             <p className="text-gray-500 text-sm font-mono">{user.id}</p>
-            <div className="mt-1">{statusBadge(user.verificationStatus)}</div>
+            <div className="mt-1 flex gap-1.5">{statusBadge(user.verificationStatus)}{deactivated && <Badge variant="neutral">Deactivated</Badge>}</div>
           </div>
         </div>
 
@@ -57,7 +58,11 @@ function PWDDetailModal({ user, onClose, onEdit, onDelete }: { user: PWDUser; on
 
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" icon={<Edit2 size={14} />} size="sm" onClick={onEdit}>Edit Profile</Button>
-          <Button variant="outline" icon={<UserX size={14} />} size="sm" onClick={() => { deactivatePWD(user.id); onClose() }}>Deactivate</Button>
+          {deactivated ? (
+            <Button variant="outline" icon={<RotateCcw size={14} />} size="sm" onClick={() => { reactivatePWD(user.id); onClose() }}>Reactivate</Button>
+          ) : (
+            <Button variant="outline" icon={<UserX size={14} />} size="sm" onClick={() => { deactivatePWD(user.id); onClose() }}>Deactivate</Button>
+          )}
           <Button variant="danger" icon={<Trash2 size={14} />} size="sm" onClick={onDelete}>Delete Record</Button>
           <Button variant="outline" onClick={onClose} size="sm" className="ml-auto">Close</Button>
         </div>
@@ -140,14 +145,18 @@ function ConfirmDeleteModal({ user, onCancel, onConfirm }: { user: PWDUser; onCa
 }
 
 export default function PWDManagement() {
-  const { pwdUsers, verifyPWD, deactivatePWD, deletePWD } = useStore()
+  const { pwdUsers, verifyPWD, deactivatePWD, reactivatePWD, deletePWD } = useStore()
   const [search, setSearch] = useState('')
   const [barangayFilter, setBarangayFilter] = useState('')
   const [disabilityFilter, setDisabilityFilter] = useState('')
   const [statusFilter, setStatusFilter] = useState('')
-  const [selected, setSelected] = useState<PWDUser | null>(null)
-  const [editing, setEditing] = useState<PWDUser | null>(null)
-  const [deleting, setDeleting] = useState<PWDUser | null>(null)
+  // Held by id so an open modal always shows the record as it is now.
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const selected = pwdUsers.find((u) => u.id === selectedId)
+  const editing = pwdUsers.find((u) => u.id === editingId)
+  const deleting = pwdUsers.find((u) => u.id === deletingId)
 
   // Filter lists come from the shared catalog, not from whatever values happen to be in the records.
   const barangays = BARANGAYS.map((b) => ({ value: b as string, label: barangayLabel(b) }))
@@ -160,7 +169,8 @@ export default function PWDManagement() {
     const disabilityMatch = !disabilityFilter
       || disability === disabilityFilter
       || (disabilityFilter === OTHER_DISABILITY && !(DISABILITY_TYPES as readonly string[]).includes(disability))
-    return (!search || u.name.toLowerCase().includes(q) || u.id.toLowerCase().includes(q) || u.email.toLowerCase().includes(q))
+    const matchesSearch = [u.name, u.id, u.pwdIdNumber, u.email].some((v) => (v ?? '').toLowerCase().includes(q))
+    return (!search || matchesSearch)
       && (!barangayFilter || officialBarangay(u.barangay) === barangayFilter)
       && disabilityMatch
       && (!statusFilter || u.verificationStatus === statusFilter)
@@ -225,11 +235,11 @@ export default function PWDManagement() {
                   </td>
                   <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{u.barangay}</td>
                   <td className="px-4 py-3 text-gray-700 whitespace-nowrap">{normalizeDisability(u.disabilityType)}</td>
-                  <td className="px-4 py-3">{statusBadge(u.verificationStatus)}</td>
+                  <td className="px-4 py-3"><div className="flex flex-wrap gap-1">{statusBadge(u.verificationStatus)}{u.active === false && <Badge variant="neutral">Deactivated</Badge>}</div></td>
                   <td className="px-4 py-3 text-gray-500 whitespace-nowrap">{u.dateRegistered}</td>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-1.5">
-                      <button onClick={() => setSelected(u)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" aria-label={`View ${u.name}'s profile`}>
+                      <button onClick={() => setSelectedId(u.id)} className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" aria-label={`View ${u.name}'s profile`}>
                         <Eye size={15} />
                       </button>
                       {u.verificationStatus === 'Pending' && (
@@ -237,13 +247,19 @@ export default function PWDManagement() {
                           <UserCheck size={15} />
                         </button>
                       )}
-                      <button className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors" aria-label={`Edit ${u.name}`} onClick={() => setEditing(u)}>
+                      <button className="p-1.5 text-gray-500 hover:bg-gray-100 rounded-lg transition-colors" aria-label={`Edit ${u.name}`} onClick={() => setEditingId(u.id)}>
                         <Edit2 size={15} />
                       </button>
-                      <button className="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" aria-label={`Deactivate ${u.name}`} onClick={() => deactivatePWD(u.id)}>
-                        <UserX size={15} />
-                      </button>
-                      <button className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors" aria-label={`Delete ${u.name}`} onClick={() => setDeleting(u)}>
+                      {u.active === false ? (
+                        <button className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors" aria-label={`Reactivate ${u.name}`} onClick={() => reactivatePWD(u.id)}>
+                          <RotateCcw size={15} />
+                        </button>
+                      ) : (
+                        <button className="p-1.5 text-amber-600 hover:bg-amber-50 rounded-lg transition-colors" aria-label={`Deactivate ${u.name}`} onClick={() => deactivatePWD(u.id)}>
+                          <UserX size={15} />
+                        </button>
+                      )}
+                      <button className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors" aria-label={`Delete ${u.name}`} onClick={() => setDeletingId(u.id)}>
                         <Trash2 size={15} />
                       </button>
                     </div>
@@ -261,17 +277,17 @@ export default function PWDManagement() {
       {selected && (
         <PWDDetailModal
           user={selected}
-          onClose={() => setSelected(null)}
-          onEdit={() => { setEditing(selected); setSelected(null) }}
-          onDelete={() => { setDeleting(selected); setSelected(null) }}
+          onClose={() => setSelectedId(null)}
+          onEdit={() => { setEditingId(selected.id); setSelectedId(null) }}
+          onDelete={() => { setDeletingId(selected.id); setSelectedId(null) }}
         />
       )}
-      {editing && <EditPWDModal user={editing} onClose={() => setEditing(null)} />}
+      {editing && <EditPWDModal user={editing} onClose={() => setEditingId(null)} />}
       {deleting && (
         <ConfirmDeleteModal
           user={deleting}
-          onCancel={() => setDeleting(null)}
-          onConfirm={() => { deletePWD(deleting.id); setDeleting(null) }}
+          onCancel={() => setDeletingId(null)}
+          onConfirm={() => { deletePWD(deleting.id); setDeletingId(null) }}
         />
       )}
     </div>
