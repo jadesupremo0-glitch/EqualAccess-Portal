@@ -20,12 +20,14 @@ import {
   type DisabilityType,
   type BenefitCategory,
   type BenefitStatus,
+  type StoredFile,
 } from './data'
 import { isSupabaseConfigured } from './lib/supabase'
-import { loadStateFromSupabase, syncStateToSupabase, EMPTY_STATE, type LoadedState } from './lib/db'
+import { loadStateFromSupabase, syncStateToSupabase, addRequestDocumentsRemote, EMPTY_STATE, type LoadedState } from './lib/db'
 import { callFunction, changeOwnPassword } from './lib/auth'
 import { APP_TIME_ZONE, DISABILITY_LABEL_BY_SLUG, OTHER_DISABILITY, manilaDate } from './lib/catalog'
-import { normalizeJob, normalizeUser } from './lib/normalize'
+import { normalizeJob, normalizeRequest, normalizeUser } from './lib/normalize'
+import { fileExtension, fileToDataUrl, prepareUpload, uploadToSlot } from './lib/files'
 
 // ── Persistence ────────────────────────────────────────────────────
 // v2: structured job postings and PWD employment-profile fields for the job
@@ -165,7 +167,7 @@ function loadState(): AppState {
     return {
       pwdUsers: (parsed.pwdUsers ?? seedPWDUsers).map(normalizeUser),
       benefits: parsed.benefits ?? seedBenefits,
-      assistanceRequests: parsed.assistanceRequests ?? seedRequests,
+      assistanceRequests: (parsed.assistanceRequests ?? seedRequests).map(normalizeRequest),
       notifications: parsed.notifications ?? seedNotifications,
       jobs: (parsed.jobs ?? seedJobs).map((j) => normalizeJob(j as unknown as Record<string, unknown>)),
       adminUsers: parsed.adminUsers ?? seedAdminUsers,
@@ -189,6 +191,9 @@ export interface RegisterInput {
   otherDisability?: string
   pwdIdNumber: string
   password: string
+  /** Photos / scans of the PWD ID card (optional). */
+  idFront?: File | null
+  idBack?: File | null
 }
 
 export interface BenefitInput {
@@ -239,11 +244,14 @@ interface StoreContextValue extends AppState {
   setRequestDraft: (draft: { type?: string; title?: string } | null) => void
 
   // PWD
-  registerPWD: (input: RegisterInput) => Promise<{ ok: boolean; error?: string }>
+  /** `warning`: the account was created, but something (an ID photo) still needs the user's attention. */
+  registerPWD: (input: RegisterInput) => Promise<{ ok: boolean; error?: string; warning?: string }>
   updateProfile: (userId: string, patch: Partial<PWDUser>) => void
   changePassword: (userId: string, current: string, next: string) => Promise<string | null>
   resetPassword: (kind: 'user' | 'admin', identifier: string, next: string) => { ok: boolean; error?: string }
-  addRequest: (userId: string, input: { type: string; title: string; description: string }) => AssistanceRequest
+  addRequest: (userId: string, input: { type: string; title: string; description: string; reason?: string; documents?: StoredFile[] }) => AssistanceRequest
+  /** Attaches already-uploaded files to the PWD's own request. Returns an error message or null. */
+  addRequestDocuments: (requestId: string, documents: StoredFile[]) => Promise<string | null>
   submitFeedback: (userId: string, input: { category: string; subject: string; message: string; anonymous: boolean }) => FeedbackTicket
   /** A reply from the PWD who owns the ticket (shown under their name, or "Anonymous User"). */
   addFeedbackReply: (ticketId: string, message: string) => void
@@ -269,6 +277,8 @@ interface StoreContextValue extends AppState {
   // Admin — requests
   updateRequestStatus: (requestId: string, status: RequestStatus) => void
   addRequestComment: (requestId: string, author: string, message: string) => void
+  /** Saves what the PWD still has to submit; a request not yet decided moves to "Requirements Needed". */
+  setRequestRequirements: (requestId: string, requirements: string) => void
 
   // Admin — feedback
   addFeedbackResponse: (ticketId: string, input: { author: string; message: string; isInternal?: boolean }) => void
@@ -481,10 +491,52 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     async registerPWD(input) {
       const disability: DisabilityType = DISABILITY_LABEL_BY_SLUG[input.disabilityType] ?? OTHER_DISABILITY
+      const { idFront, idBack, ...fields } = input
       if (ONLINE) {
-        // Guests cannot write to the database; the Edge Function creates the record and its sign-in.
-        const res = await callFunction('register-pwd', { ...input, disabilityType: disability })
-        return res.ok ? { ok: true } : { ok: false, error: res.error ?? 'Registration failed. Please try again.' }
+        const files: Partial<Record<'front' | 'back', File>> = {}
+        try {
+          if (idFront) files.front = await prepareUpload(idFront)
+          if (idBack) files.back = await prepareUpload(idBack)
+        } catch (e) {
+          return { ok: false, error: e instanceof Error ? e.message : 'Could not read the PWD ID file.' }
+        }
+        // Guests cannot write to the database or to file storage; the Edge Function creates the
+        // record and its sign-in, and hands back one upload slot per ID photo.
+        const res = await callFunction('register-pwd', {
+          ...fields,
+          disabilityType: disability,
+          idFiles: {
+            ...(files.front ? { front: fileExtension(files.front) } : {}),
+            ...(files.back ? { back: fileExtension(files.back) } : {}),
+          },
+        })
+        if (!res.ok) return { ok: false, error: res.error ?? 'Registration failed. Please try again.' }
+        const failed: string[] = []
+        for (const side of ['front', 'back'] as const) {
+          const file = files[side]
+          if (!file) continue
+          try {
+            const slot = res.uploads?.[side]
+            if (!slot) throw new Error('No upload slot.')
+            await uploadToSlot(slot, file)
+          } catch {
+            failed.push(side)
+          }
+        }
+        if (failed.length === 0) return { ok: true }
+        return {
+          ok: true,
+          warning: `Your account was created, but the ${failed.join(' and ')} side of your PWD ID could not be uploaded. After signing in, upload it again from My Profile → Update PWD ID Documents.`,
+        }
+      }
+      let idPhotos: Pick<PWDUser, 'idFront' | 'idBack'> = {}
+      try {
+        idPhotos = {
+          ...(idFront ? { idFront: await fileToDataUrl(idFront) } : {}),
+          ...(idBack ? { idBack: await fileToDataUrl(idBack) } : {}),
+        }
+      } catch (e) {
+        return { ok: false, error: e instanceof Error ? e.message : 'Could not read the PWD ID file.' }
       }
       // Checked here, not inside the updater: React may run updaters after setState returns,
       // so an error set in one would be read too late and a rejected sign-up reported as a success.
@@ -510,6 +562,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           dateRegistered: today(),
           pwdIdNumber: input.pwdIdNumber.trim(),
           skills: [],
+          ...idPhotos,
         }
         let next: AppState = { ...s, pwdUsers: [...s.pwdUsers, user] }
         next = addNotification(
@@ -589,6 +642,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         type: input.type,
         title: input.title,
         description: input.description,
+        ...(input.reason ? { reason: input.reason } : {}),
+        ...(input.documents?.length ? { documents: input.documents } : {}),
         dateSubmitted: today(),
         lastUpdated: today(),
         status: 'Pending',
@@ -603,6 +658,28 @@ export function StoreProvider({ children }: { children: ReactNode }) {
         return next
       })
       return req
+    },
+
+    async addRequestDocuments(requestId, documents) {
+      if (documents.length === 0) return null
+      if (ONLINE) {
+        // Not through the usual sync: a PWD's upsert is only accepted for Pending requests.
+        try {
+          await queue.current
+          await addRequestDocumentsRemote(requestId, documents)
+          await reloadFromServer()
+        } catch (e) {
+          return e instanceof Error ? e.message : 'Could not attach the documents.'
+        }
+        return null
+      }
+      setState((s) => ({
+        ...s,
+        assistanceRequests: s.assistanceRequests.map((r) =>
+          r.id === requestId ? { ...r, lastUpdated: today(), documents: [...(r.documents ?? []), ...documents] } : r,
+        ),
+      }))
+      return null
     },
 
     submitFeedback(userId, input) {
@@ -827,6 +904,35 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           ),
         }
         next = addNotification(next, 'New Comment on Your Request', `${author} commented on request ${requestId}.`, 'info', req.pwdId)
+        return next
+      })
+    },
+
+    setRequestRequirements(requestId, requirements) {
+      setState((s) => {
+        const req = s.assistanceRequests.find((r) => r.id === requestId)
+        if (!req) return s
+        const text = requirements.trim()
+        // Asking for documents is a step of its own, but only while the request is still undecided.
+        const status: RequestStatus = text && (req.status === 'Pending' || req.status === 'Under Review') ? 'Requirements Needed' : req.status
+        const updated: AssistanceRequest = {
+          ...req,
+          requirementsNeeded: text || undefined,
+          status,
+          lastUpdated: today(),
+          timeline: status === req.status ? req.timeline : buildTimeline(status, today(), req.timeline),
+        }
+        let next: AppState = { ...s, assistanceRequests: s.assistanceRequests.map((r) => (r.id === requestId ? updated : r)) }
+        if (text) {
+          next = addNotification(
+            next,
+            'Requirements Needed for Your Request',
+            `PDAO needs the following for your request ${requestId} (${req.title}): ${text}`,
+            'warning',
+            req.pwdId,
+          )
+        }
+        next = log(next, actor(), 'Updated Request Requirements', `${text ? 'Set' : 'Cleared'} the requirements needed for ${requestId}`)
         return next
       })
     },

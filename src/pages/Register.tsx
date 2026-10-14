@@ -4,6 +4,7 @@ import { Button, Input, PasswordInput, Select, FileUpload, Alert } from '../comp
 import { useStore } from '../store'
 import logoUrl from '../assets/logo.png'
 import { BARANGAYS, DISABILITY_FORM_OPTIONS, barangayLabel } from '../lib/catalog'
+import { fileProblem } from '../lib/files'
 
 // Shown as the plain barangay name; the stored value keeps the "Brgy." form used by existing records.
 const barangayOptions = BARANGAYS.map((b) => ({ value: barangayLabel(b), label: b }))
@@ -20,6 +21,9 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
   const [step, setStep] = useState(1)
   const [done, setDone] = useState(false)
   const [submitError, setSubmitError] = useState('')
+  const [submitWarning, setSubmitWarning] = useState('')
+  const [idFront, setIdFront] = useState<File | null>(null)
+  const [idBack, setIdBack] = useState<File | null>(null)
   const [form, setForm] = useState({
     fullName: '', age: '', address: '', barangay: '', contact: '', email: '',
     disabilityType: '', otherDisability: '',
@@ -42,6 +46,10 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
     }
     if (step === 2) {
       if (!form.disabilityType) e.disabilityType = 'Please select a disability type'
+    }
+    if (step === 3) {
+      const problem = (idFront && fileProblem(idFront)) || (idBack && fileProblem(idBack))
+      if (problem) e.idFiles = problem
     }
     if (step === 4) {
       if (!form.pwdIdNumber) e.pwdIdNumber = 'PWD ID No. is required'
@@ -71,12 +79,15 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
           otherDisability: form.otherDisability?.trim() || undefined,
           pwdIdNumber: form.pwdIdNumber.trim(),
           password: form.password,
+          idFront,
+          idBack,
         })
         setSubmitting(false)
         if (!result.ok) {
           setSubmitError(result.error ?? 'Registration failed. Please try again.')
           return
         }
+        setSubmitWarning(result.warning ?? '')
         setDone(true)
       } else {
         setStep(step + 1)
@@ -100,6 +111,7 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
           <p className="text-slate-500 mb-5 text-sm leading-relaxed">
             Thank you for registering, <strong>{form.fullName || 'User'}</strong>. Your application has been submitted to the PDAO.
           </p>
+          {submitWarning && <div className="mb-3 text-left"><Alert type="warning" title="PWD ID not uploaded" message={submitWarning} /></div>}
           <Alert
             type="info"
             title="PDAO Review Required"
@@ -201,8 +213,9 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
               {step === 3 && (
                 <>
                   <p className="text-sm text-slate-600 leading-relaxed">Upload a clear photo or scan of your PWD ID issued by the Municipality of Los Baños. This will be reviewed by PDAO staff.</p>
-                  <FileUpload label="PWD ID — Front Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" />
-                  <FileUpload label="PWD ID — Back Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" />
+                  {errors.idFiles && <Alert type="error" message={errors.idFiles} />}
+                  <FileUpload label="PWD ID — Front Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" file={idFront} onChange={setIdFront} />
+                  <FileUpload label="PWD ID — Back Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" file={idBack} onChange={setIdBack} />
                   <Alert type="warning" title="Important" message="Ensure all ID details are clearly visible. Blurry or incomplete images will delay your PDAO verification." />
                 </>
               )}
@@ -231,8 +244,8 @@ export default function Register({ onNavigate }: { onNavigate: (p: string) => vo
               <Button variant="outline" size="lg" onClick={step === 1 ? () => onNavigate('login') : back} icon={<ArrowLeft size={15} />}>
                 {step === 1 ? 'Back to Login' : 'Previous'}
               </Button>
-              <Button size="lg" onClick={next} icon={step === 4 ? <CheckCircle size={16} /> : <ArrowRight size={16} />}>
-                {step === 4 ? 'Create Account' : 'Continue'}
+              <Button size="lg" onClick={next} disabled={submitting} icon={step === 4 ? <CheckCircle size={16} /> : <ArrowRight size={16} />}>
+                {step === 4 ? (submitting ? 'Creating Account…' : 'Create Account') : 'Continue'}
               </Button>
             </div>
           </div>

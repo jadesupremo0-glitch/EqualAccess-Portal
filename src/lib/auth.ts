@@ -61,6 +61,8 @@ export interface FunctionResult {
   error?: string
   message?: string
   id?: string
+  /** register-pwd: where to send the PWD ID photos it was told about. */
+  uploads?: Partial<Record<'front' | 'back', { path: string; token: string }>>
 }
 
 /**

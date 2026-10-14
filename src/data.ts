@@ -33,6 +33,9 @@ export interface PWDUser {
   dateRegistered: string
   pwdIdNumber: string
   avatar?: string
+  /** Uploaded PWD ID photos: where each file is stored (see src/lib/files.ts). */
+  idFront?: string
+  idBack?: string
   active?: boolean
   /** Soft-delete marker (ISO date). Deleted records are excluded from every count. */
   deletedAt?: string
@@ -74,6 +77,12 @@ export interface Benefit {
   contactNumber: string
 }
 
+/** An uploaded file: its original name and where it is stored (see src/lib/files.ts). */
+export interface StoredFile {
+  name: string
+  path: string
+}
+
 export interface AssistanceRequest {
   id: string
   pwdName: string
@@ -81,6 +90,12 @@ export interface AssistanceRequest {
   type: string
   title: string
   description: string
+  /** Why the PWD needs the assistance (optional). */
+  reason?: string
+  /** Written by staff: the documents / requirements the PWD still has to submit. */
+  requirementsNeeded?: string
+  /** Supporting documents uploaded by the PWD. */
+  documents?: StoredFile[]
   dateSubmitted: string
   lastUpdated: string
   status: RequestStatus

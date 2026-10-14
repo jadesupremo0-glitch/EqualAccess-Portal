@@ -1,9 +1,15 @@
 // Public PWD sign-up. Guests cannot write any table directly, so this creates the PWD record,
 // its Supabase Auth user, the welcome notification and the activity-log entry server-side.
+// A guest has no file-storage access either: for each PWD ID photo the form announces
+// (`idFiles: { front: 'jpg', back: 'pdf' }`) it gets back a one-time upload slot.
 import { corsHeaders, json, loginEmail } from '../_shared/account.ts'
 import { admin, manilaTime, manilaToday, nextSequentialId, randomId } from '../_shared/server.ts'
 
 const str = (v: unknown, max = 200) => (typeof v === 'string' ? v.trim().slice(0, max) : '')
+
+const ID_SIDES = ['front', 'back'] as const
+const ID_EXTENSIONS = ['jpg', 'png', 'pdf']
+const randomHex = () => Array.from(crypto.getRandomValues(new Uint8Array(4)), (b) => b.toString(16).padStart(2, '0')).join('')
 
 Deno.serve(async (req) => {
   const headers = corsHeaders(req)
@@ -36,6 +42,14 @@ Deno.serve(async (req) => {
 
     const today = manilaToday()
     const id = await nextSequentialId('pwd_users', `PWD-LB-${today.slice(0, 4)}-`, 4)
+
+    // Same layout as uploadDocument() in src/lib/files.ts: everything under the record's own folder.
+    const idFiles = (body.idFiles && typeof body.idFiles === 'object' ? body.idFiles : {}) as Record<string, unknown>
+    const idPaths: Partial<Record<(typeof ID_SIDES)[number], string>> = {}
+    for (const side of ID_SIDES) {
+      const ext = str(idFiles[side], 5).toLowerCase()
+      if (ID_EXTENSIONS.includes(ext)) idPaths[side] = `${id}/id/${side}-${randomHex()}.${ext}`
+    }
     const { error: insErr } = await admin.from('pwd_users').insert({
       id,
       username: input.pwdIdNumber,
@@ -50,6 +64,8 @@ Deno.serve(async (req) => {
       date_registered: today,
       pwd_id_number: input.pwdIdNumber,
       skills: [],
+      id_front: idPaths.front ?? null,
+      id_back: idPaths.back ?? null,
     })
     if (insErr) throw new Error(insErr.message)
 
@@ -82,7 +98,20 @@ Deno.serve(async (req) => {
       activity: `New PWD registration submitted for ${input.fullName} (${id})`,
     })
 
-    return json({ ok: true, id }, 200, headers)
+    // The account exists either way; a slot that could not be made is reported by the form.
+    const uploads: Record<string, { path: string; token: string }> = {}
+    for (const side of ID_SIDES) {
+      const path = idPaths[side]
+      if (!path) continue
+      const { data: slot, error: slotErr } = await admin.storage.from('documents').createSignedUploadUrl(path)
+      if (slotErr || !slot) {
+        await admin.from('pwd_users').update({ [`id_${side}`]: null }).eq('id', id)
+        continue
+      }
+      uploads[side] = { path, token: slot.token }
+    }
+
+    return json({ ok: true, id, uploads }, 200, headers)
   } catch (e) {
     return json({ ok: false, error: e instanceof Error ? e.message : 'Registration failed.' }, 500, headers)
   }

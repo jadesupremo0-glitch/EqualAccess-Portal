@@ -3,6 +3,7 @@ import { UserCheck, Eye, Edit2, UserX, Trash2, RotateCcw } from 'lucide-react'
 import { type PWDUser } from '../../data'
 import { Badge, Card, Button, SearchBar, Select, Input, statusBadge, Modal, Alert } from '../../components/ui'
 import { useStore } from '../../store'
+import { DocumentList } from '../../components/DocumentPreview'
 import {
   ALL_BARANGAYS_LABEL,
   BARANGAYS,
@@ -17,6 +18,10 @@ import {
 function PWDDetailModal({ user, onClose, onEdit, onDelete }: { user: PWDUser; onClose: () => void; onEdit: () => void; onDelete: () => void }) {
   const { verifyPWD, deactivatePWD, reactivatePWD } = useStore()
   const deactivated = user.active === false
+  const idFiles = [
+    ...(user.idFront ? [{ name: 'PWD ID — Front Side', path: user.idFront }] : []),
+    ...(user.idBack ? [{ name: 'PWD ID — Back Side', path: user.idBack }] : []),
+  ]
   return (
     <Modal open title={`PWD Profile — ${user.id}`} onClose={onClose} size="lg">
       <div className="space-y-5">
@@ -47,6 +52,15 @@ function PWDDetailModal({ user, onClose, onEdit, onDelete }: { user: PWDUser; on
               <p className="text-gray-900">{f.value}</p>
             </div>
           ))}
+        </div>
+
+        <div>
+          <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Uploaded PWD ID</p>
+          {idFiles.length > 0 ? (
+            <DocumentList files={idFiles} />
+          ) : (
+            <p className="text-sm text-gray-500 bg-gray-50 rounded-xl p-4">No PWD ID has been uploaded for this record.</p>
+          )}
         </div>
 
         {user.verificationStatus === 'Pending' && (

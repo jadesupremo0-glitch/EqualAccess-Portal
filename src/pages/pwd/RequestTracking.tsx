@@ -8,6 +8,7 @@ const MAIN_STATUSES: RequestStatus[] = ['Pending', 'Under Review', 'Approved', '
 import { Card, Timeline, statusBadge, Modal } from '../../components/ui'
 import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
+import { DocumentList } from '../../components/DocumentPreview'
 
 function TrackingCard({ req, onSelect }: { req: AssistanceRequest; onSelect: () => void }) {
   const completedSteps = req.timeline.filter((s) => s.completed).length
@@ -93,8 +94,30 @@ function TrackingDetail({ req, onClose }: { req: AssistanceRequest; onClose: () 
 
           <div>
             <h3 className="font-bold text-gray-900 text-base mb-1">{req.title}</h3>
-            <p className="text-sm text-gray-600 leading-relaxed">{req.description}</p>
+            <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{req.description}</p>
           </div>
+
+          {req.reason && (
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Reason for Request</p>
+              <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">{req.reason}</p>
+            </div>
+          )}
+
+          {req.requirementsNeeded && (
+            <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+              <p className="text-xs font-bold text-amber-700 uppercase tracking-wide mb-1">Requirements Needed</p>
+              <p className="text-sm text-amber-950 leading-relaxed whitespace-pre-line">{req.requirementsNeeded}</p>
+              <p className="text-xs text-amber-800 mt-2">Upload them from Assistance Requests → View, or bring them to the PDAO office.</p>
+            </div>
+          )}
+
+          {req.documents && req.documents.length > 0 && (
+            <div>
+              <p className="text-xs font-bold text-gray-400 uppercase tracking-wide mb-2">Supporting Documents</p>
+              <DocumentList files={req.documents} />
+            </div>
+          )}
 
           {/* Details grid */}
           <div className="bg-gray-50 rounded-xl p-4 grid sm:grid-cols-2 gap-3 text-sm">

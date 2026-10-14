@@ -12,7 +12,7 @@ import {
 } from './catalog'
 import { canonicalAccommodations } from './recommend/accommodations'
 import { lowestEducationLabel } from './recommend/education'
-import type { Job, PWDUser } from '../data'
+import type { AssistanceRequest, Job, PWDUser } from '../data'
 
 type Row = Record<string, unknown>
 
@@ -85,4 +85,15 @@ export function normalizeUser(u: PWDUser): PWDUser {
     ...(types ? { preferredJobTypes: types } : {}),
     ...(setups ? { preferredWorkSetup: setups } : {}),
   }
+}
+
+// Until the request form got its own "reason" field, the reason was appended to the description.
+const LEGACY_REASON = /\n\nReason for request: ([\s\S]*?)(?=\n\nAssistive device needed: |$)/
+
+/** Read an assistance request, moving a reason stored inside the description into `reason`. */
+export function normalizeRequest(r: AssistanceRequest): AssistanceRequest {
+  if (r.reason) return r
+  const m = (r.description ?? '').match(LEGACY_REASON)
+  if (!m) return r
+  return { ...r, description: r.description.replace(m[0], ''), reason: m[1].trim() }
 }

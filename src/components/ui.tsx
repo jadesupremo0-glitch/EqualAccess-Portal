@@ -485,13 +485,16 @@ export function SearchBar({ value, onChange, placeholder = 'Search...' }: {
 }
 
 // --- FileUpload ---
-export function FileUpload({ label, accept, helperText, onChange }: {
+export function FileUpload({ label, accept, helperText, onChange, file: controlled }: {
   label?: string
   accept?: string
   helperText?: string
   onChange?: (file: File | null) => void
+  /** Pass the chosen file (or null) to control what the box shows; omit to let it remember by itself. */
+  file?: File | null
 }) {
-  const [file, setFile] = useState<File | null>(null)
+  const [own, setFile] = useState<File | null>(null)
+  const file = controlled !== undefined ? controlled : own
   const [drag, setDrag] = useState(false)
   const inputId = useId()
 
@@ -517,7 +520,7 @@ export function FileUpload({ label, accept, helperText, onChange }: {
           type="file"
           accept={accept}
           className="hidden"
-          onChange={(e) => { const f = e.target.files?.[0] ?? null; setFile(f); onChange?.(f) }}
+          onChange={(e) => { const f = e.target.files?.[0] ?? null; e.target.value = ''; setFile(f); onChange?.(f) }}
         />
         <div className="flex flex-col items-center gap-2">
           <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-ea-teal-50 to-ea-blue-50 border border-ea-teal-100 flex items-center justify-center">

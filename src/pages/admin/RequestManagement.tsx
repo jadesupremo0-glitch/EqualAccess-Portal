@@ -4,17 +4,27 @@ import { type AssistanceRequest, type RequestStatus } from '../../data'
 import { Card, Button, Tabs, SearchBar, statusBadge, Modal, Timeline, Textarea, Alert } from '../../components/ui'
 import { useStore } from '../../store'
 import { useCurrentAdmin } from '../../context'
+import { DocumentList } from '../../components/DocumentPreview'
 
 const ALL_TABS = ['All', 'Pending', 'Under Review', 'Requirements Needed', 'Approved', 'Available', 'Claimed', 'Rejected', 'Completed']
 
 function RequestDetailModal({ req, onClose }: { req: AssistanceRequest; onClose: () => void }) {
-  const { updateRequestStatus, addRequestComment } = useStore()
+  const { updateRequestStatus, addRequestComment, setRequestRequirements } = useStore()
   const admin = useCurrentAdmin()
   const [comment, setComment] = useState('')
+  const [requirements, setRequirements] = useState(req.requirementsNeeded ?? '')
+  const requirementsChanged = requirements.trim() !== (req.requirementsNeeded ?? '')
   const [updated, setUpdated] = useState(false)
 
   const handleAction = (status: RequestStatus) => {
     updateRequestStatus(req.id, status)
+    setUpdated(true)
+    setTimeout(() => setUpdated(false), 3000)
+  }
+
+  const handleRequirements = () => {
+    setRequestRequirements(req.id, requirements)
+    setRequirements(requirements.trim())
     setUpdated(true)
     setTimeout(() => setUpdated(false), 3000)
   }
@@ -52,7 +62,38 @@ function RequestDetailModal({ req, onClose }: { req: AssistanceRequest; onClose:
           {/* Description */}
           <div>
             <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Description</p>
-            <p className="text-sm text-gray-700 bg-gray-50 rounded-xl p-4 leading-relaxed">{req.description}</p>
+            <p className="text-sm text-gray-700 bg-gray-50 rounded-xl p-4 leading-relaxed whitespace-pre-line">{req.description}</p>
+          </div>
+          {/* Reason */}
+          <div>
+            <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Reason for Request</p>
+            <p className="text-sm text-gray-700 bg-gray-50 rounded-xl p-4 leading-relaxed whitespace-pre-line">{req.reason || <span className="text-gray-400">No reason given.</span>}</p>
+          </div>
+          {/* Documents */}
+          <div>
+            <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Supporting Documents</p>
+            {req.documents?.length ? (
+              <DocumentList files={req.documents} />
+            ) : (
+              <p className="text-sm text-gray-400 bg-gray-50 rounded-xl p-4">No documents uploaded.</p>
+            )}
+          </div>
+          {/* Requirements needed */}
+          <div>
+            <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Requirements Needed</p>
+            <div className="bg-amber-50 border border-amber-100 rounded-xl p-4 space-y-3">
+              <Textarea
+                label="Documents / requirements the PWD still has to submit"
+                value={requirements}
+                onChange={setRequirements}
+                placeholder={'One per line, e.g.\nMedical certificate\nBarangay Certificate of Residency'}
+                rows={3}
+              />
+              <div className="flex flex-wrap items-center gap-3">
+                <Button size="sm" icon={<FileText size={14} />} disabled={!requirementsChanged} onClick={handleRequirements}>Save Requirements</Button>
+                <p className="text-xs text-amber-800">The PWD is notified and sees this list on their request.</p>
+              </div>
+            </div>
           </div>
           {/* Comments */}
           {req.comments.length > 0 && (

@@ -1,5 +1,5 @@
 import { supabase, hasServiceRole } from './supabase'
-import { normalizeJob, normalizeUser } from './normalize'
+import { normalizeJob, normalizeRequest, normalizeUser } from './normalize'
 import type { RawStats } from './stats'
 import type {
   PWDUser,
@@ -35,6 +35,8 @@ const PWD_USER_MAP: Record<string, string> = {
   dateRegistered: 'date_registered',
   pwdIdNumber: 'pwd_id_number',
   avatar: 'avatar',
+  idFront: 'id_front',
+  idBack: 'id_back',
   active: 'active',
   deletedAt: 'deleted_at',
   skills: 'skills',
@@ -77,6 +79,9 @@ const REQUEST_MAP: Record<string, string> = {
   type: 'type',
   title: 'title',
   description: 'description',
+  reason: 'reason',
+  requirementsNeeded: 'requirements_needed',
+  documents: 'documents',
   dateSubmitted: 'date_submitted',
   lastUpdated: 'last_updated',
   status: 'status',
@@ -279,7 +284,7 @@ export async function loadStateFromSupabase(): Promise<{ state: LoadedState; see
     state: {
       pwdUsers: (pwds.data ?? []).map((r) => normalizeUser(fromRow(r, PWD_USER_MAP) as unknown as PWDUser)),
       benefits: (benefits.data ?? []).map((r) => fromRow(r, BENEFIT_MAP) as unknown as Benefit),
-      assistanceRequests: (requests.data ?? []).map((r) => fromRow(r, REQUEST_MAP) as unknown as AssistanceRequest),
+      assistanceRequests: (requests.data ?? []).map((r) => normalizeRequest(fromRow(r, REQUEST_MAP) as unknown as AssistanceRequest)),
       notifications: (notifications.data ?? []).map((r) => fromRow(r, NOTIFICATION_MAP) as unknown as Notification),
       jobs: (jobs.data ?? []).map((r) => normalizeJob({ ...fromRow(r, JOB_LEGACY_READ_MAP), ...fromRow(r, JOB_MAP) })),
       adminUsers: (admins.data ?? []).map((r) => fromRow(r, ADMIN_USER_MAP) as unknown as AdminUser),
@@ -319,6 +324,13 @@ export async function fetchDashboardStats(): Promise<RawStats> {
     pwdsByDisability: raw.pwdsByDisability ?? [],
     requestsByType: raw.requestsByType ?? [],
   }
+}
+
+/** Attaches files a PWD uploaded to one of their own requests (see `add_request_documents`). */
+export async function addRequestDocumentsRemote(requestId: string, documents: { name: string; path: string }[]): Promise<void> {
+  if (!supabase) throw new Error('Supabase is not configured.')
+  const { error } = await supabase.rpc('add_request_documents', { p_request_id: requestId, p_documents: documents })
+  if (error) throw new Error(error.message)
 }
 
 // ── Sync ───────────────────────────────────────────────────────────

@@ -1,10 +1,59 @@
 import { useState } from 'react'
-import { Plus, Eye } from 'lucide-react'
-import { type AssistanceRequest } from '../../data'
+import { Plus, Eye, X } from 'lucide-react'
+import { type AssistanceRequest, type StoredFile } from '../../data'
 import { Card, Button, statusBadge, Modal, Timeline, Alert, Textarea, Select, FileUpload, Input } from '../../components/ui'
 import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 import { ASSISTANCE_TYPES } from '../../lib/catalog'
+import { fileProblem, uploadDocument } from '../../lib/files'
+import { DocumentList } from '../../components/DocumentPreview'
+
+/** Uploads the chosen files into the PWD's own folder. Throws with a message fit to show the user. */
+async function uploadAll(userId: string, files: File[]): Promise<StoredFile[]> {
+  const stored: StoredFile[] = []
+  for (const file of files) {
+    stored.push({ name: file.name, path: await uploadDocument(userId, 'requests', 'doc', file) })
+  }
+  return stored
+}
+
+/** A file box that collects several files, listed underneath with a remove button each. */
+function FilePicker({ label, helperText, files, onChange, onError }: {
+  label: string
+  helperText: string
+  files: File[]
+  onChange: (files: File[]) => void
+  onError: (message: string) => void
+}) {
+  const add = (file: File | null) => {
+    if (!file) return
+    const problem = fileProblem(file)
+    if (problem) { onError(problem); return }
+    onError('')
+    onChange([...files, file])
+  }
+  return (
+    <div className="space-y-2">
+      <FileUpload label={label} accept=".pdf,.jpg,.jpeg,.png" helperText={helperText} file={null} onChange={add} />
+      {files.length > 0 && (
+        <ul className="space-y-1.5">
+          {files.map((f, i) => (
+            <li key={i} className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm">
+              <span className="flex-1 min-w-0 truncate text-gray-800">{f.name}</span>
+              <span className="text-xs text-gray-400 shrink-0">{(f.size / 1024).toFixed(0)} KB</span>
+              <button type="button" onClick={() => onChange(files.filter((_, j) => j !== i))} className="p-1 text-gray-400 hover:text-red-600 rounded" aria-label={`Remove ${f.name}`}>
+                <X size={14} />
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )
+}
+
+/** Requests that are finished accept no more documents. */
+const CLOSED_STATUSES = ['Rejected', 'Claimed', 'Completed']
 
 const assistanceTypes = ASSISTANCE_TYPES.map((t) => ({ value: t, label: t }))
 
@@ -32,6 +81,29 @@ function RequestRow({ req, onView }: { req: AssistanceRequest; onView: () => voi
 }
 
 function RequestDetail({ req, onClose }: { req: AssistanceRequest; onClose: () => void }) {
+  const { addRequestDocuments } = useStore()
+  const [files, setFiles] = useState<File[]>([])
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [sent, setSent] = useState(false)
+
+  const submitFiles = async () => {
+    if (busy || files.length === 0) return
+    setBusy(true)
+    setError('')
+    setSent(false)
+    try {
+      const failure = await addRequestDocuments(req.id, await uploadAll(req.pwdId, files))
+      if (failure) throw new Error(failure)
+      setFiles([])
+      setSent(true)
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Could not upload the documents. Please try again.')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   return (
     <Modal open title={`Request Details — ${req.id}`} onClose={onClose} size="xl">
       <div className="grid md:grid-cols-3 gap-6">
@@ -48,7 +120,40 @@ function RequestDetail({ req, onClose }: { req: AssistanceRequest; onClose: () =
           </div>
           <div>
             <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Description</p>
-            <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 rounded-xl p-4">{req.description}</p>
+            <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 rounded-xl p-4 whitespace-pre-line">{req.description}</p>
+          </div>
+          {req.reason && (
+            <div>
+              <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Reason for Request</p>
+              <p className="text-sm text-gray-700 leading-relaxed bg-gray-50 rounded-xl p-4 whitespace-pre-line">{req.reason}</p>
+            </div>
+          )}
+          {req.requirementsNeeded && (
+            <div>
+              <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Requirements Needed</p>
+              <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
+                <p className="text-xs text-amber-800 mb-1">PDAO needs the following from you:</p>
+                <p className="text-sm text-amber-950 leading-relaxed whitespace-pre-line">{req.requirementsNeeded}</p>
+              </div>
+            </div>
+          )}
+          <div>
+            <p className="text-xs uppercase tracking-wide font-semibold text-gray-500 mb-2">Supporting Documents</p>
+            {req.documents?.length ? (
+              <DocumentList files={req.documents} />
+            ) : (
+              <p className="text-sm text-gray-400 bg-gray-50 rounded-xl p-4">No documents uploaded.</p>
+            )}
+            {!CLOSED_STATUSES.includes(req.status) && (
+              <div className="mt-3 space-y-2">
+                {error && <Alert type="error" message={error} />}
+                {sent && <Alert type="success" message="Your documents were added to this request." />}
+                <FilePicker label="Add Documents" helperText="JPG, PNG, or PDF · Max 5 MB each" files={files} onChange={(f) => { setFiles(f); setSent(false) }} onError={setError} />
+                {files.length > 0 && (
+                  <Button size="sm" disabled={busy} onClick={submitFiles}>{busy ? 'Uploading…' : `Upload ${files.length} Document${files.length !== 1 ? 's' : ''}`}</Button>
+                )}
+              </div>
+            )}
           </div>
           {req.comments.length > 0 && (
             <div>
@@ -76,10 +181,13 @@ function RequestDetail({ req, onClose }: { req: AssistanceRequest; onClose: () =
   )
 }
 
+interface NewRequestData { type: string; title: string; description: string; reason: string; device?: string; files: File[] }
+
 function NewRequestForm({ onClose, onSaveDraft, onSubmit, initialType, initialTitle }: {
   onClose: () => void
   onSaveDraft: (draft: { type?: string; title?: string }) => void
-  onSubmit: (data: { type: string; title: string; description: string; reason: string; device?: string }) => void
+  /** Resolves to an error message (the form stays open) or null once the request is filed. */
+  onSubmit: (data: NewRequestData) => Promise<string | null>
   initialType?: string
   initialTitle?: string
 }) {
@@ -88,9 +196,12 @@ function NewRequestForm({ onClose, onSaveDraft, onSubmit, initialType, initialTi
   const [description, setDescription] = useState('')
   const [device, setDevice] = useState('')
   const [reason, setReason] = useState('')
+  const [files, setFiles] = useState<File[]>([])
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    if (submitting) return
     if (!type || !title.trim() || !description.trim()) {
       setError('Please complete the assistance type, title, and description.')
       return
@@ -100,7 +211,13 @@ function NewRequestForm({ onClose, onSaveDraft, onSubmit, initialType, initialTi
       return
     }
     setError('')
-    onSubmit({ type, title: title.trim(), description: description.trim(), reason: reason.trim(), device: type === 'Assistive Devices' ? device : undefined })
+    setSubmitting(true)
+    const failure = await onSubmit({ type, title: title.trim(), description: description.trim(), reason: reason.trim(), device: type === 'Assistive Devices' ? device : undefined, files })
+    // On success the form is closed by the parent.
+    if (failure) {
+      setError(failure)
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -114,10 +231,10 @@ function NewRequestForm({ onClose, onSaveDraft, onSubmit, initialType, initialTi
         <Input label="Request Title" placeholder="Brief title for your request" value={title} onChange={(e) => setTitle(e.target.value)} required />
         <Textarea label="Description of Request" placeholder="Describe what you need assistance with..." value={description} onChange={setDescription} rows={4} required />
         <Textarea label="Reason for Request" placeholder="Explain why you need this assistance..." value={reason} onChange={setReason} rows={3} />
-        <FileUpload label="Supporting Documents (Optional)" accept=".pdf,.jpg,.png" helperText="Medical certificates, ID, or other supporting documents" />
+        <FilePicker label="Supporting Documents (Optional)" helperText="Medical certificates, ID, or other supporting documents · JPG, PNG, or PDF · Max 5 MB each" files={files} onChange={setFiles} onError={setError} />
         <div className="flex gap-3 pt-2">
-          <Button onClick={handleSubmit} fullWidth>Submit Request</Button>
-          <Button variant="outline" onClick={() => onSaveDraft({ type, title })} fullWidth>Save as Draft</Button>
+          <Button onClick={handleSubmit} disabled={submitting} fullWidth>{submitting ? 'Submitting…' : 'Submit Request'}</Button>
+          <Button variant="outline" onClick={() => onSaveDraft({ type, title })} disabled={submitting} fullWidth>Save as Draft</Button>
         </div>
       </div>
     </Modal>
@@ -159,17 +276,21 @@ export default function Requests() {
     setNewRequest(true)
   }
 
-  const handleSubmitted = (data: { type: string; title: string; description: string; reason: string; device?: string }) => {
-    // The form's optional fields are folded into the description, the only free-text field a request has.
-    const description = [
-      data.description,
-      data.reason && `Reason for request: ${data.reason}`,
-      data.device && `Assistive device needed: ${data.device}`,
-    ].filter(Boolean).join('\n\n')
-    const req = addRequest(userId, { type: data.type, title: data.title, description })
+  const handleSubmitted = async (data: NewRequestData): Promise<string | null> => {
+    // Files go first: a request is only filed once its documents are safely stored.
+    let documents: StoredFile[]
+    try {
+      documents = await uploadAll(userId, data.files)
+    } catch (e) {
+      return e instanceof Error ? e.message : 'Could not upload the documents. Please try again.'
+    }
+    // The chosen device has no field of its own, so it stays part of the description.
+    const description = [data.description, data.device && `Assistive device needed: ${data.device}`].filter(Boolean).join('\n\n')
+    const req = addRequest(userId, { type: data.type, title: data.title, description, reason: data.reason, documents })
     setRequestDraft(null)
     setNewRequest(false)
     setJustSubmitted(req)
+    return null
   }
 
   return (

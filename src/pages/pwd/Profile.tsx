@@ -6,6 +6,8 @@ import { useCurrentPWD } from '../../context'
 import { useStore } from '../../store'
 import EmploymentProfile from './EmploymentProfile'
 import { BARANGAY_OPTIONS, normalizeDisability, officialBarangay } from '../../lib/catalog'
+import { uploadDocument } from '../../lib/files'
+import { DocumentList } from '../../components/DocumentPreview'
 
 export default function Profile() {
   const currentUser = useCurrentPWD()
@@ -28,6 +30,41 @@ export default function Profile() {
   // document upload
   const [docModal, setDocModal] = useState(false)
   const [docSent, setDocSent] = useState(false)
+  const [docFront, setDocFront] = useState<File | null>(null)
+  const [docBack, setDocBack] = useState<File | null>(null)
+  const [docError, setDocError] = useState('')
+  const [docBusy, setDocBusy] = useState(false)
+  const idFiles = [
+    ...(currentUser.idFront ? [{ name: 'PWD ID — Front Side', path: currentUser.idFront }] : []),
+    ...(currentUser.idBack ? [{ name: 'PWD ID — Back Side', path: currentUser.idBack }] : []),
+  ]
+
+  const openDocModal = () => {
+    setDocFront(null)
+    setDocBack(null)
+    setDocError('')
+    setDocSent(false)
+    setDocModal(true)
+  }
+
+  const submitDocs = async () => {
+    if (docBusy) return
+    if (!docFront && !docBack) { setDocError('Please choose at least one file to upload.'); return }
+    setDocBusy(true)
+    setDocError('')
+    try {
+      // Only the side that was chosen is replaced; the other keeps its current file.
+      const idFront = docFront ? await uploadDocument(currentUser.id, 'id', 'front', docFront) : undefined
+      const idBack = docBack ? await uploadDocument(currentUser.id, 'id', 'back', docBack) : undefined
+      updateProfile(currentUser.id, { ...(idFront ? { idFront } : {}), ...(idBack ? { idBack } : {}) })
+      setDocSent(true)
+      setTimeout(() => { setDocModal(false); setDocSent(false) }, 1500)
+    } catch (e) {
+      setDocError(e instanceof Error ? e.message : 'Could not upload the file. Please try again.')
+    } finally {
+      setDocBusy(false)
+    }
+  }
 
   const startEditing = () => {
     setForm(formFromUser())
@@ -163,8 +200,16 @@ export default function Profile() {
             <div className="mt-0.5">{statusBadge(currentUser.verificationStatus)}</div>
           </div>
         </div>
-        <div className="px-5 pb-5">
-          <Button variant="outline" size="sm" icon={<Upload size={14} />} onClick={() => setDocModal(true)}>Update PWD ID Documents</Button>
+        <div className="px-5 pb-5 space-y-3">
+          <div>
+            <p className="text-xs font-medium text-gray-500 mb-1.5">Uploaded PWD ID</p>
+            {idFiles.length > 0 ? (
+              <DocumentList files={idFiles} />
+            ) : (
+              <p className="text-sm text-gray-500">No PWD ID uploaded yet.</p>
+            )}
+          </div>
+          <Button variant="outline" size="sm" icon={<Upload size={14} />} onClick={openDocModal}>Update PWD ID Documents</Button>
         </div>
       </Card>
 
@@ -186,12 +231,13 @@ export default function Profile() {
           <p className="text-sm text-gray-600 leading-relaxed">
             Upload a clear photo or scan of your PWD ID. The PDAO will review and update your verification status.
           </p>
-          <FileUpload label="PWD ID — Front Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" />
-          <FileUpload label="PWD ID — Back Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" />
+          <FileUpload label="PWD ID — Front Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" file={docFront} onChange={setDocFront} />
+          <FileUpload label="PWD ID — Back Side" accept=".jpg,.jpeg,.png,.pdf" helperText="JPG, PNG, or PDF · Max 5 MB" file={docBack} onChange={setDocBack} />
+          {docError && <Alert type="error" message={docError} />}
           {docSent && <Alert type="success" title="Documents Submitted" message="Your documents have been submitted for PDAO review." />}
           <div className="flex gap-3">
-            <Button fullWidth onClick={() => { setDocSent(true); setTimeout(() => { setDocModal(false); setDocSent(false) }, 1500) }}>
-              Submit for Review
+            <Button fullWidth disabled={docBusy || docSent} onClick={submitDocs}>
+              {docBusy ? 'Uploading…' : 'Submit for Review'}
             </Button>
             <Button variant="outline" fullWidth onClick={() => setDocModal(false)}>Cancel</Button>
           </div>
